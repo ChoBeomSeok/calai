@@ -48,8 +48,35 @@ export default function CalculatorLayout({ title, description, children }: Props
 
   const fav = current ? isFav(current.slug) : false;
 
+  // Breadcrumb JSON-LD (홈 > 카테고리 > 도구)
+  const breadcrumbJsonLd = current ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "홈", item: "https://calai.kr" },
+      { "@type": "ListItem", position: 2, name: current.category, item: `https://calai.kr/?cat=${encodeURIComponent(current.category)}` },
+      { "@type": "ListItem", position: 3, name: title, item: `https://calai.kr${current.slug}` },
+    ],
+  } : null;
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      )}
+      {/* Breadcrumb 화면 표시 */}
+      {current && (
+        <nav className="mb-3 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5" aria-label="이동 경로">
+          <Link href="/" className="hover:text-indigo-600 transition">홈</Link>
+          <span>›</span>
+          <span className="text-slate-700 dark:text-slate-300">{current.category}</span>
+          <span>›</span>
+          <span className="text-slate-900 dark:text-slate-100 font-medium">{current.shortTitle}</span>
+        </nav>
+      )}
       <div className="flex items-center justify-between mb-6">
         <Link href="/" className="inline-flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors">
           ← 모든 도구

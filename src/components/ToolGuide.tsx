@@ -17,8 +17,28 @@ export default function ToolGuide({ title }: Props) {
     return null;
   }
 
+  // FAQ Schema (JSON-LD) — Google 검색 결과 풍부 표시
+  const faqJsonLd = guide.faq && guide.faq.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: guide.faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  } : null;
+
   return (
     <section className="mt-12 pt-10 border-t border-slate-200 dark:border-slate-700">
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
         <span>📖</span> {tool.shortTitle} 가이드
       </h2>
