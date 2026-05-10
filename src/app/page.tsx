@@ -85,7 +85,7 @@ export default function Home() {
               <span>🕐</span> 최근 사용
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recentTools.slice(0, 6).map((tool) => (
+              {recentTools.slice(0, 3).map((tool) => (
                 <ToolCard key={tool.slug} tool={tool} fav={isFav(tool.slug)} onToggleFav={() => toggle(tool.slug)} />
               ))}
             </div>
