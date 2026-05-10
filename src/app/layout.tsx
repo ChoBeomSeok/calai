@@ -42,6 +42,9 @@ export const metadata: Metadata = {
     },
   },
   alternates: { canonical: "https://calai.kr" },
+  verification: {
+    google: "iyjeJCSlVSqTzjmxJvyg1JJy5dSfCcf5pjtdnjLoMp4",
+  },
 };
 
 const siteJsonLd = {
