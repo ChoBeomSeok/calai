@@ -88,14 +88,22 @@ export default function ComprehensivePropertyTaxPage() {
         {status === "single" && (
           <div className="mt-5 grid grid-cols-2 gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
             <label className="block">
-              <span className="text-xs font-medium text-emerald-800">소유자 만 나이 (60세+ 공제)</span>
-              <input type="number" min="0" value={age} onChange={(e) => setAge(e.target.value)} className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="60·65·70" />
+              <span className="text-xs font-medium text-emerald-800">소유자 만 나이 (세)</span>
+              <div className="relative mt-1">
+                <input type="number" min="0" value={age} onChange={(e) => setAge(e.target.value)} className="block w-full rounded-lg border border-slate-300 px-3 py-2 pr-10 text-sm" placeholder="예: 65" />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">세</span>
+              </div>
+              <span className="block mt-1 text-xs text-emerald-700">60·65·70세 도달 시 20·30·40% 공제</span>
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-emerald-800">보유 기간 (년, 5년+ 공제)</span>
-              <input type="number" min="0" value={holdYears} onChange={(e) => setHoldYears(e.target.value)} className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="5·10·15" />
+              <span className="text-xs font-medium text-emerald-800">보유 기간 (년)</span>
+              <div className="relative mt-1">
+                <input type="number" min="0" value={holdYears} onChange={(e) => setHoldYears(e.target.value)} className="block w-full rounded-lg border border-slate-300 px-3 py-2 pr-10 text-sm" placeholder="예: 10" />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">년</span>
+              </div>
+              <span className="block mt-1 text-xs text-emerald-700">5·10·15년 보유 시 20·40·50% 공제</span>
             </label>
-            <p className="col-span-2 text-xs text-emerald-700">고령(60·65·70세 → 20·30·40%) + 장기보유(5·10·15년 → 20·40·50%) 합산 최대 80% 세액공제</p>
+            <p className="col-span-2 text-xs text-emerald-700">합산 최대 80% 세액공제 (1주택자 한정)</p>
           </div>
         )}
 

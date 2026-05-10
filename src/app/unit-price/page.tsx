@@ -35,13 +35,27 @@ export default function UnitPricePage() {
             <button key={u} onClick={() => setUnit(u)} className={`px-3 py-2.5 rounded-lg text-sm font-medium border transition ${unit === u ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}>{u} 기준</button>
           ))}
         </div>
+        <div className="grid grid-cols-12 gap-2 items-center mb-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <div className="col-span-4">상품명</div>
+          <div className="col-span-4">가격 (원)</div>
+          <div className="col-span-3">용량 ({unit})</div>
+          <div className="col-span-1"></div>
+        </div>
         <div className="space-y-3">
           {items.map((it) => (
             <div key={it.id} className="grid grid-cols-12 gap-2 items-center">
-              <input type="text" value={it.name} onChange={(e) => update(it.id, "name", e.target.value)} placeholder="이름" className="col-span-4 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm" />
-              <input type="number" value={it.price} onChange={(e) => update(it.id, "price", parseFloat(e.target.value) || 0)} placeholder="가격" className="col-span-4 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm" />
-              <input type="number" value={it.amount} onChange={(e) => update(it.id, "amount", parseFloat(e.target.value) || 0)} placeholder={`용량 (${unit})`} className="col-span-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm" />
-              <button onClick={() => setItems(items.filter((x) => x.id !== it.id))} className="col-span-1 text-rose-500 text-sm">×</button>
+              <div className="col-span-4 relative">
+                <input type="text" value={it.name} onChange={(e) => update(it.id, "name", e.target.value)} placeholder="예: 우유 1L" className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm" />
+              </div>
+              <div className="col-span-4 relative">
+                <input type="number" min="0" value={it.price} onChange={(e) => update(it.id, "price", parseFloat(e.target.value) || 0)} placeholder="3000" className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 pl-3 pr-8 py-2 text-sm" />
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">원</span>
+              </div>
+              <div className="col-span-3 relative">
+                <input type="number" min="0" value={it.amount} onChange={(e) => update(it.id, "amount", parseFloat(e.target.value) || 0)} placeholder="500" className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 pl-3 pr-8 py-2 text-sm" />
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400">{unit}</span>
+              </div>
+              <button onClick={() => setItems(items.filter((x) => x.id !== it.id))} className="col-span-1 text-rose-500 text-sm hover:bg-rose-50 dark:hover:bg-rose-950 rounded-lg py-2">×</button>
             </div>
           ))}
         </div>

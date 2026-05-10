@@ -74,27 +74,33 @@ export default function CarTaxPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block">
             <span className="text-sm font-medium text-slate-700">배기량 (cc)</span>
-            <input
-              type="number"
-              min="0"
-              inputMode="numeric"
-              value={cc}
-              onChange={(e) => setCc(e.target.value)}
-              className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition"
-              placeholder="1998"
-            />
+            <div className="relative mt-1.5">
+              <input
+                type="number"
+                min="0"
+                inputMode="numeric"
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+                className="block w-full rounded-lg border border-slate-300 px-4 py-3 pr-12 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition"
+                placeholder="예: 1998"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">cc</span>
+            </div>
           </label>
           <label className="block">
             <span className="text-sm font-medium text-slate-700">차령 (년)</span>
-            <input
-              type="number"
-              inputMode="numeric"
-              min="0"
-              value={yearsOld}
-              onChange={(e) => setYearsOld(e.target.value)}
-              className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition"
-              placeholder="3"
-            />
+            <div className="relative mt-1.5">
+              <input
+                type="number"
+                inputMode="numeric"
+                min="0"
+                value={yearsOld}
+                onChange={(e) => setYearsOld(e.target.value)}
+                className="block w-full rounded-lg border border-slate-300 px-4 py-3 pr-12 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition"
+                placeholder="예: 3"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">년</span>
+            </div>
           </label>
         </div>
 
