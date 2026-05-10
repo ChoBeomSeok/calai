@@ -26,7 +26,7 @@ export default async function Image() {
           한국에서 가장 빠른 도구·계산기
         </div>
         <div style={{ fontSize: 28, color: "rgba(255,255,255,0.7)", marginTop: 8 }}>
-          BMI · 대출 · 세금 · 환율 · 코인 · 60개+ 도구
+          BMI · 대출 · 세금 · 환율 · 코인 · 80개+ 도구
         </div>
       </div>
     ),

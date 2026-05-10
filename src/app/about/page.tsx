@@ -4,7 +4,7 @@ import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "calai 소개",
-  description: "calai는 한국에서 자주 쓰는 도구·계산기 60개+를 한 페이지에 모은 무료 사이트입니다. 가입·로그인 없이 즉시 사용 가능.",
+  description: "calai는 한국에서 자주 쓰는 도구·계산기 80개+를 한 페이지에 모은 무료 사이트입니다. 가입·로그인 없이 즉시 사용 가능.",
   alternates: { canonical: "https://calai.kr/about" },
 };
 

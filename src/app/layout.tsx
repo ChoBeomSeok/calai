@@ -7,11 +7,11 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 export const metadata: Metadata = {
   metadataBase: new URL("https://calai.kr"),
   title: {
-    default: "calai — 한국에서 가장 빠른 도구·계산기 60개",
+    default: "calai — 한국에서 가장 빠른 도구·계산기 80개",
     template: "%s | calai",
   },
   description:
-    "BMI·대출·적금·양도세·만 나이·연봉 실수령액·평수 변환·청약 가점·LTV/DTI·JSON 포매터 등 60개 도구를 한 페이지에 모았습니다. 가입·로그인 없이 무료로 즉시 사용.",
+    "BMI·대출·적금·양도세·만 나이·연봉 실수령액·평수 변환·청약 가점·LTV/DTI·JSON 포매터 등 80개 도구를 한 페이지에 모았습니다. 가입·로그인 없이 무료로 즉시 사용.",
   keywords: [
     "계산기", "도구", "BMI", "대출 이자", "적금 만기", "양도세", "취득세",
     "만 나이", "연봉 실수령액", "평수 변환", "청약 가점", "LTV", "DTI",
@@ -19,9 +19,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "calai" }],
   openGraph: {
-    title: "calai — 한국에서 가장 빠른 도구·계산기 60개",
+    title: "calai — 한국에서 가장 빠른 도구·계산기 80개",
     description:
-      "BMI·대출·적금·양도세·만 나이·평수 변환 등 60개 도구를 한 페이지에. 가입 없이 무료.",
+      "BMI·대출·적금·양도세·만 나이·평수 변환 등 80개 도구를 한 페이지에. 가입 없이 무료.",
     url: "https://calai.kr",
     siteName: "calai",
     locale: "ko_KR",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "calai — 한국에서 가장 빠른 도구·계산기",
-    description: "60개 도구를 한 페이지에. 가입 없이 무료.",
+    description: "80개 도구를 한 페이지에. 가입 없이 무료.",
   },
   robots: {
     index: true,
@@ -58,7 +58,7 @@ const siteJsonLd = {
   url: "https://calai.kr",
   inLanguage: "ko",
   description:
-    "BMI·대출·적금·양도세·만 나이·평수 변환 등 60개 한국 도구·계산기를 한 페이지에 모은 사이트.",
+    "BMI·대출·적금·양도세·만 나이·평수 변환 등 80개 한국 도구·계산기를 한 페이지에 모은 사이트.",
   potentialAction: {
     "@type": "SearchAction",
     target: "https://calai.kr/?q={search_term_string}",
