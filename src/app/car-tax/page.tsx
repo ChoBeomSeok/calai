@@ -26,6 +26,7 @@ export default function CarTaxPage() {
   const [cc, setCc] = useState("1998");
   const [yearsOld, setYearsOld] = useState("3");
   const [carType, setCarType] = useState<CarType>("passenger");
+  const [annualPay, setAnnualPay] = useState(false);
 
   const result = useMemo(() => {
     const c = parseFloat(cc);
@@ -45,7 +46,10 @@ export default function CarTaxPage() {
     // 본세에만 차령 경감 적용 → 경감된 본세 × 30% = 지방교육세
     const baseTaxAfterDiscount = baseTax * (1 - discountRate);
     const localEducation = baseTaxAfterDiscount * 0.30;
-    const finalTax = baseTaxAfterDiscount + localEducation;
+    const grossTax = baseTaxAfterDiscount + localEducation;
+    // 1월 연납 신청 시 9.15% 할인
+    const annualDiscount = annualPay ? grossTax * 0.0915 : 0;
+    const finalTax = grossTax - annualDiscount;
     const discount = baseTax * discountRate;
 
     return {
@@ -54,10 +58,12 @@ export default function CarTaxPage() {
       localEducation,
       discountRate,
       discount,
+      grossTax,
+      annualDiscount,
       finalTax,
       halfYear: finalTax / 2,
     };
-  }, [cc, yearsOld, carType]);
+  }, [cc, yearsOld, carType, annualPay]);
 
   return (
     <CalculatorLayout
@@ -115,6 +121,11 @@ export default function CarTaxPage() {
           </div>
         </div>
 
+        <label className="mt-4 flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-slate-300 hover:border-indigo-400">
+          <input type="checkbox" checked={annualPay} onChange={(e) => setAnnualPay(e.target.checked)} className="w-4 h-4" />
+          <span className="text-sm">1월 연납 (일시납) 신청 — 9.15% 할인 적용</span>
+        </label>
+
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">
             <div className="rounded-xl bg-indigo-50 p-5 text-center">
@@ -145,6 +156,12 @@ export default function CarTaxPage() {
                 <div className="flex justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-600">차령 경감액 ({(result.discountRate * 100).toFixed(0)}%)</span>
                   <span className="text-emerald-600">- {formatKRW(result.discount)} 원</span>
+                </div>
+              )}
+              {result.annualDiscount > 0 && (
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-slate-600">1월 연납 할인 (9.15%)</span>
+                  <span className="text-emerald-600">- {formatKRW(result.annualDiscount)} 원</span>
                 </div>
               )}
             </div>

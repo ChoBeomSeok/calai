@@ -20,8 +20,10 @@ export default function SeverancePage() {
     if (!w || w <= 0 || (y === 0 && m === 0)) return null;
     const totalDays = y * 365 + m * 30;
     const dailyAvg = w / 30;
-    const severance = dailyAvg * 30 * (totalDays / 365);
-    return { totalDays, dailyAvg, severance };
+    // 근로기준법: 1년 이상 (365일+) 근무자만 퇴직금 발생
+    const eligible = totalDays >= 365;
+    const severance = eligible ? dailyAvg * 30 * (totalDays / 365) : 0;
+    return { totalDays, dailyAvg, severance, eligible };
   }, [years, months, avgWage]);
 
   return (
@@ -37,11 +39,19 @@ export default function SeverancePage() {
         </div>
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">
-            <div className="rounded-xl bg-indigo-50 p-5 text-center">
-              <div className="text-sm text-indigo-700 mb-1">예상 퇴직금</div>
-              <div className="text-4xl font-bold text-indigo-900">{fmt(result.severance)} 원</div>
-              <div className="text-xs text-indigo-700 mt-2">재직 {result.totalDays}일 · 1일 평균임금 {fmt(result.dailyAvg)} 원</div>
-            </div>
+            {!result.eligible ? (
+              <div className="rounded-xl bg-amber-50 p-5 text-center">
+                <div className="text-sm text-amber-700 mb-1">⚠️ 퇴직금 지급 대상 아님</div>
+                <div className="text-base font-semibold text-amber-900 mt-2">근로기준법상 1년 이상 (365일+) 근무자만 퇴직금 발생</div>
+                <div className="text-xs text-amber-700 mt-2">현재 재직 {result.totalDays}일 ({Math.floor(result.totalDays/30)}개월)</div>
+              </div>
+            ) : (
+              <div className="rounded-xl bg-indigo-50 p-5 text-center">
+                <div className="text-sm text-indigo-700 mb-1">예상 퇴직금</div>
+                <div className="text-4xl font-bold text-indigo-900">{fmt(result.severance)} 원</div>
+                <div className="text-xs text-indigo-700 mt-2">재직 {result.totalDays}일 · 1일 평균임금 {fmt(result.dailyAvg)} 원</div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -17,7 +17,7 @@ export default function CarbonFootprintPage() {
     // 한국 평균 배출 계수
     const carYearly = carKm * 52 * 0.21; // kg CO2/km
     const flightYearly = flights * 200; // kg CO2/단거리 1회
-    const meatYearly = meatDays * 52 * 5; // kg CO2/육식 1일
+    const meatYearly = meatDays * 52 * 3; // kg CO2/육식 1일 (FAO·EWG 평균 추정)
     const electricYearly = electricityKwh * 12 * 0.4256; // kg CO2/kWh (한전 공식 2024)
     const total = carYearly + flightYearly + meatYearly + electricYearly;
     return {

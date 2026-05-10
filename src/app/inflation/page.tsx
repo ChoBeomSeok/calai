@@ -20,12 +20,15 @@ export default function InflationPage() {
     const r = parseFloat(rate) / 100;
     if (!a || isNaN(y) || isNaN(r)) return null;
     if (direction === "future") {
-      const future = a * Math.pow(1 + r, y);
+      // 미래에 동일 구매력을 갖기 위한 명목 금액
+      const equivalent = a * Math.pow(1 + r, y);
+      // 미래 시점에서 오늘 명목금액의 실질 구매력 (가치 하락)
       const realValue = a / Math.pow(1 + r, y);
-      return { future, realValue, equivalent: future };
+      return { equivalent, realValue };
     } else {
-      const past = a / Math.pow(1 + r, y);
-      return { future: past, realValue: 0, equivalent: past };
+      // 과거 → 지금: 과거 N원의 현재 명목 가치 (인플레 보정)
+      const equivalent = a * Math.pow(1 + r, y);
+      return { equivalent, realValue: 0 };
     }
   }, [amount, years, rate, direction]);
 
@@ -45,9 +48,22 @@ export default function InflationPage() {
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
             <div className="rounded-xl bg-indigo-50 dark:bg-indigo-950 p-5 text-center">
-              <div className="text-sm text-indigo-700 dark:text-indigo-400 mb-1">{direction === "future" ? `${years}년 후 동일 구매력` : `${years}년 전 환산 가치`}</div>
+              <div className="text-sm text-indigo-700 dark:text-indigo-400 mb-1">
+                {direction === "future"
+                  ? `${years}년 후 ${fmt(parseFloat(amount))}원과 같은 구매력 (명목 금액)`
+                  : `과거 ${fmt(parseFloat(amount))}원의 현재 가치`}
+              </div>
               <div className="text-4xl font-bold text-indigo-900 dark:text-indigo-300">{fmt(result.equivalent)} 원</div>
             </div>
+            {direction === "future" && result.realValue > 0 && (
+              <div className="mt-4 rounded-xl bg-rose-50 dark:bg-rose-950 p-4 text-center">
+                <div className="text-xs text-rose-700 dark:text-rose-400 mb-1">
+                  반대로: 오늘 {fmt(parseFloat(amount))}원의 {years}년 후 실질 구매력
+                </div>
+                <div className="text-2xl font-bold text-rose-900 dark:text-rose-300">{fmt(result.realValue)} 원</div>
+                <div className="text-xs text-rose-600 dark:text-rose-400 mt-1">→ 화폐 가치 {((1 - result.realValue / parseFloat(amount)) * 100).toFixed(1)}% 하락</div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -14,11 +14,14 @@ export default function OneRMPage() {
   const result = useMemo(() => {
     const w = parseFloat(weight);
     const r = parseInt(reps);
-    if (!w || !r || w <= 0 || r <= 0) return null;
+    // Brzycki·Lander 공식은 r=1~12 범위 외에서 부정확/발산하므로 1~36 제한
+    if (!w || !r || w <= 0 || r <= 0 || r >= 37) return null;
     // 4가지 공식 평균 (Epley·Brzycki·Lander·Lombardi)
     const epley = w * (1 + r / 30);
     const brzycki = w * (36 / (37 - r));
-    const lander = w / (1.013 - 0.0267123 * r);
+    // Lander 분모 0 방지 (r ≈ 37.94)
+    const landerDen = 1.013 - 0.0267123 * r;
+    const lander = landerDen > 0 ? w / landerDen : epley;
     const lombardi = w * Math.pow(r, 0.10);
     const avg = (epley + brzycki + lander + lombardi) / 4;
     // RM별 추정 무게

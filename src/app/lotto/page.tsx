@@ -5,15 +5,16 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 
 function generateNumbers(): { numbers: number[]; bonus: number } {
   const all = Array.from({ length: 45 }, (_, i) => i + 1);
-  const arr = new Uint32Array(7);
-  crypto.getRandomValues(arr);
-  // Fisher-Yates 셔플
+  // Fisher-Yates 셔플 (각 swap마다 독립적인 암호학적 난수)
+  const rand = new Uint32Array(45);
+  crypto.getRandomValues(rand);
   for (let i = all.length - 1; i > 0; i--) {
-    const j = arr[i % 7] % (i + 1);
+    const j = rand[i] % (i + 1);
     [all[i], all[j]] = [all[j], all[i]];
   }
-  const picked = all.slice(0, 7).sort((a, b) => a - b);
-  return { numbers: picked.slice(0, 6), bonus: picked[6] };
+  const numbers = all.slice(0, 6).sort((a, b) => a - b);
+  const bonus = all[6];
+  return { numbers, bonus };
 }
 
 function ballColor(n: number): string {

@@ -40,7 +40,9 @@ export default function AgentFeePage() {
       const d = parseFloat(deposit);
       const m = parseFloat(monthly);
       if (!d && !m) return null;
-      const eqAmount = d + m * 100; // 환산 보증금
+      // 환산보증금 = 보증금 + (월세 × 100). 환산보증금이 5천만 미만이면 월세×70 특례 적용
+      const tentative = d + m * 100;
+      const eqAmount = tentative < 50_000_000 ? d + m * 70 : tentative;
       const { rate, limit } = getRateAndLimit("jeonse", eqAmount);
       const fee = Math.min(eqAmount * (rate / 100), limit);
       return { fee, rate, eqAmount, vat: fee * 0.1 };

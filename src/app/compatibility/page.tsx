@@ -65,7 +65,10 @@ export default function CompatibilityPage() {
           </div>
         )}
       </div>
-      <div className="mt-4 text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-4 rounded-xl bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
+        ⚠️ <strong>음력 기준 안내</strong>: 한국식 띠는 음력 1월 1일 기준입니다. 양력 1~2월 출생자는 전년 띠일 수 있어 결과가 다를 수 있습니다 (본 도구는 양력 연도 기준 단순 계산).
+      </div>
+      <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
         ※ 12지 띠 궁합은 동양 전통 분석. 실제 관계는 성격·가치관·소통이 더 중요합니다 — 재미로만!
       </div>
     </CalculatorLayout>

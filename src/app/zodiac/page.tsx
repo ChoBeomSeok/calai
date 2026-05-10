@@ -69,6 +69,9 @@ export default function ZodiacPage() {
           </div>
         )}
       </div>
+      <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
+        ⚠️ <strong>띠는 음력 기준</strong>: 본 도구는 양력 연도 기준 단순 계산입니다. 양력 1~2월 출생자는 음력으로는 전년이 되어 띠가 다를 수 있습니다 (예: 양력 2024-02-09 출생 → 음력으론 2023년 토끼띠).
+      </div>
     </CalculatorLayout>
   );
 }

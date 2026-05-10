@@ -61,7 +61,16 @@ export default function JeonseMonthlyPage() {
             </>
           )}
           <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">전월세 전환율 (%)</span><input type="number"
-              min="0" step="0.1" value={conversionRate} onChange={(e) => setConversionRate(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" step="0.1" value={conversionRate} onChange={(e) => setConversionRate(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              <div className="mt-1.5 text-xs text-slate-500">
+                ※ 「주택임대차보호법」상 갱신·전환 시 법정 상한: 한국은행 기준금리(약 3.5%) + 2% = <strong className="text-amber-700">약 5.5%</strong>. 신규 계약은 자율.
+              </div>
+          </label>
+          {parseFloat(conversionRate) > 5.5 && (
+            <div className="sm:col-span-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
+              ⚠️ 입력한 전환율 {conversionRate}%가 법정 상한(약 5.5%)을 초과합니다. 갱신·전환 계약 시 임차인이 거부할 수 있습니다.
+            </div>
+          )}
         </div>
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">

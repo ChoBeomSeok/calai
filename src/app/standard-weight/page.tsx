@@ -21,8 +21,8 @@ export default function StandardWeightPage() {
     const m = h / 100;
     // 브로카 (Broca): 표준 = (키 - 100) × 0.9 (남) / × 0.85 (여)
     const broca = (h - 100) * (sex === "male" ? 0.9 : 0.85);
-    // 로러 (Rohrer): 표준 = 키(m)³ × 1300 (체중 = kg, 키 = m)
-    const rohrer = Math.pow(m, 3) * 1300;
+    // 로러 (Rohrer): 표준 체중(kg) = 키(m)³ × 13
+    const rohrer = Math.pow(m, 3) * 13;
     // BMI 22 기준 (한국)
     const bmi22 = 22 * m * m;
     const bmi = a ? a / (m * m) : 0;
