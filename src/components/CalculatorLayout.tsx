@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { tools, type Tool } from "@/lib/tools";
 import { useFavorites, useRecent } from "@/lib/useFavorites";
+import ToolGuide from "./ToolGuide";
 
 type Props = {
   title: string;
@@ -75,6 +76,8 @@ export default function CalculatorLayout({ title, description, children }: Props
       <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">{title}</h1>
       <p className="mt-2 text-slate-600 dark:text-slate-400 leading-relaxed">{description}</p>
       <div className="mt-8">{children}</div>
+
+      <ToolGuide title={title} />
 
       <aside className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-700">
         <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">관련 도구</h2>
