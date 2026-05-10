@@ -1,0 +1,84 @@
+# Google Search Console 색인 요청 URL 목록 (총 65개)
+# https://search.google.com/search-console > URL 검사 > 색인 요청
+# Google은 하루 약 10~12개 색인 요청 가능 → 우선순위 순으로 진행 권장
+
+# ===== 1순위: 메인 + 검색량 매우 큰 도구 (TOP 10) =====
+https://calai.kr
+https://calai.kr/age
+https://calai.kr/salary
+https://calai.kr/loan
+https://calai.kr/bmi
+https://calai.kr/savings
+https://calai.kr/capital-gains
+https://calai.kr/pyeong
+https://calai.kr/exchange
+https://calai.kr/percent
+
+# ===== 2순위: 한국 특화 + 검색량 큰 도구 =====
+https://calai.kr/cheongyak-score
+https://calai.kr/ltv-dti
+https://calai.kr/acquisition-tax
+https://calai.kr/property-tax
+https://calai.kr/comprehensive-property-tax
+https://calai.kr/income-tax
+https://calai.kr/freelancer-tax
+https://calai.kr/car-tax
+https://calai.kr/electricity
+https://calai.kr/dday
+
+# ===== 3순위: 금융·부동산·세금 =====
+https://calai.kr/compound
+https://calai.kr/installment
+https://calai.kr/stock-average
+https://calai.kr/coin-average
+https://calai.kr/coin-pl
+https://calai.kr/agent-fee
+https://calai.kr/jeonse-monthly
+https://calai.kr/rental-yield
+https://calai.kr/inheritance-tax
+https://calai.kr/gift-tax
+https://calai.kr/severance
+https://calai.kr/vat
+
+# ===== 4순위: 자동차 =====
+https://calai.kr/car-loan
+https://calai.kr/fuel-cost
+https://calai.kr/parking-fee
+https://calai.kr/ev-charge
+
+# ===== 5순위: 건강 =====
+https://calai.kr/calorie
+https://calai.kr/standard-weight
+https://calai.kr/water-intake
+https://calai.kr/sleep
+https://calai.kr/child-height
+https://calai.kr/heart-rate
+https://calai.kr/pregnancy
+https://calai.kr/ovulation
+https://calai.kr/alcohol
+https://calai.kr/one-rm
+
+# ===== 6순위: 일상·생활 =====
+https://calai.kr/discount
+https://calai.kr/tip
+https://calai.kr/gpa
+https://calai.kr/lunar
+https://calai.kr/zodiac
+https://calai.kr/unit
+https://calai.kr/timezone
+
+# ===== 7순위: 개발자 도구 =====
+https://calai.kr/password
+https://calai.kr/color
+https://calai.kr/uuid
+https://calai.kr/json-format
+https://calai.kr/base64
+https://calai.kr/url-encode
+https://calai.kr/jwt-decode
+https://calai.kr/regex-test
+
+# ===== 8순위: 정책 페이지 =====
+https://calai.kr/about
+https://calai.kr/privacy
+https://calai.kr/terms
+https://calai.kr/contact
