@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number, d = 2): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: d }).format(n);
@@ -30,11 +31,11 @@ export default function RentalYieldPage() {
       <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">매매가 (원)</span><input type="number"
-              min="0" value={price} onChange={(e) => setPrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={price} onChange={(e) => setPrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={price} /></label>
           <label className="block"><span className="text-sm font-medium text-slate-700">보증금 (원)</span><input type="number"
-              min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={deposit} /></label>
           <label className="block"><span className="text-sm font-medium text-slate-700">월세 (원)</span><input type="number"
-              min="0" value={monthly} onChange={(e) => setMonthly(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={monthly} onChange={(e) => setMonthly(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={monthly} /></label>
         </div>
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">

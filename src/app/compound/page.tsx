@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -29,7 +30,7 @@ export default function CompoundPage() {
       <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <label className="block sm:col-span-3"><span className="text-sm font-medium text-slate-700">원금 (원)</span><input type="number"
-              min="0" value={principal} onChange={(e) => setPrincipal(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={principal} onChange={(e) => setPrincipal(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={principal} /></label>
           <label className="block"><span className="text-sm font-medium text-slate-700">연 이율 (%)</span><input type="number"
               min="0" step="0.01" value={rate} onChange={(e) => setRate(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
           <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">기간 (년)</span><input type="number"

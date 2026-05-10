@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -49,7 +50,7 @@ export default function ComprehensivePropertyTaxPage() {
       <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
         <label className="block">
           <span className="text-sm font-medium text-slate-700">주택 공시가격 합계 (원)</span>
-          <input type="number" min="0" value={publicPrice} onChange={(e) => setPublicPrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+          <input type="number" min="0" value={publicPrice} onChange={(e) => setPublicPrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={publicPrice} />
         </label>
         <div className="mt-5 grid grid-cols-2 gap-2">
           {[{ v: "single", l: "1주택자 (공제 12억)" }, { v: "multi", l: "다주택자 (공제 9억)" }].map((s) => (

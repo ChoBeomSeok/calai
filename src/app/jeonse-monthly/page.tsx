@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -47,16 +48,16 @@ export default function JeonseMonthlyPage() {
           {mode === "to-monthly" ? (
             <>
               <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">전세 보증금 (원)</span><input type="number"
-              min="0" value={jeonse} onChange={(e) => setJeonse(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={jeonse} onChange={(e) => setJeonse(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={jeonse} /></label>
               <label className="block"><span className="text-sm font-medium text-slate-700">월세 보증금 (원)</span><input type="number"
-              min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={deposit} /></label>
             </>
           ) : (
             <>
               <label className="block"><span className="text-sm font-medium text-slate-700">월세 보증금 (원)</span><input type="number"
-              min="0" value={jeonse} onChange={(e) => setJeonse(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={jeonse} onChange={(e) => setJeonse(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={jeonse} /></label>
               <label className="block"><span className="text-sm font-medium text-slate-700">월세 (원)</span><input type="number"
-              min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+              min="0" value={deposit} onChange={(e) => setDeposit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={deposit} /></label>
             </>
           )}
           <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">전월세 전환율 (%)</span><input type="number"

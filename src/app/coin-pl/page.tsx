@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 const COINS = ["BTC", "ETH", "XRP", "SOL", "DOGE", "ADA", "TRX", "AVAX", "MATIC", "DOT"];
 
@@ -78,7 +79,7 @@ export default function CoinPLPage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <label className="block"><span className="text-sm font-medium text-slate-700">매수가 (원)</span><input type="number" min="0" value={buyPrice} onChange={(e) => setBuyPrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+          <label className="block"><span className="text-sm font-medium text-slate-700">매수가 (원)</span><input type="number" min="0" value={buyPrice} onChange={(e) => setBuyPrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={buyPrice} /></label>
           <label className="block">
             <span className="text-sm font-medium text-slate-700 flex items-center justify-between">
               <span>매도가 (원)</span>

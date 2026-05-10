@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -50,7 +51,7 @@ export default function InheritanceTaxPage() {
         <label className="block">
           <span className="text-sm font-medium text-slate-700">상속재산 가액 (원)</span>
           <input type="number"
-              min="0" value={estate} onChange={(e) => setEstate(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              min="0" value={estate} onChange={(e) => setEstate(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={estate} />
         </label>
         <div className="mt-4 grid grid-cols-2 gap-4">
           <label className="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-slate-300 hover:border-indigo-400">

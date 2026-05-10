@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -41,7 +42,7 @@ export default function IncomeTaxPage() {
         <label className="block">
           <span className="text-sm font-medium text-slate-700">과세표준 (원) — 소득공제 후</span>
           <input type="number"
-              min="0" value={taxableIncome} onChange={(e) => setTaxableIncome(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              min="0" value={taxableIncome} onChange={(e) => setTaxableIncome(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={taxableIncome} />
         </label>
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">

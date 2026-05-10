@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -33,9 +34,9 @@ export default function ParkingFeePage() {
       <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
         <div className="grid grid-cols-2 gap-4">
           <label className="block"><span className="text-sm font-medium text-slate-700">기본 시간 (분)</span><input type="number" min="0" value={baseTime} onChange={(e) => setBaseTime(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
-          <label className="block"><span className="text-sm font-medium text-slate-700">기본 요금 (원)</span><input type="number" min="0" value={baseFee} onChange={(e) => setBaseFee(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+          <label className="block"><span className="text-sm font-medium text-slate-700">기본 요금 (원)</span><input type="number" min="0" value={baseFee} onChange={(e) => setBaseFee(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={baseFee} /></label>
           <label className="block"><span className="text-sm font-medium text-slate-700">초과 단위 (분)</span><input type="number" min="0" value={extraTime} onChange={(e) => setExtraTime(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
-          <label className="block"><span className="text-sm font-medium text-slate-700">초과 단위 요금 (원)</span><input type="number" min="0" value={extraFee} onChange={(e) => setExtraFee(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+          <label className="block"><span className="text-sm font-medium text-slate-700">초과 단위 요금 (원)</span><input type="number" min="0" value={extraFee} onChange={(e) => setExtraFee(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={extraFee} /></label>
           <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">실제 주차 시간 (분)</span><input type="number" min="0" value={totalMins} onChange={(e) => setTotalMins(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
         </div>
         {result && (

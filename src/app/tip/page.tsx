@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -30,7 +31,7 @@ export default function TipPage() {
           <label className="block sm:col-span-3">
             <span className="text-sm font-medium text-slate-700">음식값·청구액 (원)</span>
             <input type="number"
-              min="0" inputMode="numeric" value={bill} onChange={(e) => setBill(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              min="0" inputMode="numeric" value={bill} onChange={(e) => setBill(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={bill} />
           </label>
           <label className="block">
             <span className="text-sm font-medium text-slate-700">봉사료·팁 (%)</span>

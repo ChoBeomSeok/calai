@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 const COINS = ["BTC", "ETH", "XRP", "SOL", "DOGE", "ADA", "TRX", "AVAX", "MATIC", "DOT"];
 
@@ -65,7 +66,7 @@ export default function CoinAveragePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="block">
                 <span className="text-xs font-medium text-slate-600 block mb-1">기존 평균 매수가 (원)</span>
-                <input type="number" min="0" value={price1} onChange={(e) => setPrice1(e.target.value)} placeholder="예: 60,000,000" className="block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+                <input type="number" min="0" value={price1} onChange={(e) => setPrice1(e.target.value)} placeholder="예: 60,000,000" className="block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={price1} />
                 <span className="text-xs text-slate-400 block mt-1">거래소 \"평균 매수단가\" 그대로 입력</span>
               </label>
               <label className="block">
@@ -89,7 +90,7 @@ export default function CoinAveragePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="block">
                 <span className="text-xs font-medium text-slate-600 block mb-1">추가 매수가 (원)</span>
-                <input type="number" min="0" value={price2} onChange={(e) => setPrice2(e.target.value)} placeholder="예: 50,000,000" className="block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+                <input type="number" min="0" value={price2} onChange={(e) => setPrice2(e.target.value)} placeholder="예: 50,000,000" className="block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={price2} />
                 <span className="text-xs text-slate-400 block mt-1">현재 매수하려는 가격</span>
               </label>
               <label className="block">

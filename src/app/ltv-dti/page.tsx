@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import { MoneyHint } from "@/components/MoneyHint";
 
 function fmt(n: number, d = 0): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: d }).format(n);
@@ -40,9 +41,9 @@ export default function LtvDtiPage() {
     <CalculatorLayout title="LTV·DTI·DSR 계산기" description="주택가·소득·기존 대출로 LTV·DSR 한도 자동 계산. 실제 받을 수 있는 대출 한도 추정.">
       <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">주택 가격 (원)</span><input type="number" min="0" value={housePrice} onChange={(e) => setHousePrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
-          <label className="block"><span className="text-sm font-medium text-slate-700">연 소득 (원)</span><input type="number" min="0" value={annualIncome} onChange={(e) => setAnnualIncome(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
-          <label className="block"><span className="text-sm font-medium text-slate-700">기존 대출 잔액 (원)</span><input type="number" min="0" value={existingLoan} onChange={(e) => setExistingLoan(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
+          <label className="block sm:col-span-2"><span className="text-sm font-medium text-slate-700">주택 가격 (원)</span><input type="number" min="0" value={housePrice} onChange={(e) => setHousePrice(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={housePrice} /></label>
+          <label className="block"><span className="text-sm font-medium text-slate-700">연 소득 (원)</span><input type="number" min="0" value={annualIncome} onChange={(e) => setAnnualIncome(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={annualIncome} /></label>
+          <label className="block"><span className="text-sm font-medium text-slate-700">기존 대출 잔액 (원)</span><input type="number" min="0" value={existingLoan} onChange={(e) => setExistingLoan(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /><MoneyHint value={existingLoan} /></label>
           <label className="block"><span className="text-sm font-medium text-slate-700">LTV 한도 (%)</span><input type="number" min="0" value={ltvLimit} onChange={(e) => setLtvLimit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
           <label className="block"><span className="text-sm font-medium text-slate-700">DSR 한도 (%)</span><input type="number" min="0" value={dsrLimit} onChange={(e) => setDsrLimit(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" /></label>
         </div>
