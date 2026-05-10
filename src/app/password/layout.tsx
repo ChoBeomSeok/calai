@@ -1,0 +1,39 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "비밀번호 생성기 — calai",
+  description: "길이·문자 종류 선택해 안전한 비밀번호 생성.",
+  openGraph: {
+    title: "비밀번호 생성기 | calai",
+    description: "길이·문자 종류 선택해 안전한 비밀번호 생성.",
+    url: "https://calai.kr/password",
+    siteName: "calai",
+    locale: "ko_KR",
+    type: "website",
+  },
+  alternates: { canonical: "https://calai.kr/password" },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "비밀번호 생성기",
+  description: "길이·문자 종류 선택해 안전한 비밀번호 생성.",
+  url: "https://calai.kr/password",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "Any",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" },
+  inLanguage: "ko",
+};
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {children}
+    </>
+  );
+}
