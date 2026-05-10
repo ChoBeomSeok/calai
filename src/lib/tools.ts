@@ -3,7 +3,7 @@ export type Tool = {
   title: string;
   shortTitle: string;
   description: string;
-  category: "건강" | "금융" | "부동산" | "자동차" | "세금" | "일상" | "개발자" | "여행";
+  category: "건강" | "금융" | "부동산" | "자동차" | "세금" | "일상" | "개발자" | "여행" | "라이프";
   icon: string;
 };
 
@@ -16,6 +16,8 @@ export const tools: Tool[] = [
   { slug: "/ovulation", title: "배란일 계산기", shortTitle: "배란일", description: "마지막 생리일·주기로 배란일·가임기 자동 계산.", category: "건강", icon: "🌸" },
   { slug: "/alcohol", title: "음주 알코올 분해 시간", shortTitle: "알코올 분해", description: "성별·체중·음주량으로 운전 가능 시간 추정.", category: "건강", icon: "🍺" },
   { slug: "/one-rm", title: "1RM 계산기", shortTitle: "1RM", description: "들어올린 무게·횟수로 1회 최대 중량(1RM) 추정.", category: "건강", icon: "🏋️" },
+  { slug: "/marathon-pace", title: "마라톤 페이스 계산기", shortTitle: "마라톤 페이스", description: "5km·10km·하프·풀 마라톤 목표 시간 → 페이스 (km당 분).", category: "건강", icon: "🏃" },
+  { slug: "/mountain-time", title: "등산 시간 계산기", shortTitle: "등산 시간", description: "거리·고도로 예상 등산 시간 (Naismith·Tobler 공식).", category: "건강", icon: "⛰️" },
   { slug: "/water-intake", title: "수분 섭취량 계산기", shortTitle: "수분 섭취", description: "체중·활동량으로 일일 수분 권장량 자동.", category: "건강", icon: "💧" },
   { slug: "/sleep", title: "수면 시간 계산기", shortTitle: "수면 시간", description: "기상 시간 → 90분 사이클 기반 취침 시간 추천.", category: "건강", icon: "😴" },
   { slug: "/child-height", title: "어린이 키 예측", shortTitle: "키 예측", description: "부모 키·성별로 자녀 예상 성인 키 (Tanner 공식).", category: "건강", icon: "👶" },
@@ -32,6 +34,10 @@ export const tools: Tool[] = [
   { slug: "/coin-average", title: "가상화폐 평단가", shortTitle: "코인 평단가", description: "기존 코인 + 추가 매수로 평균 매수가.", category: "금융", icon: "🪙" },
   { slug: "/coin-pl", title: "코인 손익 계산기", shortTitle: "코인 손익", description: "매수가·매도가·수량으로 손익률·실현 수익 계산.", category: "금융", icon: "💹" },
   { slug: "/freelancer-tax", title: "프리랜서 3.3% 원천징수", shortTitle: "3.3% 원천", description: "프리랜서 수익 → 원천징수 3.3% + 종합소득세 추정.", category: "금융", icon: "🧑‍💻" },
+  { slug: "/job-change", title: "이직 손익 계산기", shortTitle: "이직 손익", description: "현재 vs 새 직장 연봉·복지·통근비 종합 비교.", category: "금융", icon: "💼" },
+  { slug: "/inflation", title: "인플레이션 환산", shortTitle: "인플레이션", description: "10년 전 100만원 = 지금 얼마 / 미래 가치 추정.", category: "금융", icon: "📉" },
+  { slug: "/remit-fee", title: "외환 송금 수수료", shortTitle: "송금 수수료", description: "은행·송금 서비스별 수수료 + 환율 우대 비교.", category: "금융", icon: "💸" },
+  { slug: "/rule-of-72", title: "72의 법칙 계산기", shortTitle: "72의 법칙", description: "현재 금리에서 자산이 2배 되는 기간 즉시 계산.", category: "금융", icon: "✖️" },
 
   // 부동산
   { slug: "/capital-gains", title: "양도소득세 계산기", shortTitle: "양도세", description: "1주택·다주택 양도세 + 보유·거주별 공제.", category: "부동산", icon: "🏠" },
@@ -49,6 +55,7 @@ export const tools: Tool[] = [
   { slug: "/car-loan", title: "자동차 할부 계산기", shortTitle: "자동차 할부", description: "차량 가격·계약금·할부 기간으로 월 할부금.", category: "자동차", icon: "🚙" },
   { slug: "/parking-fee", title: "주차 요금 계산기", shortTitle: "주차 요금", description: "기본 요금·추가 시간·할인으로 주차비 자동.", category: "자동차", icon: "🅿️" },
   { slug: "/ev-charge", title: "전기차 충전 비용", shortTitle: "전기차 충전", description: "주행거리·전비·요금제로 충전 비용 + 주유비 비교.", category: "자동차", icon: "🔌" },
+  { slug: "/toll-fee", title: "고속도로 톨비 계산", shortTitle: "고속도로 톨비", description: "출발·도착 IC + 차종으로 통행료 추정 (서울→부산 등).", category: "자동차", icon: "🛣️" },
 
   // 세금
   { slug: "/income-tax", title: "종합소득세 계산기", shortTitle: "종합소득세", description: "사업·근로·이자 등 종합소득 누진세.", category: "세금", icon: "🧾" },
@@ -71,6 +78,11 @@ export const tools: Tool[] = [
   { slug: "/zodiac", title: "띠·별자리 계산기", shortTitle: "띠·별자리", description: "생년월일로 띠 + 12별자리 + 혈액형 궁합.", category: "일상", icon: "✨" },
   { slug: "/unit", title: "단위 변환기", shortTitle: "단위 변환", description: "길이·무게·온도·부피·속도 모든 단위 변환.", category: "일상", icon: "📐" },
   { slug: "/timezone", title: "세계 시간 변환기", shortTitle: "세계 시간", description: "한국 시간 ↔ 뉴욕·런던·도쿄 등 주요 도시 시차.", category: "일상", icon: "🕐" },
+  { slug: "/lotto", title: "로또 번호 생성기", shortTitle: "로또 번호", description: "로또 6/45 자동 번호 생성 + 보너스 번호 + 통계 기반 패턴.", category: "일상", icon: "🎰" },
+  { slug: "/pomodoro", title: "포모도로 타이머", shortTitle: "포모도로", description: "25분 작업 + 5분 휴식 자동 반복. 집중력 향상 기법.", category: "일상", icon: "🍅" },
+  { slug: "/countdown", title: "카운트다운 타이머", shortTitle: "카운트다운", description: "원하는 시간 설정 → 0초 카운트다운 + 알림.", category: "일상", icon: "⏰" },
+  { slug: "/unit-price", title: "단가 비교 (g당)", shortTitle: "단가 비교", description: "여러 상품 가격·용량 → g당·100g당·ml당 단가 비교.", category: "일상", icon: "🛒" },
+  { slug: "/annual-leave", title: "휴가 일수 계산", shortTitle: "휴가 일수", description: "입사일 → 근로기준법 기준 연차 자동 계산.", category: "일상", icon: "🏖️" },
 
   // 개발자
   { slug: "/password", title: "비밀번호 생성기", shortTitle: "비밀번호", description: "길이·문자 종류 선택해 안전한 비밀번호 생성.", category: "개발자", icon: "🔐" },
@@ -81,4 +93,14 @@ export const tools: Tool[] = [
   { slug: "/url-encode", title: "URL 인코딩·디코딩", shortTitle: "URL 인코딩", description: "URL 특수문자·한글 인코딩·디코딩.", category: "개발자", icon: "🔗" },
   { slug: "/jwt-decode", title: "JWT 디코더", shortTitle: "JWT 디코더", description: "JWT 토큰의 header·payload·signature 즉시 분석.", category: "개발자", icon: "🎫" },
   { slug: "/regex-test", title: "정규식 테스터", shortTitle: "정규식", description: "정규식 패턴 + 테스트 문자열로 매칭 결과 즉시.", category: "개발자", icon: "🔍" },
+  { slug: "/ai-token", title: "AI 토큰 비용 계산기", shortTitle: "AI 토큰", description: "OpenAI·Claude·Gemini 입출력 토큰별 API 비용 즉시 비교.", category: "개발자", icon: "🤖" },
+  { slug: "/qr-code", title: "QR 코드 생성기", shortTitle: "QR 코드", description: "URL·텍스트 → QR 코드 즉시 생성, 다운로드 가능.", category: "개발자", icon: "📱" },
+  { slug: "/color-palette", title: "컬러 팔레트 생성기", shortTitle: "컬러 팔레트", description: "기준 색에서 5색 조화 (보색·유사·삼각·사각) 자동 생성.", category: "개발자", icon: "🎨" },
+
+  // 라이프
+  { slug: "/wedding-cost", title: "결혼 비용 계산기", shortTitle: "결혼 비용", description: "예식·예물·신혼여행·집 셋업 항목별 한국 평균 합산.", category: "라이프", icon: "💒" },
+  { slug: "/child-cost", title: "자녀 양육비 계산", shortTitle: "자녀 양육비", description: "0~18세 누적 양육비 + 사교육비 시뮬레이션.", category: "라이프", icon: "👨‍👩‍👧" },
+  { slug: "/compatibility", title: "궁합 계산기", shortTitle: "궁합", description: "두 사람 생년월일 → 동·서양 궁합 자동 분석.", category: "라이프", icon: "💕" },
+  { slug: "/mbti-compatibility", title: "MBTI 궁합", shortTitle: "MBTI 궁합", description: "두 MBTI → 16×16 궁합 매트릭스 + 관계 팁.", category: "라이프", icon: "🧠" },
+  { slug: "/carbon-footprint", title: "탄소 발자국 계산기", shortTitle: "탄소 발자국", description: "운전·여행·식단·전기로 일·연 CO₂ 배출량 추정.", category: "라이프", icon: "🌱" },
 ];
