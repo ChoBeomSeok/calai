@@ -59,9 +59,22 @@ export default function MarkdownPage() {
   useEffect(() => {
     let cancelled = false;
     const render = async () => {
-      const { marked } = await import("marked");
-      marked.setOptions({ gfm: true, breaks: true });
-      const result = await marked.parse(text);
+      const { Marked } = await import("marked");
+      const { markedHighlight } = await import("marked-highlight");
+      const hljs = (await import("highlight.js")).default;
+
+      const m = new Marked(
+        markedHighlight({
+          emptyLangClass: "hljs",
+          langPrefix: "hljs language-",
+          highlight(code, lang) {
+            const language = hljs.getLanguage(lang) ? lang : "plaintext";
+            return hljs.highlight(code, { language }).value;
+          },
+        })
+      );
+      m.setOptions({ gfm: true, breaks: true });
+      const result = await m.parse(text);
       if (!cancelled) setHtml(typeof result === "string" ? result : "");
     };
     render();
@@ -83,18 +96,29 @@ export default function MarkdownPage() {
 <head>
 <meta charset="UTF-8">
 <title>마크다운 변환 결과</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css">
 <style>
-body { font-family: -apple-system, "Noto Sans KR", sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; line-height: 1.6; color: #1f2937; }
-h1, h2, h3 { border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3em; }
-code { background: #f3f4f6; padding: 0.2em 0.4em; border-radius: 3px; font-family: "JetBrains Mono", monospace; font-size: 0.9em; }
-pre { background: #1e293b; color: #e2e8f0; padding: 1em; border-radius: 6px; overflow-x: auto; }
-pre code { background: none; color: inherit; padding: 0; }
-blockquote { border-left: 4px solid #6366f1; padding-left: 1em; color: #4b5563; margin-left: 0; }
-table { border-collapse: collapse; width: 100%; margin: 1em 0; }
-th, td { border: 1px solid #e5e7eb; padding: 0.5em; }
-th { background: #f9fafb; }
-a { color: #4f46e5; }
-img { max-width: 100%; }
+body { font-family: -apple-system, "Noto Sans KR", "Pretendard", sans-serif; max-width: 800px; margin: 2rem auto; padding: 1.5rem; line-height: 1.65; color: #1f2937; }
+h1 { font-size: 1.875rem; font-weight: 700; margin: 1.5rem 0 1rem; padding-bottom: 0.4em; border-bottom: 1px solid #e5e7eb; }
+h2 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 0.8rem; padding-bottom: 0.3em; border-bottom: 1px solid #e5e7eb; }
+h3 { font-size: 1.25rem; font-weight: 700; margin: 1.25rem 0 0.6rem; }
+p { margin: 0.8rem 0; }
+a { color: #4f46e5; text-decoration: underline; text-underline-offset: 2px; }
+strong { font-weight: 700; color: #0f172a; }
+ul, ol { margin: 0.8rem 0; padding-left: 2rem; }
+li { margin: 0.25rem 0; }
+code { background: #f1f5f9; color: #be185d; padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.875em; font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; }
+pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+pre code { background: none; color: inherit; padding: 0; font-size: 0.875em; }
+blockquote { border-left: 4px solid #6366f1; padding: 0.4rem 1rem; color: #475569; background: #f8fafc; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.9em; border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; }
+th, td { border: 1px solid #e5e7eb; padding: 0.5rem 0.75rem; text-align: left; }
+th { background: #f8fafc; font-weight: 600; }
+tr:nth-child(even) td { background: #fafbfc; }
+hr { border: none; height: 1px; background: #e5e7eb; margin: 2rem 0; }
+img { max-width: 100%; height: auto; border-radius: 6px; }
+del { color: #9ca3af; }
+input[type="checkbox"] { margin-right: 0.4em; }
 </style>
 </head>
 <body>
@@ -209,7 +233,7 @@ ${html}
             {tab === "preview" ? (
               <div
                 ref={previewRef}
-                className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-4 h-[500px] overflow-y-auto prose prose-sm dark:prose-invert max-w-none"
+                className="markdown-preview rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-5 h-[500px] overflow-y-auto"
                 dangerouslySetInnerHTML={{ __html: html }}
               />
             ) : (

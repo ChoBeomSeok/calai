@@ -1,6 +1,117 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @variant dark (&:where(.dark, .dark *));
+
+/* GitHub Flavored Markdown 스타일 (markdown 도구용) */
+.markdown-preview {
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", sans-serif;
+  line-height: 1.65;
+  color: #1f2937;
+  word-wrap: break-word;
+}
+.dark .markdown-preview { color: #e2e8f0; }
+
+.markdown-preview h1 { font-size: 1.875rem; font-weight: 700; margin: 1.5rem 0 1rem; padding-bottom: 0.4em; border-bottom: 1px solid #e5e7eb; }
+.markdown-preview h2 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 0.8rem; padding-bottom: 0.3em; border-bottom: 1px solid #e5e7eb; }
+.markdown-preview h3 { font-size: 1.25rem; font-weight: 700; margin: 1.25rem 0 0.6rem; }
+.markdown-preview h4 { font-size: 1.1rem; font-weight: 700; margin: 1rem 0 0.5rem; }
+.dark .markdown-preview h1,
+.dark .markdown-preview h2 { border-bottom-color: #334155; }
+
+.markdown-preview p { margin: 0.8rem 0; }
+
+.markdown-preview a { color: #4f46e5; text-decoration: underline; text-underline-offset: 2px; }
+.markdown-preview a:hover { color: #4338ca; }
+
+.markdown-preview strong { font-weight: 700; color: #0f172a; }
+.dark .markdown-preview strong { color: #f1f5f9; }
+
+.markdown-preview ul, .markdown-preview ol { margin: 0.8rem 0; padding-left: 2rem; }
+.markdown-preview ul { list-style: disc; }
+.markdown-preview ol { list-style: decimal; }
+.markdown-preview li { margin: 0.25rem 0; }
+.markdown-preview li > ul, .markdown-preview li > ol { margin: 0.25rem 0; }
+
+.markdown-preview input[type="checkbox"] { margin-right: 0.4em; transform: translateY(1px); }
+
+.markdown-preview blockquote {
+  border-left: 4px solid #6366f1;
+  padding: 0.4rem 0 0.4rem 1rem;
+  color: #475569;
+  background: #f8fafc;
+  margin: 1rem 0;
+  border-radius: 0 6px 6px 0;
+}
+.dark .markdown-preview blockquote { color: #cbd5e1; background: #1e293b; }
+
+.markdown-preview code {
+  background: #f1f5f9;
+  color: #be185d;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.875em;
+  font-family: "JetBrains Mono", "SF Mono", Consolas, Monaco, monospace;
+}
+.dark .markdown-preview code { background: #1e293b; color: #f9a8d4; }
+
+.markdown-preview pre {
+  background: #0f172a !important;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+.markdown-preview pre code {
+  background: none !important;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+.markdown-preview table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.9em;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+.dark .markdown-preview table { border-color: #334155; }
+.markdown-preview th, .markdown-preview td { border: 1px solid #e5e7eb; padding: 0.5rem 0.75rem; text-align: left; }
+.dark .markdown-preview th, .dark .markdown-preview td { border-color: #334155; }
+.markdown-preview th { background: #f8fafc; font-weight: 600; }
+.dark .markdown-preview th { background: #1e293b; }
+.markdown-preview tr:nth-child(even) td { background: #fafbfc; }
+.dark .markdown-preview tr:nth-child(even) td { background: #0f172a; }
+
+.markdown-preview hr {
+  border: none;
+  height: 1px;
+  background: #e5e7eb;
+  margin: 2rem 0;
+}
+.dark .markdown-preview hr { background: #334155; }
+
+.markdown-preview img { max-width: 100%; height: auto; border-radius: 6px; margin: 1rem 0; }
+
+.markdown-preview del { color: #9ca3af; }
+
+/* highlight.js 코드 하이라이팅 (atom-one-dark 테마) */
+.markdown-preview .hljs { display: block; overflow-x: auto; background: #0f172a; color: #e2e8f0; }
+.markdown-preview .hljs-comment, .markdown-preview .hljs-quote { color: #64748b; font-style: italic; }
+.markdown-preview .hljs-keyword, .markdown-preview .hljs-selector-tag, .markdown-preview .hljs-built_in { color: #c084fc; }
+.markdown-preview .hljs-string, .markdown-preview .hljs-attr { color: #86efac; }
+.markdown-preview .hljs-number, .markdown-preview .hljs-literal { color: #fbbf24; }
+.markdown-preview .hljs-function .hljs-title, .markdown-preview .hljs-title.function_ { color: #60a5fa; }
+.markdown-preview .hljs-variable, .markdown-preview .hljs-attr, .markdown-preview .hljs-template-variable { color: #f9a8d4; }
+.markdown-preview .hljs-class .hljs-title, .markdown-preview .hljs-title.class_ { color: #facc15; }
+.markdown-preview .hljs-tag, .markdown-preview .hljs-name { color: #f87171; }
+.markdown-preview .hljs-meta { color: #94a3b8; }
 
 :root {
   --background: #f8fafc;
