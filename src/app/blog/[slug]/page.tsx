@@ -92,13 +92,18 @@ export default async function PostPage({ params }: Props) {
         <span className="text-slate-900 dark:text-slate-100 font-medium truncate">{post.title}</span>
       </nav>
 
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
         <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-medium">
           {post.category}
         </span>
         <span className="text-xs text-slate-500 dark:text-slate-400">
-          {new Date(post.publishedAt).toLocaleDateString("ko-KR")} · 읽기 {post.readingTime}분
+          작성 {new Date(post.publishedAt).toLocaleDateString("ko-KR")} · 읽기 {post.readingTime}분
         </span>
+        {post.updatedAt && post.updatedAt !== post.publishedAt && (
+          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">
+            ✓ 마지막 업데이트 {new Date(post.updatedAt).toLocaleDateString("ko-KR")}
+          </span>
+        )}
       </div>
 
       <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight leading-snug">
