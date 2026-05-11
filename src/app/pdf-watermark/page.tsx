@@ -14,6 +14,12 @@ export default function PdfWatermarkPage() {
   const [rotation, setRotation] = useState(45);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
+  const [dragOver, setDragOver] = useState(false);
+
+  const handleFile = (f: File | null) => {
+    setFile(f);
+    setError("");
+  };
 
   const handleAdd = async () => {
     if (!file || !text) return;
@@ -85,11 +91,22 @@ export default function PdfWatermarkPage() {
       description="PDF에 텍스트 워터마크를 무료로 추가. 위치·투명도·회전 조정 가능. 가입·서명 없이 즉시 사용, 브라우저 내 처리."
     >
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm">
-        <label className="block cursor-pointer rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-indigo-400 p-8 text-center transition">
+        <label
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragOver(false);
+            handleFile(e.dataTransfer.files[0] || null);
+          }}
+          className={`block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+            dragOver ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950" : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
+          }`}
+        >
           <input
             type="file"
             accept="application/pdf,.pdf"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            onChange={(e) => handleFile(e.target.files?.[0] || null)}
             className="hidden"
           />
           <div className="text-4xl mb-2">💧</div>
@@ -97,7 +114,7 @@ export default function PdfWatermarkPage() {
             <div className="font-semibold text-slate-700 dark:text-slate-200">{file.name}</div>
           ) : (
             <>
-              <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 파일 선택</div>
+              <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 파일을 드래그하거나 클릭해서 선택</div>
               <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">100% 무료 · 브라우저 내 처리</div>
             </>
           )}

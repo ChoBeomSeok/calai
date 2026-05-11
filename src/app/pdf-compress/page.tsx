@@ -14,6 +14,13 @@ export default function PdfCompressPage() {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<{ originalSize: number; compressedSize: number; url: string; name: string } | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  const handleFile = (f: File | null) => {
+    setFile(f);
+    setResult(null);
+    setError("");
+  };
 
   const handleCompress = async () => {
     if (!file) return;
@@ -56,15 +63,22 @@ export default function PdfCompressPage() {
       description="PDF 파일 용량을 무료로 압축합니다. 메타데이터 제거 + 객체 스트림 최적화. 이메일 첨부·업로드 한도 회피에 유용. 브라우저 내 처리."
     >
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm">
-        <label className="block cursor-pointer rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-indigo-400 p-8 text-center transition">
+        <label
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragOver(false);
+            handleFile(e.dataTransfer.files[0] || null);
+          }}
+          className={`block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+            dragOver ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950" : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
+          }`}
+        >
           <input
             type="file"
             accept="application/pdf,.pdf"
-            onChange={(e) => {
-              setFile(e.target.files?.[0] || null);
-              setResult(null);
-              setError("");
-            }}
+            onChange={(e) => handleFile(e.target.files?.[0] || null)}
             className="hidden"
           />
           <div className="text-4xl mb-2">🗜️</div>
@@ -75,7 +89,7 @@ export default function PdfCompressPage() {
             </>
           ) : (
             <>
-              <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 파일 선택</div>
+              <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 파일을 드래그하거나 클릭해서 선택</div>
               <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">100% 무료 · 브라우저 내 처리</div>
             </>
           )}
