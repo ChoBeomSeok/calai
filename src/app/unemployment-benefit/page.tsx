@@ -4,11 +4,12 @@ import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import { MoneyHint } from "@/components/MoneyHint";
 
-// 2026년 고용보험법 기준
-// 1일 상한: 66,000원 (구직급여 상한액, 2025년 기준 유지 가정)
-// 1일 하한: 최저임금 80% × 8시간 (2026 최저 약 10,030원 × 0.8 × 8 = 약 64,192원)
+// 2026년 고용보험법 기준 (고용노동부 고시)
+// 1일 상한: 66,000원 (2019년 1월부터 유지, 2026년 변동 가능성 있음 → 공식 고시 확인 필요)
+// 1일 하한: 최저임금의 80% × 8시간 (퇴직 시점 최저시급 기준)
+// 2026 최저시급: 10,030원 (2025년 10,030원 동결 또는 인상 가정)
 const UPPER_LIMIT = 66_000;
-const MIN_WAGE_2026 = 10_030; // 2026 최저시급 (예상)
+const MIN_WAGE_2026 = 10_030;
 const LOWER_LIMIT = Math.floor(MIN_WAGE_2026 * 0.8 * 8); // 64,192원
 
 // 소정급여일수 (만 나이·고용보험 가입기간별)

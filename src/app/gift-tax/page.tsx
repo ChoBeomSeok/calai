@@ -36,22 +36,37 @@ export default function GiftTaxPage() {
   const [amount, setAmount] = useState("100000000");
   const [relation, setRelation] = useState("adult_child");
   const [marriageBirth, setMarriageBirth] = useState(false);
+  const [prior10y, setPrior10y] = useState("0"); // 동일인 10년 내 증여액
 
   const result = useMemo(() => {
     const a = parseFloat(amount);
+    const prior = parseFloat(prior10y) || 0;
     if (!a || a <= 0) return null;
     const baseDed = RELATION_DEDUCTION[relation] || 0;
     // 2024 신설: 직계존속 → 자녀 혼인·출산 시 1억 추가 공제 (성인 자녀만)
     const extraDed = marriageBirth && (relation === "adult_child" || relation === "minor_child") ? 100_000_000 : 0;
     const ded = baseDed + extraDed;
-    const taxBase = Math.max(0, a - ded);
+
+    // 10년 누적: 동일인 합산 후 과세 → 기존 증여세 공제
+    const cumAmount = a + prior;
+    const taxBase = Math.max(0, cumAmount - ded);
     const b = BRACKETS.find((x) => taxBase <= x.upTo)!;
-    const grossTax = Math.max(0, taxBase * b.rate - b.ded);
+    const cumGrossTax = Math.max(0, taxBase * b.rate - b.ded);
+
+    // 과거 10년 증여분의 산출세액 (기납부세액공제)
+    const priorTaxBase = Math.max(0, prior - ded);
+    let priorTax = 0;
+    if (priorTaxBase > 0) {
+      const priorBracket = BRACKETS.find((x) => priorTaxBase <= x.upTo)!;
+      priorTax = Math.max(0, priorTaxBase * priorBracket.rate - priorBracket.ded);
+    }
+
+    const grossTax = Math.max(0, cumGrossTax - priorTax);
     // 신고세액공제 3% (자진 신고 기간 내)
     const reportCredit = grossTax * 0.03;
     const tax = grossTax - reportCredit;
-    return { ded, baseDed, extraDed, taxBase, grossTax, reportCredit, tax };
-  }, [amount, relation, marriageBirth]);
+    return { ded, baseDed, extraDed, taxBase, cumAmount, prior, priorTax, cumGrossTax, grossTax, reportCredit, tax };
+  }, [amount, relation, marriageBirth, prior10y]);
 
   return (
     <CalculatorLayout title="증여세 계산기" description="증여재산·관계별 공제 (배우자 6억·성인자녀 5천만원 등) 자동 적용 후 누진세 계산.">
@@ -70,6 +85,21 @@ export default function GiftTaxPage() {
               <span className="text-sm">혼인·출산 추가공제 1억 적용 (2024 신설, 직계존속 → 자녀 한정)</span>
             </label>
           )}
+          <label className="block sm:col-span-2">
+            <span className="text-sm font-medium text-slate-700">동일인 과거 10년 내 증여액 (원)</span>
+            <input
+              type="number"
+              min="0"
+              value={prior10y}
+              onChange={(e) => setPrior10y(e.target.value)}
+              placeholder="없으면 0"
+              className="mt-1.5 block w-full rounded-lg border border-slate-300 px-4 py-3"
+            />
+            <MoneyHint value={prior10y} />
+            <span className="block mt-1 text-xs text-slate-500">
+              증여세는 10년 단위 합산 과세 — 동일 증여자(예: 같은 부모)에게서 받은 과거 증여액 입력 시 정확
+            </span>
+          </label>
         </div>
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">
@@ -82,6 +112,22 @@ export default function GiftTaxPage() {
               <div className="flex justify-between py-2 border-b border-slate-100"><span>기본 공제 ({RELATION_LABEL[relation]})</span><span>{fmt(result.baseDed)} 원</span></div>
               {result.extraDed > 0 && (
                 <div className="flex justify-between py-2 border-b border-slate-100 text-emerald-600"><span>혼인·출산 추가공제</span><span>+{fmt(result.extraDed)} 원</span></div>
+              )}
+              {result.prior > 0 && (
+                <>
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span>10년 누적 증여액</span>
+                    <span>{fmt(result.cumAmount)} 원</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span>누적 산출세액</span>
+                    <span>{fmt(result.cumGrossTax)} 원</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-100 text-emerald-600">
+                    <span>기납부 증여세 차감</span>
+                    <span>-{fmt(result.priorTax)} 원</span>
+                  </div>
+                </>
               )}
               <div className="flex justify-between py-2 border-b border-slate-100"><span>산출 증여세</span><span>{fmt(result.grossTax)} 원</span></div>
               <div className="flex justify-between py-2 text-emerald-600"><span>신고세액공제 (3%)</span><span>-{fmt(result.reportCredit)} 원</span></div>
