@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import type { editor as MonacoEditor } from "monaco-editor";
@@ -12,7 +12,7 @@ type LineChange = {
   modifiedEndLineNumber: number;
 };
 
-type Mode = "text" | "folder" | "image" | "json";
+type Mode = "text" | "folder";
 type ViewMode = "side-by-side" | "inline";
 type Language = "auto" | "javascript" | "typescript" | "python" | "java" | "csharp" | "go" | "rust" | "html" | "css" | "json" | "yaml" | "markdown" | "sql" | "plaintext";
 
@@ -145,19 +145,6 @@ export default function DiffPage() {
   const [folderDiff, setFolderDiff] = useState<FolderDiff | null>(null);
   const [openFile, setOpenFile] = useState<string | null>(null);
 
-  // 이미지 비교
-  const [imgA, setImgA] = useState<string | null>(null);
-  const [imgB, setImgB] = useState<string | null>(null);
-  const [imgViewMode, setImgViewMode] = useState<"side" | "overlay" | "diff">("side");
-  const [overlayOpacity, setOverlayOpacity] = useState(0.5);
-  const imgCanvasRef = useRef<HTMLCanvasElement>(null);
-
-  // JSON 비교
-  const [jsonA, setJsonA] = useState('{"name":"alice","age":30,"city":"Seoul"}');
-  const [jsonB, setJsonB] = useState('{"name":"alice","age":31,"city":"Busan","email":"a@b.com"}');
-  const [jsonResult, setJsonResult] = useState<{ left: string; right: string } | null>(null);
-  const [jsonError, setJsonError] = useState("");
-
   const handleFolderInput = async (which: "a" | "b", files: FileList | null) => {
     if (!files || files.length === 0) return;
     setLoading(which);
@@ -182,69 +169,6 @@ export default function DiffPage() {
   }, [openFile, folderDiff]);
 
   const openFileLanguage = useMemo(() => (openFile ? detectLanguage(openFile) : "plaintext"), [openFile]);
-
-  // 이미지 픽셀 diff
-  useEffect(() => {
-    if (mode !== "image" || imgViewMode !== "diff" || !imgA || !imgB || !imgCanvasRef.current) return;
-    const canvas = imgCanvasRef.current;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const a = new Image();
-    const b = new Image();
-    a.crossOrigin = "anonymous";
-    b.crossOrigin = "anonymous";
-    let loaded = 0;
-    const tryRender = () => {
-      if (++loaded < 2) return;
-      const w = Math.max(a.width, b.width);
-      const h = Math.max(a.height, b.height);
-      canvas.width = w;
-      canvas.height = h;
-      const tmpA = document.createElement("canvas");
-      tmpA.width = w;
-      tmpA.height = h;
-      tmpA.getContext("2d")!.drawImage(a, 0, 0, w, h);
-      const tmpB = document.createElement("canvas");
-      tmpB.width = w;
-      tmpB.height = h;
-      tmpB.getContext("2d")!.drawImage(b, 0, 0, w, h);
-      const dataA = tmpA.getContext("2d")!.getImageData(0, 0, w, h);
-      const dataB = tmpB.getContext("2d")!.getImageData(0, 0, w, h);
-      const out = ctx.createImageData(w, h);
-      let diffCount = 0;
-      for (let i = 0; i < dataA.data.length; i += 4) {
-        const dr = Math.abs(dataA.data[i] - dataB.data[i]);
-        const dg = Math.abs(dataA.data[i + 1] - dataB.data[i + 1]);
-        const db = Math.abs(dataA.data[i + 2] - dataB.data[i + 2]);
-        const diff = dr + dg + db;
-        if (diff > 30) {
-          out.data[i] = 255;
-          out.data[i + 1] = 50;
-          out.data[i + 2] = 50;
-          out.data[i + 3] = 255;
-          diffCount++;
-        } else {
-          out.data[i] = (dataA.data[i] + dataB.data[i]) / 2;
-          out.data[i + 1] = (dataA.data[i + 1] + dataB.data[i + 1]) / 2;
-          out.data[i + 2] = (dataA.data[i + 2] + dataB.data[i + 2]) / 2;
-          out.data[i + 3] = 100;
-        }
-      }
-      ctx.putImageData(out, 0, 0);
-      console.log(`픽셀 차이: ${diffCount} / ${dataA.data.length / 4}`);
-    };
-    a.onload = tryRender;
-    b.onload = tryRender;
-    a.src = imgA;
-    b.src = imgB;
-  }, [mode, imgViewMode, imgA, imgB]);
-
-  const handleImgFile = (which: "a" | "b", file: File | null) => {
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    if (which === "a") setImgA(url);
-    else setImgB(url);
-  };
 
   // === Monaco DiffEditor 병합 핸들러 ===
   const onTextEditorMount = useCallback((editor: MonacoEditor.IStandaloneDiffEditor) => {
@@ -367,51 +291,25 @@ export default function DiffPage() {
     }
   };
 
-  const handleJsonDiff = () => {
-    try {
-      const a = JSON.parse(jsonA);
-      const b = JSON.parse(jsonB);
-      const left = JSON.stringify(a, Object.keys(a).sort(), 2);
-      const right = JSON.stringify(b, Object.keys(b).sort(), 2);
-      setJsonResult({ left, right });
-      setJsonError("");
-    } catch (e) {
-      setJsonError(`JSON 파싱 실패: ${(e as Error).message}`);
-      setJsonResult(null);
-    }
-  };
-
   return (
     <CalculatorLayout
-      title="Diff 비교 (BeyondCompare급)"
-      description="텍스트·폴더·이미지·JSON 4가지 모드 비교. Monaco Diff Editor (VS Code 엔진) + 60개+ 언어 syntax highlighting + 픽셀 차이 시각화."
+      title="텍스트·폴더 Diff 비교 (BeyondCompare급)"
+      description="두 텍스트 또는 두 폴더 비교. 추가·삭제·변경 라인 자동 색상 표시 (Monaco VS Code 엔진) + 변경 블록별 좌우 병합 + 결과 다운로드."
     >
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm">
         {/* 모드 선택 */}
-        <div className="grid grid-cols-4 gap-2 mb-5">
+        <div className="grid grid-cols-2 gap-2 mb-5">
           <button
             onClick={() => setMode("text")}
-            className={`px-2 py-2.5 rounded-lg text-sm font-medium border transition ${mode === "text" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}
+            className={`px-3 py-2.5 rounded-lg text-sm font-medium border transition ${mode === "text" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}
           >
-            📝 텍스트
+            📝 텍스트 비교
           </button>
           <button
             onClick={() => setMode("folder")}
-            className={`px-2 py-2.5 rounded-lg text-sm font-medium border transition ${mode === "folder" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}
+            className={`px-3 py-2.5 rounded-lg text-sm font-medium border transition ${mode === "folder" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}
           >
-            📁 폴더
-          </button>
-          <button
-            onClick={() => setMode("image")}
-            className={`px-2 py-2.5 rounded-lg text-sm font-medium border transition ${mode === "image" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}
-          >
-            🖼️ 이미지
-          </button>
-          <button
-            onClick={() => setMode("json")}
-            className={`px-2 py-2.5 rounded-lg text-sm font-medium border transition ${mode === "json" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}
-          >
-            📊 JSON
+            📁 폴더 비교
           </button>
         </div>
 
@@ -834,134 +732,10 @@ export default function DiffPage() {
           </>
         )}
 
-        {/* 이미지 모드 */}
-        {mode === "image" && (
-          <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div>
-                <div className="text-sm font-semibold mb-2">🖼️ 이미지 A</div>
-                <label className="block cursor-pointer rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-indigo-400 p-6 text-center">
-                  <input type="file" accept="image/*" onChange={(e) => handleImgFile("a", e.target.files?.[0] || null)} className="hidden" />
-                  {imgA ? (
-                    <img src={imgA} alt="A" className="max-h-40 mx-auto" />
-                  ) : (
-                    <>
-                      <div className="text-3xl mb-1">🖼️</div>
-                      <div className="text-sm">이미지 A 선택</div>
-                    </>
-                  )}
-                </label>
-              </div>
-              <div>
-                <div className="text-sm font-semibold mb-2">🖼️ 이미지 B</div>
-                <label className="block cursor-pointer rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-indigo-400 p-6 text-center">
-                  <input type="file" accept="image/*" onChange={(e) => handleImgFile("b", e.target.files?.[0] || null)} className="hidden" />
-                  {imgB ? (
-                    <img src={imgB} alt="B" className="max-h-40 mx-auto" />
-                  ) : (
-                    <>
-                      <div className="text-3xl mb-1">🖼️</div>
-                      <div className="text-sm">이미지 B 선택</div>
-                    </>
-                  )}
-                </label>
-              </div>
-            </div>
-
-            {imgA && imgB && (
-              <>
-                <div className="mt-4 grid grid-cols-3 gap-2">
-                  {([
-                    { v: "side", l: "↔ 좌우 비교" },
-                    { v: "overlay", l: "◐ 겹쳐 보기" },
-                    { v: "diff", l: "🎯 픽셀 차이" },
-                  ] as const).map((m) => (
-                    <button
-                      key={m.v}
-                      onClick={() => setImgViewMode(m.v)}
-                      className={`px-3 py-2.5 rounded-lg text-sm border transition ${imgViewMode === m.v ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"}`}
-                    >
-                      {m.l}
-                    </button>
-                  ))}
-                </div>
-
-                {imgViewMode === "side" && (
-                  <div className="mt-4 grid grid-cols-2 gap-3 rounded-lg bg-slate-100 dark:bg-slate-900 p-4">
-                    <img src={imgA} alt="A" className="w-full h-auto rounded" />
-                    <img src={imgB} alt="B" className="w-full h-auto rounded" />
-                  </div>
-                )}
-
-                {imgViewMode === "overlay" && (
-                  <div className="mt-4">
-                    <label className="block mb-2">
-                      <span className="text-xs text-slate-600">B 투명도: {(overlayOpacity * 100).toFixed(0)}%</span>
-                      <input type="range" min="0" max="100" value={overlayOpacity * 100} onChange={(e) => setOverlayOpacity(parseInt(e.target.value) / 100)} className="w-full" />
-                    </label>
-                    <div className="relative rounded-lg bg-slate-100 dark:bg-slate-900 p-4 flex justify-center">
-                      <div className="relative">
-                        <img src={imgA} alt="A" className="max-h-[500px]" />
-                        <img src={imgB} alt="B" className="absolute top-0 left-0 max-h-[500px]" style={{ opacity: overlayOpacity }} />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {imgViewMode === "diff" && (
-                  <div className="mt-4 rounded-lg bg-slate-100 dark:bg-slate-900 p-4 flex justify-center">
-                    <canvas ref={imgCanvasRef} className="max-w-full max-h-[500px]" />
-                    <div className="absolute bottom-2 right-2 text-xs bg-black/70 text-white px-2 py-1 rounded">
-                      🔴 빨강 = 차이 / ⚪ 회색 = 동일
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </>
-        )}
-
-        {/* JSON 모드 */}
-        {mode === "json" && (
-          <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
-              <textarea
-                value={jsonA}
-                onChange={(e) => setJsonA(e.target.value)}
-                placeholder='{"name": "A"}'
-                className="block w-full h-32 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-3 py-2 font-mono text-xs"
-              />
-              <textarea
-                value={jsonB}
-                onChange={(e) => setJsonB(e.target.value)}
-                placeholder='{"name": "B"}'
-                className="block w-full h-32 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-3 py-2 font-mono text-xs"
-              />
-            </div>
-            <button onClick={handleJsonDiff} className="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700">
-              🔍 JSON 비교 (정렬·들여쓰기 후 diff)
-            </button>
-            {jsonError && (
-              <div className="mt-4 rounded-lg bg-rose-50 dark:bg-rose-950 p-3 text-sm text-rose-700">{jsonError}</div>
-            )}
-            {jsonResult && (
-              <div className="mt-4 rounded-lg overflow-hidden border border-slate-300 dark:border-slate-600" style={{ height: 500 }}>
-                <DiffEditor
-                  height="500px"
-                  language="json"
-                  original={jsonResult.left}
-                  modified={jsonResult.right}
-                  theme="vs-dark"
-                  options={{ renderSideBySide: true, readOnly: true, minimap: { enabled: true } }}
-                />
-              </div>
-            )}
-          </>
-        )}
       </div>
 
       <div className="mt-4 rounded-xl bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
-        💡 <strong>BeyondCompare급 기능</strong>: Monaco Diff Editor (VS Code 엔진) + 60개+ 언어 syntax highlighting + 미니맵 + 사이드바이사이드/인라인 전환 + 이미지 픽셀 비교 + JSON 정렬 후 diff.
+        💡 <strong>BeyondCompare급 기능</strong>: Monaco Diff Editor (VS Code 엔진) + 60개+ 언어 syntax highlighting + 추가(녹색)/삭제(빨강)/변경(황) 라인색 + 미니맵 + 좌우/인라인 전환 + 변경 블록별 병합 + 결과 다운로드.
       </div>
       <div className="mt-2 rounded-xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 p-3 text-xs text-emerald-900 dark:text-emerald-300">
         🔒 <strong>100% 안전</strong>: 모든 처리 브라우저 내 (소스코드·민감 파일 안전).
