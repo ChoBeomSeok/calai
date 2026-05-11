@@ -134,32 +134,67 @@ ${html}
     URL.revokeObjectURL(url);
   };
 
-  const handleDownloadPDF = async () => {
-    if (!previewRef.current) return;
-    const html2canvas = (await import("html2canvas")).default;
-    const jsPDF = (await import("jspdf")).default;
-
-    const canvas = await html2canvas(previewRef.current, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-    });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    let heightLeft = pdfHeight;
-    let position = 0;
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-    heightLeft -= pageHeight;
-    while (heightLeft > 0) {
-      position = heightLeft - pdfHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-      heightLeft -= pageHeight;
+  // 브라우저 인쇄 API로 PDF 저장 — html2canvas의 OKLCH 호환성 문제 회피
+  // 한글 폰트·코드 하이라이팅·표 모두 완벽 지원
+  const handleDownloadPDF = () => {
+    const fullHtml = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>마크다운 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css">
+<style>
+@page { size: A4; margin: 15mm; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, "Noto Sans KR", "Pretendard", "Malgun Gothic", sans-serif; line-height: 1.65; color: #1f2937; margin: 0; }
+h1 { font-size: 24pt; font-weight: 700; margin: 1.2em 0 0.6em; padding-bottom: 0.3em; border-bottom: 1px solid #e5e7eb; }
+h2 { font-size: 18pt; font-weight: 700; margin: 1em 0 0.5em; padding-bottom: 0.2em; border-bottom: 1px solid #e5e7eb; }
+h3 { font-size: 14pt; font-weight: 700; margin: 0.8em 0 0.4em; }
+h4 { font-size: 12pt; font-weight: 700; margin: 0.6em 0 0.3em; }
+p { margin: 0.6em 0; }
+a { color: #4f46e5; text-decoration: underline; }
+strong { font-weight: 700; color: #0f172a; }
+ul, ol { margin: 0.6em 0; padding-left: 2em; }
+li { margin: 0.2em 0; }
+code { background: #f1f5f9; color: #be185d; padding: 0.1em 0.3em; border-radius: 3px; font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; font-size: 0.9em; }
+pre { background: #0f172a; color: #e2e8f0; padding: 0.8em; border-radius: 6px; overflow: visible; margin: 0.8em 0; page-break-inside: avoid; }
+pre code { background: none; color: inherit; padding: 0; font-size: 9pt; }
+blockquote { border-left: 4px solid #6366f1; padding: 0.3em 1em; color: #475569; background: #f8fafc; margin: 0.8em 0; border-radius: 0 6px 6px 0; }
+table { border-collapse: collapse; width: 100%; margin: 0.8em 0; font-size: 10pt; page-break-inside: avoid; }
+th, td { border: 1px solid #e5e7eb; padding: 0.4em 0.6em; text-align: left; }
+th { background: #f8fafc; font-weight: 600; }
+tr:nth-child(even) td { background: #fafbfc; }
+hr { border: none; border-top: 1px solid #e5e7eb; margin: 1.5em 0; }
+img { max-width: 100%; height: auto; }
+del { color: #9ca3af; }
+input[type="checkbox"] { margin-right: 0.4em; }
+@media print {
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  pre, table, blockquote { page-break-inside: avoid; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+</style>
+</head>
+<body>
+${html}
+<script>
+  window.onload = function() {
+    setTimeout(function() {
+      window.print();
+      window.onafterprint = function() { window.close(); };
+    }, 300);
+  };
+</script>
+</body>
+</html>`;
+    const win = window.open("", "_blank", "width=900,height=900");
+    if (!win) {
+      alert("팝업이 차단되었습니다. 브라우저 우상단 팝업 차단 아이콘을 클릭해 허용 후 다시 시도해주세요.");
+      return;
     }
-    pdf.save(`markdown-${Date.now()}.pdf`);
+    win.document.open();
+    win.document.write(fullHtml);
+    win.document.close();
   };
 
   const handleCopyHTML = async () => {
@@ -227,7 +262,7 @@ ${html}
               <button onClick={handleDownloadHTML} className="text-xs px-2.5 py-1.5 rounded bg-slate-100 dark:bg-slate-700 hover:bg-emerald-100">
                 💾 HTML
               </button>
-              <button onClick={handleDownloadPDF} className="text-xs px-2.5 py-1.5 rounded bg-slate-100 dark:bg-slate-700 hover:bg-rose-100">
+              <button onClick={handleDownloadPDF} className="text-xs px-2.5 py-1.5 rounded bg-slate-100 dark:bg-slate-700 hover:bg-rose-100" title="새 창 인쇄 다이얼로그 → 대상에 'PDF로 저장' 선택">
                 📄 PDF
               </button>
             </div>
