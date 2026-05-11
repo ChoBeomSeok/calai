@@ -1,7 +1,7 @@
 import type { Post } from "./index";
 
 export const post: Post = {
-  slug: "yangdose-매도-실수-4가지",
+  slug: "yangdose-real-stories",
   title: "양도세 1억 더 낼 뻔한 매도 실수 4가지",
   description: "2년 전 부모님 집 매도 정리하면서 알게 된 양도세 함정. 1주택 비과세 놓치는 흔한 케이스와 실제로 새어나간 돈.",
   category: "양도세",
