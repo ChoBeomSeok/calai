@@ -3,7 +3,7 @@ export type Tool = {
   title: string;
   shortTitle: string;
   description: string;
-  category: "건강" | "금융" | "부동산" | "자동차" | "세금" | "일상" | "개발자" | "여행" | "라이프";
+  category: "건강" | "금융" | "부동산" | "자동차" | "세금" | "일상" | "개발자" | "여행" | "라이프" | "문서";
   icon: string;
 };
 
@@ -103,4 +103,14 @@ export const tools: Tool[] = [
   { slug: "/compatibility", title: "궁합 계산기", shortTitle: "궁합", description: "두 사람 생년월일 → 동·서양 궁합 자동 분석.", category: "라이프", icon: "💕" },
   { slug: "/mbti-compatibility", title: "MBTI 궁합", shortTitle: "MBTI 궁합", description: "두 MBTI → 16×16 궁합 매트릭스 + 관계 팁.", category: "라이프", icon: "🧠" },
   { slug: "/carbon-footprint", title: "탄소 발자국 계산기", shortTitle: "탄소 발자국", description: "운전·여행·식단·전기로 일·연 CO₂ 배출량 추정.", category: "라이프", icon: "🌱" },
+
+  // 문서 (PDF·이미지 변환 — 모두 무료·브라우저 내 처리)
+  { slug: "/pdf-merge", title: "PDF 합치기 (무료)", shortTitle: "PDF 합치기", description: "여러 PDF 파일을 하나로 무료 결합. 가입·로그인·워터마크 없음. 브라우저 내 처리로 안전.", category: "문서", icon: "📑" },
+  { slug: "/pdf-split", title: "PDF 분할 (무료)", shortTitle: "PDF 분할", description: "PDF를 페이지 단위로 무료 분할. 페이지 범위 지정 가능. 브라우저 내 처리.", category: "문서", icon: "✂️" },
+  { slug: "/pdf-compress", title: "PDF 용량 줄이기 (무료)", shortTitle: "PDF 압축", description: "PDF 파일 용량 무료 압축. 이메일 첨부·업로드 한도 회피.", category: "문서", icon: "🗜️" },
+  { slug: "/pdf-extract", title: "PDF 페이지 추출 (무료)", shortTitle: "PDF 추출", description: "PDF에서 원하는 페이지만 무료 추출해 새 파일 생성.", category: "문서", icon: "📄" },
+  { slug: "/pdf-rotate", title: "PDF 회전 (무료)", shortTitle: "PDF 회전", description: "PDF 페이지 90·180·270도 회전. 가로·세로 정렬 무료.", category: "문서", icon: "🔄" },
+  { slug: "/pdf-to-image", title: "PDF → 이미지 (무료)", shortTitle: "PDF→JPG", description: "PDF 페이지를 JPG·PNG 이미지로 무료 변환. 화질 선택 가능.", category: "문서", icon: "🖼️" },
+  { slug: "/image-to-pdf", title: "이미지 → PDF (무료)", shortTitle: "JPG→PDF", description: "JPG·PNG 여러 장을 하나의 PDF로 무료 변환. 순서 조정 가능.", category: "문서", icon: "📷" },
+  { slug: "/pdf-watermark", title: "PDF 워터마크 (무료)", shortTitle: "PDF 워터마크", description: "PDF에 텍스트 워터마크를 무료로 추가. 위치·투명도 조정.", category: "문서", icon: "💧" },
 ];

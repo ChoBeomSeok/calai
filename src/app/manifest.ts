@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "calai — 한국에서 가장 빠른 도구·계산기",
     short_name: "calai",
-    description: "BMI·대출·세금·환율·코인 등 80개+ 도구를 한 페이지에",
+    description: "BMI·대출·세금·환율·코인·PDF 합치기 등 88개+ 무료 도구를 한 페이지에",
     start_url: "/",
     display: "standalone",
     background_color: "#f8fafc",
