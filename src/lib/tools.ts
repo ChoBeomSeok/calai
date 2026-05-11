@@ -3,7 +3,7 @@ export type Tool = {
   title: string;
   shortTitle: string;
   description: string;
-  category: "건강" | "금융" | "부동산" | "자동차" | "세금" | "일상" | "개발자" | "여행" | "라이프" | "문서";
+  category: "건강" | "금융" | "부동산" | "자동차" | "세금" | "일상" | "개발자" | "여행" | "라이프" | "문서" | "이미지";
   icon: string;
 };
 
@@ -113,4 +113,15 @@ export const tools: Tool[] = [
   { slug: "/pdf-to-image", title: "PDF → 이미지 (무료)", shortTitle: "PDF→JPG", description: "PDF 페이지를 JPG·PNG 이미지로 무료 변환. 화질 선택 가능.", category: "문서", icon: "🖼️" },
   { slug: "/image-to-pdf", title: "이미지 → PDF (무료)", shortTitle: "JPG→PDF", description: "JPG·PNG 여러 장을 하나의 PDF로 무료 변환. 순서 조정 가능.", category: "문서", icon: "📷" },
   { slug: "/pdf-watermark", title: "PDF 워터마크 (무료)", shortTitle: "PDF 워터마크", description: "PDF에 텍스트 워터마크를 무료로 추가. 위치·투명도 조정.", category: "문서", icon: "💧" },
+  { slug: "/word-count", title: "글자수 세기 (무료)", shortTitle: "글자수 세기", description: "공백 포함·제외·바이트·원고지 매수·자소서·SNS 한도 실시간 표시. 자소서·논문 필수.", category: "문서", icon: "🔢" },
+
+  // 이미지
+  { slug: "/id-photo", title: "증명사진 만들기 (무료)", shortTitle: "증명사진", description: "여권·이력서·민증·비자 한국 9종 규격 자동 크롭. 배경색 변경·DPI 300 인쇄 가능.", category: "이미지", icon: "📸" },
+  { slug: "/image-compress", title: "이미지 압축 (무료)", shortTitle: "이미지 압축", description: "JPG·PNG·WebP 용량 무료 압축. 일괄 처리·품질 조정·원본 비교.", category: "이미지", icon: "🗜️" },
+
+  // 생활·행정 (일상 카테고리에 추가)
+  { slug: "/unemployment-benefit", title: "실업급여 계산기", shortTitle: "실업급여", description: "평균임금·가입기간으로 1일 수급액·총 지급액·기간 자동 계산 (2026 고용보험법 기준).", category: "금융", icon: "💼" },
+
+  // 부동산 추가
+  { slug: "/jeonse-risk", title: "전세 사기 위험도 체크", shortTitle: "전세 위험도", description: "보증금·매매가·근저당 입력 → 깡통전세 위험도 종합 진단 (5가지 지표).", category: "부동산", icon: "🚨" },
 ];

@@ -8,7 +8,7 @@ export default function Footer() {
           <div>
             <div className="text-sm font-bold text-slate-900 mb-3">calai</div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              한국에서 가장 빠른 도구·계산기 88개를 한 페이지에. PDF·이미지 변환 모두 무료.
+              한국에서 가장 빠른 도구·계산기 93개를 한 페이지에. PDF·이미지·실업급여·전세사기 위험도 모두 무료.
             </p>
           </div>
           <div>
