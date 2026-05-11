@@ -18,6 +18,9 @@ export default function Header() {
           <Link href="/#tools" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             도구
           </Link>
+          <Link href="/blog" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            블로그
+          </Link>
           <ThemeToggle />
         </nav>
       </div>
