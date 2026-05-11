@@ -2,6 +2,10 @@
 // 각 글은 별도 .ts 파일로 분리해 정성스러운 톤·구조 유지
 
 import { post as yangdoseStory } from "./yangdose-story";
+import { post as salaryParadox } from "./salary-paradox";
+import { post as cheongyakFriend } from "./cheongyak-friend-65";
+import { post as jeonseRiskLetter } from "./jeonse-risk-letter";
+import { post as unemploymentDiary } from "./unemployment-diary";
 
 export type Post = {
   slug: string;
@@ -16,7 +20,13 @@ export type Post = {
   content: string; // Markdown
 };
 
-export const POSTS: Post[] = [yangdoseStory];
+export const POSTS: Post[] = [
+  yangdoseStory,
+  salaryParadox,
+  cheongyakFriend,
+  jeonseRiskLetter,
+  unemploymentDiary,
+];
 
 export function getPost(slug: string): Post | undefined {
   return POSTS.find((p) => p.slug === slug);
