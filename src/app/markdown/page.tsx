@@ -172,76 +172,77 @@ ${html}
       title="마크다운 미리보기·변환"
       description="Markdown → HTML 실시간 변환 + GFM (테이블·체크리스트·코드 하이라이팅) 지원 + HTML/PDF 다운로드."
     >
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 divide-x dark:divide-slate-700">
-          {/* 입력 */}
-          <div className="p-4">
-            <div className="flex justify-between items-center mb-2">
-              <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">📝 Markdown 입력</div>
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 sm:p-6">
+        {/* 입력 */}
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">📝 Markdown 입력</div>
+            <button
+              onClick={() => setText("")}
+              className="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 hover:bg-rose-100 dark:hover:bg-rose-950"
+            >
+              지우기
+            </button>
+          </div>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            spellCheck={false}
+            className="block w-full h-[400px] rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-3 py-2 font-mono text-sm resize-y focus:border-indigo-500 focus:outline-none"
+            placeholder="여기에 Markdown 입력..."
+          />
+          <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+            {stats.lines} 줄 · {stats.words} 단어 · {stats.chars} 자
+          </div>
+        </div>
+
+        {/* 구분선 */}
+        <div className="border-t border-slate-200 dark:border-slate-700 my-4" />
+
+        {/* 출력 */}
+        <div>
+          <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+            <div className="flex gap-1">
               <button
-                onClick={() => setText("")}
-                className="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 hover:bg-rose-100 dark:hover:bg-rose-950"
+                onClick={() => setTab("preview")}
+                className={`text-xs px-3 py-1.5 rounded ${
+                  tab === "preview" ? "bg-indigo-600 text-white" : "bg-slate-100 dark:bg-slate-700"
+                }`}
               >
-                지우기
+                👁️ 미리보기
+              </button>
+              <button
+                onClick={() => setTab("html")}
+                className={`text-xs px-3 py-1.5 rounded ${
+                  tab === "html" ? "bg-indigo-600 text-white" : "bg-slate-100 dark:bg-slate-700"
+                }`}
+              >
+                {"</>"} HTML 코드
               </button>
             </div>
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              spellCheck={false}
-              className="block w-full h-[500px] rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-3 py-2 font-mono text-sm resize-none focus:border-indigo-500 focus:outline-none"
-              placeholder="여기에 Markdown 입력..."
+            <div className="flex gap-1">
+              <button onClick={handleCopyHTML} className="text-xs px-2.5 py-1.5 rounded bg-slate-100 dark:bg-slate-700 hover:bg-indigo-100">
+                📋 복사
+              </button>
+              <button onClick={handleDownloadHTML} className="text-xs px-2.5 py-1.5 rounded bg-slate-100 dark:bg-slate-700 hover:bg-emerald-100">
+                💾 HTML
+              </button>
+              <button onClick={handleDownloadPDF} className="text-xs px-2.5 py-1.5 rounded bg-slate-100 dark:bg-slate-700 hover:bg-rose-100">
+                📄 PDF
+              </button>
+            </div>
+          </div>
+          {tab === "preview" ? (
+            <div
+              ref={previewRef}
+              className="markdown-preview rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-6 sm:p-8 min-h-[600px] overflow-y-auto"
+              dangerouslySetInnerHTML={{ __html: html }}
             />
-            <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-              {stats.lines} 줄 · {stats.words} 단어 · {stats.chars} 자
-            </div>
-          </div>
-
-          {/* 출력 */}
-          <div className="p-4">
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex gap-1">
-                <button
-                  onClick={() => setTab("preview")}
-                  className={`text-xs px-3 py-1.5 rounded ${
-                    tab === "preview" ? "bg-indigo-600 text-white" : "bg-slate-100 dark:bg-slate-700"
-                  }`}
-                >
-                  미리보기
-                </button>
-                <button
-                  onClick={() => setTab("html")}
-                  className={`text-xs px-3 py-1.5 rounded ${
-                    tab === "html" ? "bg-indigo-600 text-white" : "bg-slate-100 dark:bg-slate-700"
-                  }`}
-                >
-                  HTML 코드
-                </button>
-              </div>
-              <div className="flex gap-1">
-                <button onClick={handleCopyHTML} className="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 hover:bg-indigo-100">
-                  📋 복사
-                </button>
-                <button onClick={handleDownloadHTML} className="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 hover:bg-emerald-100">
-                  💾 HTML
-                </button>
-                <button onClick={handleDownloadPDF} className="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 hover:bg-rose-100">
-                  📄 PDF
-                </button>
-              </div>
-            </div>
-            {tab === "preview" ? (
-              <div
-                ref={previewRef}
-                className="markdown-preview rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-5 h-[500px] overflow-y-auto"
-                dangerouslySetInnerHTML={{ __html: html }}
-              />
-            ) : (
-              <pre className="rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 p-4 h-[500px] overflow-auto font-mono text-xs whitespace-pre-wrap">
-                {html}
-              </pre>
-            )}
-          </div>
+          ) : (
+            <pre className="rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 p-4 min-h-[600px] overflow-auto font-mono text-xs whitespace-pre-wrap">
+              {html}
+            </pre>
+          )}
         </div>
       </div>
 
