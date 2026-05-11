@@ -26,7 +26,7 @@ export default async function Image() {
           한국에서 가장 빠른 도구·계산기
         </div>
         <div style={{ fontSize: 28, color: "rgba(255,255,255,0.7)", marginTop: 8 }}>
-          BMI · 대출 · PDF · 증명사진 · 글자수 · 93개+ 무료
+          BMI · PDF · 마크다운 · SQL · Cron · 98개+ 무료
         </div>
       </div>
     ),

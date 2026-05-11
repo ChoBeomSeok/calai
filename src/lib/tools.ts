@@ -124,4 +124,11 @@ export const tools: Tool[] = [
 
   // 부동산 추가
   { slug: "/jeonse-risk", title: "전세 사기 위험도 체크", shortTitle: "전세 위험도", description: "보증금·매매가·근저당 입력 → 깡통전세 위험도 종합 진단 (5가지 지표).", category: "부동산", icon: "🚨" },
+
+  // 개발자 확장
+  { slug: "/markdown", title: "마크다운 미리보기·변환", shortTitle: "마크다운", description: "Markdown → HTML 실시간 미리보기 + HTML·PDF 다운로드. GFM 지원.", category: "개발자", icon: "📝" },
+  { slug: "/timestamp", title: "Unix 타임스탬프 변환", shortTitle: "타임스탬프", description: "Unix timestamp ↔ 9가지 날짜 포맷. KST·UTC·ISO·RFC·밀리초·나노초 동시 표시.", category: "개발자", icon: "⏱️" },
+  { slug: "/cron", title: "Cron 표현식 해석기", shortTitle: "Cron", description: "Cron 표현식(0 9 * * 1) → 한국어 해석 + 다음 5회 실행 시간 미리보기.", category: "개발자", icon: "🕐" },
+  { slug: "/sql-format", title: "SQL 포매터", shortTitle: "SQL 포매터", description: "압축된 SQL 쿼리 자동 들여쓰기·키워드 대문자 변환. 8개 dialect 지원.", category: "개발자", icon: "🗄️" },
+  { slug: "/diff", title: "텍스트·폴더 Diff 비교", shortTitle: "Diff 비교", description: "두 텍스트 또는 두 폴더 차이점 비교. 추가·삭제·변경 라인 시각화.", category: "개발자", icon: "🔍" },
 ];
