@@ -1,8 +1,16 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import type { editor as MonacoEditor } from "monaco-editor";
+
+type LineChange = {
+  originalStartLineNumber: number;
+  originalEndLineNumber: number;
+  modifiedStartLineNumber: number;
+  modifiedEndLineNumber: number;
+};
 
 type Mode = "text" | "folder" | "image" | "json";
 type ViewMode = "side-by-side" | "inline";
@@ -123,6 +131,12 @@ export default function DiffPage() {
   return { status: "done" };
 }`);
 
+  // Monaco DiffEditor 병합 기능
+  const textEditorRef = useRef<MonacoEditor.IStandaloneDiffEditor | null>(null);
+  const folderEditorRef = useRef<MonacoEditor.IStandaloneDiffEditor | null>(null);
+  const [textChanges, setTextChanges] = useState<LineChange[]>([]);
+  const [folderChanges, setFolderChanges] = useState<LineChange[]>([]);
+
   // 폴더 비교
   const [folderA, setFolderA] = useState<FolderFile[]>([]);
   const [folderB, setFolderB] = useState<FolderFile[]>([]);
@@ -232,6 +246,127 @@ export default function DiffPage() {
     else setImgB(url);
   };
 
+  // === Monaco DiffEditor 병합 핸들러 ===
+  const onTextEditorMount = useCallback((editor: MonacoEditor.IStandaloneDiffEditor) => {
+    textEditorRef.current = editor;
+    editor.onDidUpdateDiff(() => {
+      const changes = editor.getLineChanges();
+      setTextChanges((changes || []) as LineChange[]);
+    });
+  }, []);
+
+  const onFolderEditorMount = useCallback((editor: MonacoEditor.IStandaloneDiffEditor) => {
+    folderEditorRef.current = editor;
+    editor.onDidUpdateDiff(() => {
+      const changes = editor.getLineChanges();
+      setFolderChanges((changes || []) as LineChange[]);
+    });
+  }, []);
+
+  // 변경 블록 1개를 한쪽으로 적용
+  const applyChange = (
+    editor: MonacoEditor.IStandaloneDiffEditor | null,
+    change: LineChange,
+    direction: "a-to-b" | "b-to-a"
+  ) => {
+    if (!editor) return;
+    const originalModel = editor.getOriginalEditor().getModel();
+    const modifiedModel = editor.getModifiedEditor().getModel();
+    if (!originalModel || !modifiedModel) return;
+
+    if (direction === "a-to-b") {
+      // 좌측(A) 내용을 우측(B)에 적용
+      const startL = change.originalStartLineNumber;
+      const endL = change.originalEndLineNumber || change.originalStartLineNumber;
+      const text = startL === 0 ? "" : originalModel.getValueInRange({
+        startLineNumber: startL,
+        startColumn: 1,
+        endLineNumber: endL,
+        endColumn: originalModel.getLineMaxColumn(endL),
+      });
+      const modStart = change.modifiedStartLineNumber;
+      const modEnd = change.modifiedEndLineNumber || change.modifiedStartLineNumber;
+      const range = modStart === 0
+        ? { startLineNumber: modEnd + 1, startColumn: 1, endLineNumber: modEnd + 1, endColumn: 1 }
+        : {
+            startLineNumber: modStart,
+            startColumn: 1,
+            endLineNumber: modEnd,
+            endColumn: modifiedModel.getLineMaxColumn(modEnd),
+          };
+      modifiedModel.applyEdits([{ range, text: modStart === 0 ? text + "\n" : text }]);
+    } else {
+      // 우측(B) 내용을 좌측(A)에 적용
+      const startL = change.modifiedStartLineNumber;
+      const endL = change.modifiedEndLineNumber || change.modifiedStartLineNumber;
+      const text = startL === 0 ? "" : modifiedModel.getValueInRange({
+        startLineNumber: startL,
+        startColumn: 1,
+        endLineNumber: endL,
+        endColumn: modifiedModel.getLineMaxColumn(endL),
+      });
+      const origStart = change.originalStartLineNumber;
+      const origEnd = change.originalEndLineNumber || change.originalStartLineNumber;
+      const range = origStart === 0
+        ? { startLineNumber: origEnd + 1, startColumn: 1, endLineNumber: origEnd + 1, endColumn: 1 }
+        : {
+            startLineNumber: origStart,
+            startColumn: 1,
+            endLineNumber: origEnd,
+            endColumn: originalModel.getLineMaxColumn(origEnd),
+          };
+      originalModel.applyEdits([{ range, text: origStart === 0 ? text + "\n" : text }]);
+    }
+  };
+
+  // 전체 병합 (A → B 또는 B → A)
+  const applyAll = (
+    editor: MonacoEditor.IStandaloneDiffEditor | null,
+    direction: "a-to-b" | "b-to-a"
+  ) => {
+    if (!editor) return;
+    const originalModel = editor.getOriginalEditor().getModel();
+    const modifiedModel = editor.getModifiedEditor().getModel();
+    if (!originalModel || !modifiedModel) return;
+    if (direction === "a-to-b") {
+      modifiedModel.setValue(originalModel.getValue());
+    } else {
+      originalModel.setValue(modifiedModel.getValue());
+    }
+  };
+
+  // 결과 다운로드
+  const downloadResult = (
+    editor: MonacoEditor.IStandaloneDiffEditor | null,
+    side: "a" | "b",
+    filename: string
+  ) => {
+    if (!editor) return;
+    const model = side === "a" ? editor.getOriginalEditor().getModel() : editor.getModifiedEditor().getModel();
+    if (!model) return;
+    const text = model.getValue();
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // 다음/이전 변경 점프
+  const jumpToChange = (
+    editor: MonacoEditor.IStandaloneDiffEditor | null,
+    direction: "next" | "prev"
+  ) => {
+    if (!editor) return;
+    if (direction === "next") {
+      editor.trigger("source", "editor.action.diffReview.next", null);
+    } else {
+      editor.trigger("source", "editor.action.diffReview.prev", null);
+    }
+  };
+
   const handleJsonDiff = () => {
     try {
       const a = JSON.parse(jsonA);
@@ -334,6 +469,87 @@ export default function DiffPage() {
               />
             </div>
 
+            {/* 병합 컨트롤 바 */}
+            <div className="flex flex-wrap gap-1.5 items-center mb-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-700">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 mr-2">병합:</span>
+              <button
+                onClick={() => applyAll(textEditorRef.current, "a-to-b")}
+                className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+              >
+                ← 전체 A→B
+              </button>
+              <button
+                onClick={() => applyAll(textEditorRef.current, "b-to-a")}
+                className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+              >
+                전체 B→A →
+              </button>
+              <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
+              <button
+                onClick={() => jumpToChange(textEditorRef.current, "prev")}
+                className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
+              >
+                ◀ 이전 변경
+              </button>
+              <button
+                onClick={() => jumpToChange(textEditorRef.current, "next")}
+                className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
+              >
+                다음 변경 ▶
+              </button>
+              <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
+              <button
+                onClick={() => downloadResult(textEditorRef.current, "a", `result-A-${Date.now()}.txt`)}
+                className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
+              >
+                💾 A 다운로드
+              </button>
+              <button
+                onClick={() => downloadResult(textEditorRef.current, "b", `result-B-${Date.now()}.txt`)}
+                className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
+              >
+                💾 B 다운로드
+              </button>
+              <span className="ml-auto text-xs text-slate-500">총 {textChanges.length}개 변경 블록</span>
+            </div>
+
+            {/* 변경 블록별 적용 버튼 */}
+            {textChanges.length > 0 && (
+              <details className="mb-2 rounded-lg bg-amber-50 dark:bg-amber-950 p-2">
+                <summary className="text-xs font-semibold cursor-pointer text-amber-900 dark:text-amber-300">
+                  📋 변경 블록 {textChanges.length}개 — 클릭해서 펼치고 개별 적용
+                </summary>
+                <div className="mt-2 space-y-1 max-h-60 overflow-y-auto">
+                  {textChanges.map((c, i) => (
+                    <div key={i} className="flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 rounded p-1.5">
+                      <span className="font-mono text-slate-500">#{i + 1}</span>
+                      <span className="font-mono text-blue-600">
+                        A:{c.originalStartLineNumber}-{c.originalEndLineNumber || c.originalStartLineNumber}
+                      </span>
+                      <span className="text-slate-400">↔</span>
+                      <span className="font-mono text-amber-600">
+                        B:{c.modifiedStartLineNumber}-{c.modifiedEndLineNumber || c.modifiedStartLineNumber}
+                      </span>
+                      <button
+                        onClick={() => applyChange(textEditorRef.current, c, "a-to-b")}
+                        className="ml-auto px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
+                        title="A → B 적용"
+                      >
+                        → B
+                      </button>
+                      <button
+                        onClick={() => applyChange(textEditorRef.current, c, "b-to-a")}
+                        className="px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
+                        title="B → A 적용"
+                      >
+                        A ←
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+
             {/* Monaco Diff Editor */}
             <div className="rounded-lg overflow-hidden border border-slate-300 dark:border-slate-600" style={{ height: 500 }}>
               <DiffEditor
@@ -342,6 +558,7 @@ export default function DiffPage() {
                 original={textA}
                 modified={textB}
                 theme="vs-dark"
+                onMount={onTextEditorMount}
                 options={{
                   renderSideBySide: viewMode === "side-by-side",
                   readOnly: false,
@@ -483,7 +700,87 @@ export default function DiffPage() {
 
                 {fileLineDiff && openFile && (
                   <div>
-                    <div className="text-sm font-semibold mb-2">📄 {openFile} — Monaco Diff Editor</div>
+                    <div className="text-sm font-semibold mb-2">📄 {openFile}</div>
+
+                    {/* 폴더 파일 병합 컨트롤 */}
+                    <div className="flex flex-wrap gap-1.5 items-center mb-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-700">
+                      <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 mr-2">병합:</span>
+                      <button
+                        onClick={() => applyAll(folderEditorRef.current, "a-to-b")}
+                        className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+                      >
+                        ← 전체 A→B
+                      </button>
+                      <button
+                        onClick={() => applyAll(folderEditorRef.current, "b-to-a")}
+                        className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+                      >
+                        전체 B→A →
+                      </button>
+                      <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
+                      <button
+                        onClick={() => jumpToChange(folderEditorRef.current, "prev")}
+                        className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
+                      >
+                        ◀ 이전
+                      </button>
+                      <button
+                        onClick={() => jumpToChange(folderEditorRef.current, "next")}
+                        className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
+                      >
+                        다음 ▶
+                      </button>
+                      <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
+                      <button
+                        onClick={() => downloadResult(folderEditorRef.current, "a", `${openFile.split("/").pop()}_A`)}
+                        className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
+                      >
+                        💾 A 저장
+                      </button>
+                      <button
+                        onClick={() => downloadResult(folderEditorRef.current, "b", `${openFile.split("/").pop()}_B`)}
+                        className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
+                      >
+                        💾 B 저장
+                      </button>
+                      <span className="ml-auto text-xs text-slate-500">{folderChanges.length}개 변경</span>
+                    </div>
+
+                    {/* 폴더 파일 변경 블록 리스트 */}
+                    {folderChanges.length > 0 && (
+                      <details className="mb-2 rounded-lg bg-amber-50 dark:bg-amber-950 p-2">
+                        <summary className="text-xs font-semibold cursor-pointer text-amber-900 dark:text-amber-300">
+                          📋 변경 블록 {folderChanges.length}개
+                        </summary>
+                        <div className="mt-2 space-y-1 max-h-60 overflow-y-auto">
+                          {folderChanges.map((c, i) => (
+                            <div key={i} className="flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 rounded p-1.5">
+                              <span className="font-mono text-slate-500">#{i + 1}</span>
+                              <span className="font-mono text-blue-600">
+                                A:{c.originalStartLineNumber}-{c.originalEndLineNumber || c.originalStartLineNumber}
+                              </span>
+                              <span className="text-slate-400">↔</span>
+                              <span className="font-mono text-amber-600">
+                                B:{c.modifiedStartLineNumber}-{c.modifiedEndLineNumber || c.modifiedStartLineNumber}
+                              </span>
+                              <button
+                                onClick={() => applyChange(folderEditorRef.current, c, "a-to-b")}
+                                className="ml-auto px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
+                              >
+                                → B
+                              </button>
+                              <button
+                                onClick={() => applyChange(folderEditorRef.current, c, "b-to-a")}
+                                className="px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
+                              >
+                                A ←
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    )}
+
                     <div className="rounded-lg overflow-hidden border border-slate-300 dark:border-slate-600" style={{ height: 500 }}>
                       <DiffEditor
                         height="500px"
@@ -491,7 +788,8 @@ export default function DiffPage() {
                         original={fileLineDiff.aContent}
                         modified={fileLineDiff.bContent}
                         theme="vs-dark"
-                        options={{ renderSideBySide: true, readOnly: true, minimap: { enabled: true }, fontSize: 13 }}
+                        onMount={onFolderEditorMount}
+                        options={{ renderSideBySide: true, readOnly: false, minimap: { enabled: true }, fontSize: 13 }}
                       />
                     </div>
                   </div>
