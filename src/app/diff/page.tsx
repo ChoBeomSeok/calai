@@ -418,15 +418,17 @@ export default function DiffPage() {
         {/* 텍스트 모드 */}
         {mode === "text" && (
           <>
-            <div className="flex flex-wrap gap-2 mb-3">
+            {/* 통합 툴바 */}
+            <div className="flex flex-wrap items-center gap-2 mb-3 p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+              {/* 좌측: 보기 설정 */}
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as Language)}
-                className="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
+                className="px-2 py-1.5 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs"
               >
-                <option value="plaintext">일반 텍스트</option>
-                <option value="javascript">JavaScript</option>
-                <option value="typescript">TypeScript</option>
+                <option value="plaintext">📄 일반</option>
+                <option value="javascript">JS</option>
+                <option value="typescript">TS</option>
                 <option value="python">Python</option>
                 <option value="java">Java</option>
                 <option value="csharp">C#</option>
@@ -436,111 +438,127 @@ export default function DiffPage() {
                 <option value="css">CSS</option>
                 <option value="json">JSON</option>
                 <option value="yaml">YAML</option>
-                <option value="markdown">Markdown</option>
+                <option value="markdown">MD</option>
                 <option value="sql">SQL</option>
               </select>
               <button
                 onClick={() => setViewMode(viewMode === "side-by-side" ? "inline" : "side-by-side")}
-                className="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
+                className="px-2 py-1.5 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs"
+                title="보기 모드 전환"
               >
-                {viewMode === "side-by-side" ? "↔ 좌우 분할" : "↕ 인라인"}
+                {viewMode === "side-by-side" ? "↔" : "↕"}
               </button>
               <button
-                onClick={() => { const t = textA; setTextA(textB); setTextB(t); }}
-                className="px-3 py-1.5 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm hover:bg-amber-50"
+                onClick={() => {
+                  const editor = textEditorRef.current;
+                  if (!editor) {
+                    const t = textA;
+                    setTextA(textB);
+                    setTextB(t);
+                    return;
+                  }
+                  const origModel = editor.getOriginalEditor().getModel();
+                  const modModel = editor.getModifiedEditor().getModel();
+                  if (!origModel || !modModel) return;
+                  const a = origModel.getValue();
+                  const b = modModel.getValue();
+                  setTextA(b);
+                  setTextB(a);
+                }}
+                className="px-2 py-1.5 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs"
+                title="A ↔ B 교환"
               >
-                🔄 A↔B 교환
+                🔄
               </button>
+
+              <div className="w-px h-5 bg-slate-300 dark:bg-slate-600" />
+
+              {/* 중앙: 점프 + 병합 */}
+              <div className="inline-flex rounded border border-slate-300 dark:border-slate-600 overflow-hidden">
+                <button
+                  onClick={() => jumpToChange(textEditorRef.current, "prev")}
+                  className="px-2 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 text-xs"
+                  title="이전 변경"
+                >
+                  ◀
+                </button>
+                <div className="w-px bg-slate-300 dark:bg-slate-600" />
+                <button
+                  onClick={() => jumpToChange(textEditorRef.current, "next")}
+                  className="px-2 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 text-xs"
+                  title="다음 변경"
+                >
+                  ▶
+                </button>
+              </div>
+
+              <div className="inline-flex rounded border border-blue-300 overflow-hidden">
+                <button
+                  onClick={() => applyAll(textEditorRef.current, "a-to-b")}
+                  className="px-2.5 py-1.5 bg-blue-500 text-white hover:bg-blue-600 text-xs"
+                  title="전체 A → B"
+                >
+                  ← A 전체
+                </button>
+                <div className="w-px bg-white" />
+                <button
+                  onClick={() => applyAll(textEditorRef.current, "b-to-a")}
+                  className="px-2.5 py-1.5 bg-blue-500 text-white hover:bg-blue-600 text-xs"
+                  title="전체 B → A"
+                >
+                  B 전체 →
+                </button>
+              </div>
+
+              <div className="inline-flex rounded border border-emerald-300 overflow-hidden">
+                <button
+                  onClick={() => downloadResult(textEditorRef.current, "a", `result-A-${Date.now()}.txt`)}
+                  className="px-2.5 py-1.5 bg-emerald-500 text-white hover:bg-emerald-600 text-xs"
+                  title="A 다운로드"
+                >
+                  💾 A
+                </button>
+                <div className="w-px bg-white" />
+                <button
+                  onClick={() => downloadResult(textEditorRef.current, "b", `result-B-${Date.now()}.txt`)}
+                  className="px-2.5 py-1.5 bg-emerald-500 text-white hover:bg-emerald-600 text-xs"
+                  title="B 다운로드"
+                >
+                  💾 B
+                </button>
+              </div>
+
+              <span className="ml-auto text-xs px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-semibold">
+                {textChanges.length}개 변경
+              </span>
             </div>
 
-            {/* 입력 텍스트 영역 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
-              <textarea
-                value={textA}
-                onChange={(e) => setTextA(e.target.value)}
-                placeholder="텍스트 A (원본)"
-                className="block w-full h-32 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-3 py-2 font-mono text-xs"
-              />
-              <textarea
-                value={textB}
-                onChange={(e) => setTextB(e.target.value)}
-                placeholder="텍스트 B (변경)"
-                className="block w-full h-32 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 px-3 py-2 font-mono text-xs"
-              />
-            </div>
-
-            {/* 병합 컨트롤 바 */}
-            <div className="flex flex-wrap gap-1.5 items-center mb-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-700">
-              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 mr-2">병합:</span>
-              <button
-                onClick={() => applyAll(textEditorRef.current, "a-to-b")}
-                className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
-              >
-                ← 전체 A→B
-              </button>
-              <button
-                onClick={() => applyAll(textEditorRef.current, "b-to-a")}
-                className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
-              >
-                전체 B→A →
-              </button>
-              <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
-              <button
-                onClick={() => jumpToChange(textEditorRef.current, "prev")}
-                className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
-              >
-                ◀ 이전 변경
-              </button>
-              <button
-                onClick={() => jumpToChange(textEditorRef.current, "next")}
-                className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
-              >
-                다음 변경 ▶
-              </button>
-              <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
-              <button
-                onClick={() => downloadResult(textEditorRef.current, "a", `result-A-${Date.now()}.txt`)}
-                className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
-              >
-                💾 A 다운로드
-              </button>
-              <button
-                onClick={() => downloadResult(textEditorRef.current, "b", `result-B-${Date.now()}.txt`)}
-                className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
-              >
-                💾 B 다운로드
-              </button>
-              <span className="ml-auto text-xs text-slate-500">총 {textChanges.length}개 변경 블록</span>
-            </div>
-
-            {/* 변경 블록별 적용 버튼 */}
+            {/* 변경 블록 리스트 (기본 접힘) */}
             {textChanges.length > 0 && (
-              <details className="mb-2 rounded-lg bg-amber-50 dark:bg-amber-950 p-2">
-                <summary className="text-xs font-semibold cursor-pointer text-amber-900 dark:text-amber-300">
-                  📋 변경 블록 {textChanges.length}개 — 클릭해서 펼치고 개별 적용
+              <details className="mb-2 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/30 dark:bg-amber-950/30">
+                <summary className="text-xs font-medium cursor-pointer text-amber-900 dark:text-amber-300 px-3 py-2 hover:bg-amber-100 dark:hover:bg-amber-900/50">
+                  📋 변경 블록별 개별 적용 ({textChanges.length}) — 펼치기
                 </summary>
-                <div className="mt-2 space-y-1 max-h-60 overflow-y-auto">
+                <div className="px-3 pb-3 space-y-1 max-h-60 overflow-y-auto">
                   {textChanges.map((c, i) => (
                     <div key={i} className="flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 rounded p-1.5">
-                      <span className="font-mono text-slate-500">#{i + 1}</span>
-                      <span className="font-mono text-blue-600">
+                      <span className="font-mono text-slate-500 w-8">#{i + 1}</span>
+                      <span className="font-mono text-blue-600 text-xs">
                         A:{c.originalStartLineNumber}-{c.originalEndLineNumber || c.originalStartLineNumber}
                       </span>
                       <span className="text-slate-400">↔</span>
-                      <span className="font-mono text-amber-600">
+                      <span className="font-mono text-amber-600 text-xs">
                         B:{c.modifiedStartLineNumber}-{c.modifiedEndLineNumber || c.modifiedStartLineNumber}
                       </span>
                       <button
                         onClick={() => applyChange(textEditorRef.current, c, "a-to-b")}
-                        className="ml-auto px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
-                        title="A → B 적용"
+                        className="ml-auto px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600 text-xs"
                       >
                         → B
                       </button>
                       <button
                         onClick={() => applyChange(textEditorRef.current, c, "b-to-a")}
-                        className="px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
-                        title="B → A 적용"
+                        className="px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600 text-xs"
                       >
                         A ←
                       </button>
@@ -702,76 +720,93 @@ export default function DiffPage() {
                   <div>
                     <div className="text-sm font-semibold mb-2">📄 {openFile}</div>
 
-                    {/* 폴더 파일 병합 컨트롤 */}
-                    <div className="flex flex-wrap gap-1.5 items-center mb-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-700">
-                      <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 mr-2">병합:</span>
-                      <button
-                        onClick={() => applyAll(folderEditorRef.current, "a-to-b")}
-                        className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
-                      >
-                        ← 전체 A→B
-                      </button>
-                      <button
-                        onClick={() => applyAll(folderEditorRef.current, "b-to-a")}
-                        className="text-xs px-2.5 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
-                      >
-                        전체 B→A →
-                      </button>
-                      <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
-                      <button
-                        onClick={() => jumpToChange(folderEditorRef.current, "prev")}
-                        className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
-                      >
-                        ◀ 이전
-                      </button>
-                      <button
-                        onClick={() => jumpToChange(folderEditorRef.current, "next")}
-                        className="text-xs px-2.5 py-1 rounded bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"
-                      >
-                        다음 ▶
-                      </button>
-                      <div className="w-px h-5 bg-slate-300 dark:bg-slate-500 mx-1" />
-                      <button
-                        onClick={() => downloadResult(folderEditorRef.current, "a", `${openFile.split("/").pop()}_A`)}
-                        className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
-                      >
-                        💾 A 저장
-                      </button>
-                      <button
-                        onClick={() => downloadResult(folderEditorRef.current, "b", `${openFile.split("/").pop()}_B`)}
-                        className="text-xs px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"
-                      >
-                        💾 B 저장
-                      </button>
-                      <span className="ml-auto text-xs text-slate-500">{folderChanges.length}개 변경</span>
+                    {/* 폴더 파일 통합 툴바 */}
+                    <div className="flex flex-wrap items-center gap-2 mb-2 p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+                      <div className="inline-flex rounded border border-slate-300 dark:border-slate-600 overflow-hidden">
+                        <button
+                          onClick={() => jumpToChange(folderEditorRef.current, "prev")}
+                          className="px-2 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 text-xs"
+                          title="이전 변경"
+                        >
+                          ◀
+                        </button>
+                        <div className="w-px bg-slate-300 dark:bg-slate-600" />
+                        <button
+                          onClick={() => jumpToChange(folderEditorRef.current, "next")}
+                          className="px-2 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 text-xs"
+                          title="다음 변경"
+                        >
+                          ▶
+                        </button>
+                      </div>
+
+                      <div className="inline-flex rounded border border-blue-300 overflow-hidden">
+                        <button
+                          onClick={() => applyAll(folderEditorRef.current, "a-to-b")}
+                          className="px-2.5 py-1.5 bg-blue-500 text-white hover:bg-blue-600 text-xs"
+                          title="전체 A → B"
+                        >
+                          ← A 전체
+                        </button>
+                        <div className="w-px bg-white" />
+                        <button
+                          onClick={() => applyAll(folderEditorRef.current, "b-to-a")}
+                          className="px-2.5 py-1.5 bg-blue-500 text-white hover:bg-blue-600 text-xs"
+                          title="전체 B → A"
+                        >
+                          B 전체 →
+                        </button>
+                      </div>
+
+                      <div className="inline-flex rounded border border-emerald-300 overflow-hidden">
+                        <button
+                          onClick={() => downloadResult(folderEditorRef.current, "a", `${openFile.split("/").pop()}_A`)}
+                          className="px-2.5 py-1.5 bg-emerald-500 text-white hover:bg-emerald-600 text-xs"
+                          title="A 다운로드"
+                        >
+                          💾 A
+                        </button>
+                        <div className="w-px bg-white" />
+                        <button
+                          onClick={() => downloadResult(folderEditorRef.current, "b", `${openFile.split("/").pop()}_B`)}
+                          className="px-2.5 py-1.5 bg-emerald-500 text-white hover:bg-emerald-600 text-xs"
+                          title="B 다운로드"
+                        >
+                          💾 B
+                        </button>
+                      </div>
+
+                      <span className="ml-auto text-xs px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-semibold">
+                        {folderChanges.length}개 변경
+                      </span>
                     </div>
 
-                    {/* 폴더 파일 변경 블록 리스트 */}
+                    {/* 폴더 파일 변경 블록 리스트 (기본 접힘) */}
                     {folderChanges.length > 0 && (
-                      <details className="mb-2 rounded-lg bg-amber-50 dark:bg-amber-950 p-2">
-                        <summary className="text-xs font-semibold cursor-pointer text-amber-900 dark:text-amber-300">
-                          📋 변경 블록 {folderChanges.length}개
+                      <details className="mb-2 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/30 dark:bg-amber-950/30">
+                        <summary className="text-xs font-medium cursor-pointer text-amber-900 dark:text-amber-300 px-3 py-2 hover:bg-amber-100 dark:hover:bg-amber-900/50">
+                          📋 변경 블록별 개별 적용 ({folderChanges.length}) — 펼치기
                         </summary>
-                        <div className="mt-2 space-y-1 max-h-60 overflow-y-auto">
+                        <div className="px-3 pb-3 space-y-1 max-h-60 overflow-y-auto">
                           {folderChanges.map((c, i) => (
                             <div key={i} className="flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 rounded p-1.5">
-                              <span className="font-mono text-slate-500">#{i + 1}</span>
-                              <span className="font-mono text-blue-600">
+                              <span className="font-mono text-slate-500 w-8">#{i + 1}</span>
+                              <span className="font-mono text-blue-600 text-xs">
                                 A:{c.originalStartLineNumber}-{c.originalEndLineNumber || c.originalStartLineNumber}
                               </span>
                               <span className="text-slate-400">↔</span>
-                              <span className="font-mono text-amber-600">
+                              <span className="font-mono text-amber-600 text-xs">
                                 B:{c.modifiedStartLineNumber}-{c.modifiedEndLineNumber || c.modifiedStartLineNumber}
                               </span>
                               <button
                                 onClick={() => applyChange(folderEditorRef.current, c, "a-to-b")}
-                                className="ml-auto px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
+                                className="ml-auto px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600 text-xs"
                               >
                                 → B
                               </button>
                               <button
                                 onClick={() => applyChange(folderEditorRef.current, c, "b-to-a")}
-                                className="px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600"
+                                className="px-2 py-0.5 rounded bg-blue-500 text-white hover:bg-blue-600 text-xs"
                               >
                                 A ←
                               </button>
