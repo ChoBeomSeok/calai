@@ -29,7 +29,23 @@ export default function PdfWatermarkPage() {
       const { PDFDocument, StandardFonts, rgb, degrees } = await import("pdf-lib");
       const bytes = await file.arrayBuffer();
       const pdf = await PDFDocument.load(bytes, { ignoreEncryption: true });
-      const font = await pdf.embedFont(StandardFonts.HelveticaBold);
+
+      // 한글 포함 여부 감지 → 한글 폰트 임베드 (NanumGothic Bold)
+      const hasKorean = /[\u3131-\uD79D]/.test(text);
+      let font;
+      if (hasKorean) {
+        const fontkitModule = await import("@pdf-lib/fontkit");
+        pdf.registerFontkit(fontkitModule.default);
+        // jsDelivr CDN의 NanumGothic Bold TTF (한국 공공 폰트, OFL 라이선스)
+        const fontUrl = "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/nanumgothic/NanumGothic-Bold.ttf";
+        const fontBytes = await fetch(fontUrl).then((r) => {
+          if (!r.ok) throw new Error("한글 폰트 다운로드 실패");
+          return r.arrayBuffer();
+        });
+        font = await pdf.embedFont(fontBytes, { subset: true });
+      } else {
+        font = await pdf.embedFont(StandardFonts.HelveticaBold);
+      }
 
       pdf.getPages().forEach((page) => {
         const { width, height } = page.getSize();
@@ -123,15 +139,17 @@ export default function PdfWatermarkPage() {
         {file && (
           <>
             <label className="block mt-5">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">워터마크 텍스트 (영문만)</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">워터마크 텍스트 (한글·영문)</span>
               <input
                 type="text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="CONFIDENTIAL"
+                placeholder="기밀 / CONFIDENTIAL"
                 className="mt-1.5 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-3 font-mono"
               />
-              <span className="block mt-1 text-xs text-slate-500 dark:text-slate-400">※ 한글은 폰트 임베드 한계로 일부 미지원</span>
+              <span className="block mt-1 text-xs text-slate-500 dark:text-slate-400">
+                ✓ 한글·영문 모두 지원 (한글 입력 시 NanumGothic 자동 임베드, 약 2MB 다운로드)
+              </span>
             </label>
 
             <div className="mt-5">
@@ -208,7 +226,7 @@ export default function PdfWatermarkPage() {
               disabled={processing || !text}
               className="w-full mt-5 bg-indigo-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
             >
-              {processing ? "처리 중..." : "💧 워터마크 추가 (무료)"}
+              {processing ? (/[\u3131-\uD79D]/.test(text) ? "한글 폰트 다운로드 중..." : "처리 중...") : "💧 워터마크 추가 (무료)"}
             </button>
           </>
         )}
