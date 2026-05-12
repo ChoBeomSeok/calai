@@ -17,13 +17,36 @@ function matches(tool: Tool, q: string): boolean {
   return haystack.includes(needle);
 }
 
+// 메인 페이지 카테고리 노출 순서 (실무 도구·이미지가 최상단)
+const CATEGORY_ORDER: Tool["category"][] = [
+  "문서",
+  "이미지",
+  "개발자",
+  "부동산",
+  "금융",
+  "세금",
+  "자동차",
+  "건강",
+  "라이프",
+  "일상",
+  "여행",
+];
+
 export default function Home() {
   const [query, setQuery] = useState("");
   const { favorites, hydrated: favHydrated, isFav, toggle } = useFavorites();
   const { recent, hydrated: recentHydrated } = useRecent();
 
   const filtered = useMemo(() => tools.filter((t) => matches(t, query)), [query]);
-  const categories = useMemo(() => Array.from(new Set(filtered.map((t) => t.category))), [filtered]);
+  const categories = useMemo(() => {
+    const present = new Set(filtered.map((t) => t.category));
+    const ordered = CATEGORY_ORDER.filter((c) => present.has(c));
+    // CATEGORY_ORDER에 없는 카테고리도 마지막에 추가 (방어적)
+    for (const c of present) {
+      if (!ordered.includes(c)) ordered.push(c);
+    }
+    return ordered;
+  }, [filtered]);
 
   const favTools = favorites.map((slug) => tools.find((t) => t.slug === slug)).filter((t): t is Tool => !!t);
   const recentTools = recent.map((slug) => tools.find((t) => t.slug === slug)).filter((t): t is Tool => !!t);
