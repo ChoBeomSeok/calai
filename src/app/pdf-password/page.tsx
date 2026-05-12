@@ -27,7 +27,7 @@ export default function PdfPasswordPage() {
   const [dragOver, setDragOver] = useState(false);
   const [showUserPwd, setShowUserPwd] = useState(false);
   const [showOwnerPwd, setShowOwnerPwd] = useState(false);
-  const [dpi, setDpi] = useState<Dpi>("150");
+  const [dpi, setDpi] = useState<Dpi>("300");
   const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -258,8 +258,8 @@ export default function PdfPasswordPage() {
                       onChange={(e) => setDpi(e.target.value as Dpi)}
                       className="mt-1.5 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2.5 text-sm"
                     >
+                      <option value="300">300 DPI (인쇄 품질·권장)</option>
                       <option value="150">150 DPI (화면 표준·빠름·작은 용량)</option>
-                      <option value="300">300 DPI (인쇄 품질·느림·큰 용량)</option>
                     </select>
                   </label>
                   <div className="rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
