@@ -131,4 +131,6 @@ export const tools: Tool[] = [
   { slug: "/timestamp", title: "Unix 타임스탬프 변환", shortTitle: "타임스탬프", description: "Unix timestamp ↔ 9가지 날짜 포맷. KST·UTC·ISO·RFC·밀리초·나노초 동시 표시.", category: "개발자", icon: "⏱️" },
   { slug: "/cron", title: "Cron 표현식 해석기", shortTitle: "Cron", description: "Cron 표현식(0 9 * * 1) → 한국어 해석 + 다음 5회 실행 시간 미리보기.", category: "개발자", icon: "🕐" },
   { slug: "/sql-format", title: "SQL 포매터", shortTitle: "SQL 포매터", description: "압축된 SQL 쿼리 자동 들여쓰기·키워드 대문자 변환. 8개 dialect 지원.", category: "개발자", icon: "🗄️" },
+  { slug: "/csv-json", title: "CSV ↔ JSON 변환기", shortTitle: "CSV JSON", description: "CSV ↔ JSON 양방향 무료 변환. 헤더 자동 인식·구분자 감지·숫자 자동 타입·미리보기 테이블.", category: "개발자", icon: "🔄" },
+  { slug: "/hash", title: "해시 생성기 (MD5·SHA·HMAC)", shortTitle: "해시 생성", description: "텍스트·파일 → MD5·SHA-1·SHA-256·SHA-384·SHA-512 동시 생성 + HMAC 서명. 파일 무결성·체크섬용.", category: "개발자", icon: "🔑" },
 ];

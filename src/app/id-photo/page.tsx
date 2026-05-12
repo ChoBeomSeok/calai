@@ -19,19 +19,46 @@ const PRESETS = [
 const DPI = 300;
 const mmToPx = (mm: number) => Math.round((mm / 25.4) * DPI);
 
-const BG_COLORS = [
-  { id: "white", name: "흰색", color: "#ffffff" },
-  { id: "lightblue", name: "하늘색", color: "#cfe2f3" },
-  { id: "gray", name: "회색", color: "#d9d9d9" },
-  { id: "blue", name: "파랑", color: "#3b82f6" },
-  { id: "red", name: "빨강", color: "#ef4444" },
+const BG_PRESETS = [
+  { name: "흰색", color: "#ffffff" },
+  { name: "오프화이트", color: "#f5f5f5" },
+  { name: "하늘색", color: "#cfe2f3" },
+  { name: "연파랑", color: "#a8c5e6" },
+  { name: "회색", color: "#d9d9d9" },
+  { name: "베이지", color: "#efe6d7" },
+  { name: "연분홍", color: "#f8d7da" },
+  { name: "민트", color: "#cdebd6" },
+  { name: "여권 파랑", color: "#2a4d7e" },
+  { name: "비자 빨강", color: "#c0392b" },
 ];
+
+const isLightColor = (hex: string) => {
+  const m = hex.replace("#", "").match(/^([0-9a-f]{6})$/i);
+  if (!m) return true;
+  const r = parseInt(m[1].slice(0, 2), 16);
+  const g = parseInt(m[1].slice(2, 4), 16);
+  const b = parseInt(m[1].slice(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 160;
+};
+
+const normalizeHex = (v: string) => {
+  const s = v.trim().replace(/^#/, "");
+  if (/^[0-9a-f]{3}$/i.test(s)) return "#" + s.split("").map((c) => c + c).join("").toLowerCase();
+  if (/^[0-9a-f]{6}$/i.test(s)) return "#" + s.toLowerCase();
+  return null;
+};
 
 export default function IdPhotoPage() {
   const [src, setSrc] = useState<string | null>(null);
   const [imgEl, setImgEl] = useState<HTMLImageElement | null>(null);
+  const [cutoutEl, setCutoutEl] = useState<HTMLImageElement | null>(null);
+  const [useCutout, setUseCutout] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const [removeStage, setRemoveStage] = useState("");
+  const [removeProgress, setRemoveProgress] = useState(0);
   const [preset, setPreset] = useState(PRESETS[0]);
-  const [bgColor, setBgColor] = useState(BG_COLORS[0]);
+  const [bgColor, setBgColor] = useState<string>(BG_PRESETS[0].color);
+  const [hexInput, setHexInput] = useState<string>(BG_PRESETS[0].color);
   const [scale, setScale] = useState(1);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
@@ -46,6 +73,8 @@ export default function IdPhotoPage() {
       return;
     }
     setError("");
+    setCutoutEl(null);
+    setUseCutout(false);
     const url = URL.createObjectURL(f);
     setSrc(url);
     const img = new Image();
@@ -58,9 +87,49 @@ export default function IdPhotoPage() {
     img.src = url;
   };
 
+  const handleRemoveBg = async () => {
+    if (!src) return;
+    setError("");
+    setRemoving(true);
+    setRemoveProgress(0);
+    setRemoveStage("AI 모델 준비 중");
+    try {
+      const { removeBackground } = await import("@imgly/background-removal");
+      const blob = await removeBackground(src, {
+        model: "isnet_fp16",
+        output: { format: "image/png" },
+        progress: (key, current, total) => {
+          const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+          setRemoveProgress(pct);
+          if (key.startsWith("fetch")) setRemoveStage("AI 모델 다운로드 중 (최초 1회·약 22MB)");
+          else if (key.startsWith("compute")) setRemoveStage("배경 분석 중");
+          else setRemoveStage("처리 중");
+        },
+      });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => {
+        setCutoutEl(img);
+        setUseCutout(true);
+        setRemoving(false);
+      };
+      img.onerror = () => {
+        setError("누끼 이미지 로드에 실패했습니다.");
+        setRemoving(false);
+      };
+      img.src = url;
+    } catch (e) {
+      console.error(e);
+      setError("배경 제거에 실패했습니다. 다른 사진을 시도해 주세요.");
+      setRemoving(false);
+    }
+  };
+
+  const drawImg = useCutout && cutoutEl ? cutoutEl : imgEl;
+
   // Canvas 그리기
   useEffect(() => {
-    if (!imgEl || !canvasRef.current) return;
+    if (!drawImg || !canvasRef.current) return;
     const canvas = canvasRef.current;
     const w = mmToPx(preset.w);
     const h = mmToPx(preset.h);
@@ -69,11 +138,11 @@ export default function IdPhotoPage() {
     const ctx = canvas.getContext("2d")!;
 
     // 배경
-    ctx.fillStyle = bgColor.color;
+    ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, w, h);
 
     // 이미지 그리기 (Cover + 스케일 + 오프셋)
-    const imgRatio = imgEl.width / imgEl.height;
+    const imgRatio = drawImg.width / drawImg.height;
     const canvasRatio = w / h;
     let drawW = w * scale;
     let drawH = h * scale;
@@ -87,8 +156,8 @@ export default function IdPhotoPage() {
     }
     const dx = (w - drawW) / 2 + offsetX;
     const dy = (h - drawH) / 2 + offsetY;
-    ctx.drawImage(imgEl, dx, dy, drawW, drawH);
-  }, [imgEl, preset, bgColor, scale, offsetX, offsetY]);
+    ctx.drawImage(drawImg, dx, dy, drawW, drawH);
+  }, [drawImg, preset, bgColor, scale, offsetX, offsetY]);
 
   const handleDownload = () => {
     if (!canvasRef.current) return;
@@ -137,12 +206,12 @@ export default function IdPhotoPage() {
                       maxHeight: "400px",
                       objectFit: "contain",
                       border: "1px solid #ddd",
-                      backgroundColor: bgColor.color,
+                      backgroundColor: bgColor,
                     }}
                   />
                 </div>
                 <button
-                  onClick={() => { setSrc(null); setImgEl(null); }}
+                  onClick={() => { setSrc(null); setImgEl(null); setCutoutEl(null); setUseCutout(false); }}
                   className="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
                 >
                   ↻ 다른 사진 선택
@@ -151,6 +220,53 @@ export default function IdPhotoPage() {
 
               {/* 컨트롤 */}
               <div className="space-y-4">
+                {/* 배경 자동 제거 */}
+                <div className="rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/50 p-3">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                      🎭 AI 배경 자동 제거
+                    </div>
+                    {cutoutEl && !removing && (
+                      <label className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={useCutout}
+                          onChange={(e) => setUseCutout(e.target.checked)}
+                          className="accent-indigo-600"
+                        />
+                        누끼 적용
+                      </label>
+                    )}
+                  </div>
+                  {removing ? (
+                    <div>
+                      <div className="text-xs text-slate-600 dark:text-slate-400 mb-1">
+                        {removeStage} · {removeProgress}%
+                      </div>
+                      <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                        <div
+                          className="h-full bg-indigo-600 transition-all"
+                          style={{ width: `${removeProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  ) : !cutoutEl ? (
+                    <button
+                      onClick={handleRemoveBg}
+                      className="w-full bg-indigo-600 text-white text-sm font-semibold px-3 py-2 rounded-lg hover:bg-indigo-700 transition"
+                    >
+                      배경 제거 시작
+                    </button>
+                  ) : (
+                    <div className="text-xs text-emerald-700 dark:text-emerald-400">
+                      ✓ 누끼 완료 — 배경색이 실제로 반영됩니다
+                    </div>
+                  )}
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                    100% 브라우저 처리. 최초 1회 AI 모델 약 22MB 다운로드 (이후 캐시됨).
+                  </div>
+                </div>
+
                 {/* 규격 선택 */}
                 <div>
                   <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">📏 규격 선택</div>
@@ -179,28 +295,75 @@ export default function IdPhotoPage() {
                 <div>
                   <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">🎨 배경색</div>
                   <div className="grid grid-cols-5 gap-1.5">
-                    {BG_COLORS.map((c) => (
+                    {BG_PRESETS.map((c) => (
                       <button
-                        key={c.id}
-                        onClick={() => setBgColor(c)}
-                        className={`h-10 rounded-lg border-2 transition ${
-                          bgColor.id === c.id ? "border-indigo-500 scale-105" : "border-slate-200 dark:border-slate-600"
+                        key={c.color}
+                        onClick={() => { setBgColor(c.color); setHexInput(c.color); }}
+                        className={`h-10 rounded-lg border-2 transition relative ${
+                          bgColor === c.color ? "border-indigo-500 scale-105" : "border-slate-200 dark:border-slate-600"
                         }`}
                         style={{ backgroundColor: c.color }}
                         title={c.name}
-                      />
+                      >
+                        {bgColor === c.color && (
+                          <span
+                            className="absolute inset-0 flex items-center justify-center text-xs font-bold"
+                            style={{ color: isLightColor(c.color) ? "#1e293b" : "#ffffff" }}
+                          >
+                            ✓
+                          </span>
+                        )}
+                      </button>
                     ))}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <label
+                      className="relative h-10 w-12 shrink-0 rounded-lg border-2 border-slate-300 dark:border-slate-600 cursor-pointer overflow-hidden"
+                      title="원하는 색 직접 선택"
+                      style={{ backgroundColor: bgColor }}
+                    >
+                      <input
+                        type="color"
+                        value={bgColor}
+                        onChange={(e) => { setBgColor(e.target.value); setHexInput(e.target.value); }}
+                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      />
+                      <span
+                        className="absolute inset-0 flex items-center justify-center text-base"
+                        style={{ color: isLightColor(bgColor) ? "#1e293b" : "#ffffff" }}
+                      >
+                        🎨
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={hexInput}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setHexInput(v);
+                        const n = normalizeHex(v);
+                        if (n) setBgColor(n);
+                      }}
+                      onBlur={() => {
+                        const n = normalizeHex(hexInput);
+                        if (n) setHexInput(n);
+                        else setHexInput(bgColor);
+                      }}
+                      placeholder="#ffffff"
+                      maxLength={7}
+                      className="flex-1 h-10 px-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm font-mono text-slate-700 dark:text-slate-300 focus:outline-none focus:border-indigo-500"
+                    />
                   </div>
                 </div>
 
                 {/* 크기·위치 조정 */}
                 <div>
                   <label className="block">
-                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">확대 / 축소: {(scale * 100).toFixed(0)}%</span>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">크기 조정: {(scale * 100).toFixed(0)}%</span>
                     <input
                       type="range"
-                      min="50"
-                      max="300"
+                      min="80"
+                      max="250"
                       value={scale * 100}
                       onChange={(e) => setScale(parseInt(e.target.value) / 100)}
                       className="block w-full mt-1"
@@ -250,7 +413,7 @@ export default function IdPhotoPage() {
       </div>
 
       <div className="mt-4 rounded-xl bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
-        💡 <strong>여권사진 촬영 가이드</strong>: ① 흰색 배경 ② 머리·어깨까지 포함 ③ 안경 X (반사) ④ 정면 응시 ⑤ 자연광 ⑥ 자연스러운 표정 (무표정 권장). 외무부 표준은 \"머리 32~36mm + 정수리에서 턱까지 32~36mm\".
+        💡 <strong>여권사진 촬영 가이드</strong>: ① 머리·어깨까지 포함 ② 안경 X (반사) ③ 정면 응시 ④ 자연광 ⑤ 자연스러운 표정 (무표정 권장). 외무부 표준은 &quot;머리 32~36mm + 정수리에서 턱까지 32~36mm&quot;. <strong>AI 배경 제거를 사용하면 어떤 배경에서 찍어도 됩니다.</strong>
       </div>
       <div className="mt-2 rounded-xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 p-3 text-xs text-emerald-900 dark:text-emerald-300">
         🔒 <strong>100% 안전</strong>: 사진이 서버로 전송되지 않습니다. 모든 처리는 브라우저 안에서.
