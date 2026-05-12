@@ -284,7 +284,7 @@ export default function PdfSignPage() {
       const bytes = new Uint8Array(await f.arrayBuffer());
       // pdfjs로 페이지 정보 수집 (먼저 분석 후 state 저장)
       const pdfjsLib = await import("pdfjs-dist");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
       const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(bytes) }).promise;
       const infos: PageInfo[] = [];
       const targetWidth = 700;
@@ -318,7 +318,7 @@ export default function PdfSignPage() {
       setRenderingPage(true);
       try {
         const pdfjsLib = await import("pdfjs-dist");
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(pdfBytes) }).promise;
         const page = await pdf.getPage(currentPage);
         const info = pages[currentPage - 1];
