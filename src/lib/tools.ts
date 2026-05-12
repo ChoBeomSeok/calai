@@ -103,6 +103,7 @@ export const tools: Tool[] = [
   { slug: "/compatibility", title: "궁합 계산기", shortTitle: "궁합", description: "두 사람 생년월일 → 동·서양 궁합 자동 분석.", category: "라이프", icon: "💕" },
   { slug: "/mbti-compatibility", title: "MBTI 궁합", shortTitle: "MBTI 궁합", description: "두 MBTI → 16×16 궁합 매트릭스 + 관계 팁.", category: "라이프", icon: "🧠" },
   { slug: "/carbon-footprint", title: "탄소 발자국 계산기", shortTitle: "탄소 발자국", description: "운전·여행·식단·전기로 일·연 CO₂ 배출량 추정.", category: "라이프", icon: "🌱" },
+  { slug: "/korea-rank", title: "한국에서 몇 번째? 진단", shortTitle: "한국 순위", description: "생년월일·이름·키로 같은 생일 동기·키 분위·성씨 순위·누적 출생 순번 6가지 한 페이지.", category: "라이프", icon: "🇰🇷" },
 
   // 문서 (PDF·이미지 변환 — 모두 무료·브라우저 내 처리)
   { slug: "/pdf-merge", title: "PDF 합치기 (무료)", shortTitle: "PDF 합치기", description: "여러 PDF 파일을 하나로 무료 결합. 가입·로그인·워터마크 없음. 브라우저 내 처리로 안전.", category: "문서", icon: "📑" },

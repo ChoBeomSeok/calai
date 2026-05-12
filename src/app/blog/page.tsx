@@ -2,22 +2,111 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getRecentPosts } from "@/lib/posts";
 
-export const metadata: Metadata = {
-  title: "블로그 — 실제 경험에서 정리한 세금·부동산 가이드 | calai",
-  description: "양도세·청약·전세사기·실업급여 등 한국 사용자가 실제로 겪는 상황을 직접 정리한 글. 광고·일반론 X, 실수담·체크리스트 위주.",
-  openGraph: {
-    title: "calai 블로그 — 실제 경험 가이드",
-    description: "양도세·청약·전세사기·실업급여 실수담과 체크리스트.",
-    url: "https://calai.kr/blog",
-    siteName: "calai",
-    locale: "ko_KR",
-    type: "website",
-  },
-  alternates: { canonical: "https://calai.kr/blog" },
-};
+const PER_PAGE = 5;
 
-export default function BlogIndexPage() {
-  const posts = getRecentPosts(50);
+type SP = Promise<{ page?: string }>;
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: SP;
+}): Promise<Metadata> {
+  const { page: pageStr } = await searchParams;
+  const page = parseInt(pageStr || "1") || 1;
+  const canonical = page === 1 ? "https://calai.kr/blog" : `https://calai.kr/blog?page=${page}`;
+  const titleSuffix = page === 1 ? "" : ` (${page}페이지)`;
+  return {
+    title: `블로그${titleSuffix} — 실제 경험에서 정리한 세금·부동산 가이드 | calai`,
+    description:
+      "양도세·청약·전세사기·실업급여 등 한국 사용자가 실제로 겪는 상황을 직접 정리한 글. 광고·일반론 X, 실수담·체크리스트 위주.",
+    openGraph: {
+      title: `calai 블로그${titleSuffix} — 실제 경험 가이드`,
+      description: "양도세·청약·전세사기·실업급여 실수담과 체크리스트.",
+      url: canonical,
+      siteName: "calai",
+      locale: "ko_KR",
+      type: "website",
+    },
+    alternates: { canonical },
+  };
+}
+
+function Pagination({
+  currentPage,
+  totalPages,
+}: {
+  currentPage: number;
+  totalPages: number;
+}) {
+  if (totalPages <= 1) return null;
+  const pages: number[] = [];
+  for (let i = 1; i <= totalPages; i++) pages.push(i);
+
+  const linkFor = (p: number) => (p === 1 ? "/blog" : `/blog?page=${p}`);
+  const baseBtn =
+    "min-w-9 h-9 px-3 inline-flex items-center justify-center rounded-lg text-sm border transition";
+  const inactive =
+    "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-indigo-400 hover:text-indigo-600";
+  const active =
+    "border-indigo-600 bg-indigo-600 text-white font-semibold";
+  const disabled =
+    "border-slate-100 dark:border-slate-800 text-slate-300 dark:text-slate-600 cursor-not-allowed";
+
+  return (
+    <nav
+      className="mt-12 flex items-center justify-center gap-2"
+      aria-label="페이지 네비게이션"
+    >
+      {currentPage > 1 ? (
+        <Link
+          href={linkFor(currentPage - 1)}
+          className={`${baseBtn} ${inactive}`}
+          aria-label="이전 페이지"
+        >
+          ← 이전
+        </Link>
+      ) : (
+        <span className={`${baseBtn} ${disabled}`} aria-disabled="true">← 이전</span>
+      )}
+
+      {pages.map((p) => (
+        <Link
+          key={p}
+          href={linkFor(p)}
+          className={`${baseBtn} ${p === currentPage ? active : inactive}`}
+          aria-current={p === currentPage ? "page" : undefined}
+        >
+          {p}
+        </Link>
+      ))}
+
+      {currentPage < totalPages ? (
+        <Link
+          href={linkFor(currentPage + 1)}
+          className={`${baseBtn} ${inactive}`}
+          aria-label="다음 페이지"
+        >
+          다음 →
+        </Link>
+      ) : (
+        <span className={`${baseBtn} ${disabled}`} aria-disabled="true">다음 →</span>
+      )}
+    </nav>
+  );
+}
+
+export default async function BlogIndexPage({
+  searchParams,
+}: {
+  searchParams: SP;
+}) {
+  const { page: pageStr } = await searchParams;
+  const all = getRecentPosts(200);
+  const totalPages = Math.max(1, Math.ceil(all.length / PER_PAGE));
+  const requested = parseInt(pageStr || "1") || 1;
+  const currentPage = Math.max(1, Math.min(totalPages, requested));
+  const start = (currentPage - 1) * PER_PAGE;
+  const posts = all.slice(start, start + PER_PAGE);
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -31,6 +120,9 @@ export default function BlogIndexPage() {
       <p className="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
         세금·부동산·실업급여 같은 한국 사용자가 실제로 겪는 상황을 직접 정리한 글입니다. 광고성 일반론 대신 실수담·체크리스트·시점별 의사결정 위주로 씁니다.
       </p>
+      <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        총 {all.length}개 글 · {currentPage} / {totalPages} 페이지
+      </div>
 
       <div className="mt-10 space-y-6">
         {posts.length === 0 ? (
@@ -75,6 +167,8 @@ export default function BlogIndexPage() {
           ))
         )}
       </div>
+
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
     </div>
   );
 }

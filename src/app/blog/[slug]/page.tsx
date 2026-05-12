@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { marked } from "marked";
 import { POSTS, getPost } from "@/lib/posts";
 import { tools } from "@/lib/tools";
+import { renderPost } from "@/lib/blogRender";
+import BlogReadingUI from "@/components/BlogReadingUI";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -38,8 +39,7 @@ export default async function PostPage({ params }: Props) {
   const post = getPost(slug);
   if (!post) notFound();
 
-  marked.setOptions({ gfm: true, breaks: true });
-  const html = await marked.parse(post.content);
+  const { html, headings } = await renderPost(post.content);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -112,6 +112,30 @@ export default async function PostPage({ params }: Props) {
       <p className="mt-3 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
         {post.description}
       </p>
+
+      {/* 진행 바 + 데스크탑 sticky TOC (xl 이상) */}
+      <BlogReadingUI headings={headings} />
+
+      {/* 모바일·태블릿 접이식 TOC (xl 미만) */}
+      {headings.length > 2 && (
+        <details className="xl:hidden mt-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+          <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-slate-700 dark:text-slate-300 select-none">
+            📑 목차 ({headings.length})
+          </summary>
+          <ul className="px-4 pb-4 space-y-1.5">
+            {headings.map((h) => (
+              <li key={h.id} className={h.level === 3 ? "ml-4" : ""}>
+                <a
+                  href={`#${h.id}`}
+                  className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
 
       <div
         className="markdown-preview mt-8 pt-8 border-t border-slate-200 dark:border-slate-700"

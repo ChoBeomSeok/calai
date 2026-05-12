@@ -113,6 +113,22 @@ export default function MbtiCompatibilityPage() {
           </div>
         </div>
 
+        {/* 첫 만남 케미 (NEW) */}
+        <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
+          <h3 className="text-base font-bold text-pink-700 dark:text-pink-400 mb-3">💘 첫 만남 케미</h3>
+          <div className="rounded-xl bg-pink-50 dark:bg-pink-950 p-4">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{r.firstImpression}</p>
+          </div>
+        </div>
+
+        {/* 카톡 케미 (NEW) */}
+        <div className="mt-6">
+          <h3 className="text-base font-bold text-yellow-700 dark:text-yellow-400 mb-3">📱 카톡 케미</h3>
+          <div className="rounded-xl bg-yellow-50 dark:bg-yellow-950 p-4">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{r.katokVibe}</p>
+          </div>
+        </div>
+
         {/* 데이트 스타일 */}
         <div className="mt-6">
           <h3 className="text-base font-bold text-indigo-700 dark:text-indigo-400 mb-3">🎨 추천 데이트 스타일</h3>
@@ -141,6 +157,37 @@ export default function MbtiCompatibilityPage() {
               <div className="text-xs text-orange-700 dark:text-orange-400 mb-1">{t2} (상대)가 싫어하는 것</div>
               <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{r.triggers.theirs}</p>
             </div>
+          </div>
+        </div>
+
+        {/* 금기어 (NEW) */}
+        <div className="mt-6">
+          <h3 className="text-base font-bold text-red-700 dark:text-red-400 mb-3 flex items-center gap-2">🚫 절대 하면 안 되는 말</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-xl bg-red-50 dark:bg-red-950 p-4">
+              <div className="text-xs text-red-700 dark:text-red-400 mb-2">{t1} (나)한테 → 금기어</div>
+              <ul className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-1">
+                {r.forbiddenWords.yours.map((w, i) => (
+                  <li key={i}>· {w}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-xl bg-red-50 dark:bg-red-950 p-4">
+              <div className="text-xs text-red-700 dark:text-red-400 mb-2">{t2} (상대)한테 → 금기어</div>
+              <ul className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-1">
+                {r.forbiddenWords.theirs.map((w, i) => (
+                  <li key={i}>· {w}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* 이별 사인 (NEW) */}
+        <div className="mt-6">
+          <h3 className="text-base font-bold text-slate-700 dark:text-slate-300 mb-3">💔 깨질 가능성 + 이별 사인</h3>
+          <div className="rounded-xl bg-slate-100 dark:bg-slate-700 p-4">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{r.breakupSign}</p>
           </div>
         </div>
 

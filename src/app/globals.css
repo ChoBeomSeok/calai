@@ -140,3 +140,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* sticky header(h-14 = 56px) 아래로 focus 자동 스크롤이 element를 가리지 않도록 */
+html {
+  scroll-padding-top: 64px;
+}
