@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
-import { encryptPdf, decryptPdf, preloadQpdf } from "@/lib/qpdfWasm";
+import { encryptPdf } from "@/lib/pdfEncrypt";
 
 type Mode = "encrypt" | "decrypt";
 type Bits = "256" | "128" | "40";
@@ -28,11 +28,6 @@ export default function PdfPasswordPage() {
   const [showOwnerPwd, setShowOwnerPwd] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // 페이지 진입 시 WASM 사전 로드
-  useEffect(() => {
-    preloadQpdf();
-  }, []);
-
   const handleFile = (f: File | null) => {
     if (!f) return;
     if (!f.name.toLowerCase().endsWith(".pdf") && f.type !== "application/pdf") {
@@ -55,15 +50,16 @@ export default function PdfPasswordPage() {
       setError("비밀번호를 입력해 주세요.");
       return;
     }
+    if (mode === "decrypt") {
+      setError("잠금 해제 기능은 v2에서 제공 예정입니다. 현재는 잠금만 지원합니다.");
+      return;
+    }
     setError("");
     setProcessing(true);
-    setStage(mode === "encrypt" ? "PDF 잠금 처리 중" : "PDF 잠금 해제 중");
+    setStage("PDF 잠금 처리 중");
     try {
       const inBytes = new Uint8Array(await file.arrayBuffer());
-      const out =
-        mode === "encrypt"
-          ? await encryptPdf(inBytes, userPwd, useSamePwd ? userPwd : ownerPwd, Number(bits) as 256 | 128 | 40)
-          : await decryptPdf(inBytes, userPwd);
+      const out = await encryptPdf(inBytes, userPwd, useSamePwd ? userPwd : ownerPwd, Number(bits) as 256 | 128 | 40);
 
       const blob = new Blob([toArrayBuffer(out)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
@@ -114,13 +110,16 @@ export default function PdfPasswordPage() {
               setMode("decrypt");
               setStage("");
             }}
-            className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition ${
+            className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition relative ${
               mode === "decrypt"
                 ? "bg-indigo-600 text-white"
                 : "bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
             }`}
           >
             🔓 해제 (암호 제거)
+            <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+              준비 중
+            </span>
           </button>
         </div>
 

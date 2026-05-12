@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { PDFDocument, PDFName, StandardFonts, rgb, degrees } from "pdf-lib";
 import JSZip from "jszip";
 import CalculatorLayout from "@/components/CalculatorLayout";
-import { encryptPdf, preloadQpdf } from "@/lib/qpdfWasm";
+import { encryptPdf } from "@/lib/pdfEncrypt";
 
 type Action = "page-numbers" | "watermark" | "strip-meta" | "encrypt";
 type Position = "bottom-right" | "bottom-center" | "bottom-left" | "top-right" | "top-center" | "top-left";
@@ -142,10 +142,6 @@ export default function PdfBatchPage() {
   const [wmAngle, setWmAngle] = useState(45);
   const [wmSize, setWmSize] = useState(72);
   const [encryptPwd, setEncryptPwd] = useState("");
-
-  useEffect(() => {
-    if (action === "encrypt") preloadQpdf();
-  }, [action]);
 
   const addFiles = (files: FileList | File[]) => {
     const arr = Array.from(files).filter(
