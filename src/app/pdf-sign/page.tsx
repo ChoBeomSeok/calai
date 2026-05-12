@@ -265,23 +265,29 @@ export default function PdfSignPage() {
 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const previewWrapRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // ─── 파일 로드 ───
   const handleFile = useCallback(async (f: File | null) => {
     if (!f) return;
+    if (!f.name.toLowerCase().endsWith(".pdf") && f.type !== "application/pdf") {
+      setError("PDF 파일만 지원됩니다.");
+      return;
+    }
     setError("");
-    setFile(f);
     setSignatures([]);
     setCurrentPage(1);
+    setPages([]);
+    setPdfBytes(null);
+    setFile(f);
     try {
       const bytes = new Uint8Array(await f.arrayBuffer());
-      setPdfBytes(bytes);
-      // pdfjs로 페이지 정보 수집
+      // pdfjs로 페이지 정보 수집 (먼저 분석 후 state 저장)
       const pdfjsLib = await import("pdfjs-dist");
       pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-      const pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(bytes) }).promise;
       const infos: PageInfo[] = [];
-      const targetWidth = 700; // 미리보기 너비
+      const targetWidth = 700;
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const baseVp = page.getViewport({ scale: 1 });
@@ -296,11 +302,11 @@ export default function PdfSignPage() {
           scale,
         });
       }
+      setPdfBytes(bytes);
       setPages(infos);
     } catch (e) {
+      console.error("PDF 로드 실패:", e);
       setError(e instanceof Error ? `PDF 로드 실패: ${e.message}` : "PDF 로드 실패");
-      setFile(null);
-      setPdfBytes(null);
     }
   }, []);
 
@@ -313,7 +319,7 @@ export default function PdfSignPage() {
       try {
         const pdfjsLib = await import("pdfjs-dist");
         pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-        const pdf = await pdfjsLib.getDocument({ data: pdfBytes.slice() }).promise;
+        const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(pdfBytes) }).promise;
         const page = await pdf.getPage(currentPage);
         const info = pages[currentPage - 1];
         const viewport = page.getViewport({ scale: info.scale });
@@ -481,30 +487,52 @@ export default function PdfSignPage() {
       description="PDF에 손글씨 서명 추가. 마우스·터치·펜 지각 압력 인식, 드래그·리사이즈로 정확한 위치 배치. 100% 브라우저 처리, 가입·워터마크 없음."
     >
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".pdf,application/pdf"
+          onChange={(e) => {
+            handleFile(e.target.files?.[0] || null);
+            if (e.target) e.target.value = "";
+          }}
+          className="hidden"
+        />
         {!file ? (
-          <label
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click();
+            }}
             onDragOver={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               setDragOver(true);
             }}
-            onDragLeave={() => setDragOver(false)}
+            onDragEnter={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDragOver(true);
+            }}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDragOver(false);
+            }}
             onDrop={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               setDragOver(false);
-              handleFile(e.dataTransfer.files[0] || null);
+              const f = e.dataTransfer.files?.[0] || null;
+              handleFile(f);
             }}
-            className={`block cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition ${
+            className={`cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition ${
               dragOver
                 ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950"
                 : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
             }`}
           >
-            <input
-              type="file"
-              accept=".pdf,application/pdf"
-              onChange={(e) => handleFile(e.target.files?.[0] || null)}
-              className="hidden"
-            />
             <div className="text-5xl mb-3">✍️</div>
             <div className="font-semibold text-slate-700 dark:text-slate-200">
               서명할 PDF를 드래그하거나 클릭해서 선택
@@ -512,7 +540,33 @@ export default function PdfSignPage() {
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               100% 브라우저 처리 · 파일은 서버로 전송되지 않습니다
             </div>
-          </label>
+            {error && (
+              <div className="mt-4 rounded-lg bg-rose-50 dark:bg-rose-950 border border-rose-200 dark:border-rose-800 p-3 text-sm text-rose-700 dark:text-rose-400 text-left">
+                {error}
+              </div>
+            )}
+          </div>
+        ) : pages.length === 0 ? (
+          <div className="rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 p-12 text-center">
+            {error ? (
+              <>
+                <div className="text-4xl mb-2">⚠️</div>
+                <div className="font-semibold text-rose-700 dark:text-rose-400">{error}</div>
+                <button
+                  onClick={reset}
+                  className="mt-4 text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  ↻ 다른 파일 선택
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="text-4xl mb-2 animate-pulse">📄</div>
+                <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 분석 중...</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{file.name}</div>
+              </>
+            )}
+          </div>
         ) : (
           <>
             <div className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 mb-4">
