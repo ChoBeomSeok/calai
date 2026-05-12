@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 이 프로젝트가 무엇인가
 
-`calai.kr` — 가입·로그인 없이 브라우저에서 즉시 계산하는 한국어 도구·계산기 104개 모음 사이트. Next.js 16 + React 19 + Tailwind v4. 모든 계산은 클라이언트에서 수행되어 서버로 입력값이 전송되지 않는다 (예외: `/api/exchange`, `/api/coin` 시세 프록시).
+`calai.kr` — 가입·로그인 없이 브라우저에서 즉시 계산하는 한국어 도구·계산기 105개 모음 사이트. Next.js 16 + React 19 + Tailwind v4. 모든 계산은 클라이언트에서 수행되어 서버로 입력값이 전송되지 않는다 (예외: `/api/exchange`, `/api/coin` 시세 프록시).
 
 ## 자주 쓰는 명령
 
@@ -51,7 +51,7 @@ npm run lint     # ESLint (eslint-config-next)
 
 ## 라우트 구조에 대한 비명시적 사실
 
-- **104개 도구 페이지 전부 `"use client"`** — 계산은 모두 브라우저에서. 서버 컴포넌트로 바꾸지 말 것 (interactive 폼).
+- **105개 도구 페이지 전부 `"use client"`** — 계산은 모두 브라우저에서. 서버 컴포넌트로 바꾸지 말 것 (interactive 폼).
 - **각 도구는 `page.tsx` + `layout.tsx` 쌍**. 페이지 단위 metadata·JSON-LD를 분리하기 위함. metadata는 항상 layout 쪽에 둘 것 — `"use client"` page에서는 `export const metadata`를 쓸 수 없으므로.
 - **`src/app/api/exchange/route.ts`, `src/app/api/coin/route.ts`** — 외부 환율·코인 시세 프록시. `revalidate = 3600`로 ISR 캐싱. 직접 외부 API를 클라이언트에서 부르지 말고 이 프록시를 통할 것 (CORS·키 격리).
 - **`src/app/sitemap.ts`** — `tools.ts`와 `src/lib/posts`의 `POSTS`를 합쳐 자동 생성. 정적 URL 하드코딩하지 말고 데이터에 추가.
