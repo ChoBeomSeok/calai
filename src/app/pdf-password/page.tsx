@@ -2,10 +2,11 @@
 
 import { useRef, useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
-import { encryptPdf } from "@/lib/pdfEncrypt";
+import { encryptPdf, decryptPdfByRender } from "@/lib/pdfEncrypt";
 
 type Mode = "encrypt" | "decrypt";
 type Bits = "256" | "128" | "40";
+type Dpi = "150" | "300";
 
 function toArrayBuffer(u: Uint8Array): ArrayBuffer {
   const ab = new ArrayBuffer(u.byteLength);
@@ -26,6 +27,8 @@ export default function PdfPasswordPage() {
   const [dragOver, setDragOver] = useState(false);
   const [showUserPwd, setShowUserPwd] = useState(false);
   const [showOwnerPwd, setShowOwnerPwd] = useState(false);
+  const [dpi, setDpi] = useState<Dpi>("150");
+  const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (f: File | null) => {
@@ -50,16 +53,20 @@ export default function PdfPasswordPage() {
       setError("비밀번호를 입력해 주세요.");
       return;
     }
-    if (mode === "decrypt") {
-      setError("잠금 해제 기능은 v2에서 제공 예정입니다. 현재는 잠금만 지원합니다.");
-      return;
-    }
     setError("");
     setProcessing(true);
-    setStage("PDF 잠금 처리 중");
+    setProgress(null);
+    setStage(mode === "encrypt" ? "PDF 잠금 처리 중" : "PDF 잠금 해제 처리 중");
     try {
       const inBytes = new Uint8Array(await file.arrayBuffer());
-      const out = await encryptPdf(inBytes, userPwd, useSamePwd ? userPwd : ownerPwd, Number(bits) as 256 | 128 | 40);
+      const out =
+        mode === "encrypt"
+          ? await encryptPdf(inBytes, userPwd, useSamePwd ? userPwd : ownerPwd, Number(bits) as 256 | 128 | 40)
+          : await decryptPdfByRender(inBytes, userPwd, {
+              dpi: Number(dpi),
+              quality: 0.9,
+              onProgress: (c, t) => setProgress({ current: c, total: t }),
+            });
 
       const blob = new Blob([toArrayBuffer(out)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
@@ -110,16 +117,13 @@ export default function PdfPasswordPage() {
               setMode("decrypt");
               setStage("");
             }}
-            className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition relative ${
+            className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition ${
               mode === "decrypt"
                 ? "bg-indigo-600 text-white"
                 : "bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
             }`}
           >
             🔓 해제 (암호 제거)
-            <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
-              준비 중
-            </span>
           </button>
         </div>
 
@@ -244,7 +248,40 @@ export default function PdfPasswordPage() {
                   </label>
                 </>
               )}
+
+              {mode === "decrypt" && (
+                <>
+                  <label className="block">
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">렌더링 해상도</span>
+                    <select
+                      value={dpi}
+                      onChange={(e) => setDpi(e.target.value as Dpi)}
+                      className="mt-1.5 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2.5 text-sm"
+                    >
+                      <option value="150">150 DPI (화면 표준·빠름·작은 용량)</option>
+                      <option value="300">300 DPI (인쇄 품질·느림·큰 용량)</option>
+                    </select>
+                  </label>
+                  <div className="rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
+                    ⚠️ <strong>해제 결과는 이미지 PDF로 저장됩니다</strong> — 시각적 내용은 100% 보존되지만 텍스트 검색·복사·편집은 불가능합니다. 표준 PDF 라이브러리는 보안 정책상 비밀번호 PDF의 원본 텍스트·폰트 구조를 그대로 추출할 수 없기 때문입니다.
+                  </div>
+                </>
+              )}
             </div>
+
+            {progress && (
+              <div className="mb-3">
+                <div className="text-xs text-slate-600 dark:text-slate-400 mb-1">
+                  {progress.current} / {progress.total} 페이지 렌더링 중...
+                </div>
+                <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                  <div
+                    className="h-full bg-indigo-600 transition-all"
+                    style={{ width: `${(progress.current / progress.total) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
 
             <button
               onClick={run}
