@@ -117,6 +117,276 @@ let samLoadingPromise: Promise<any> | null = null;
 
 const SAM_MODEL_ID = "Xenova/slimsam-77-uniform";
 
+// ===== Swin2SR (2배 업스케일) 모듈 레벨 캐시 =====
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let cachedSwin2SRTf: any = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let cachedSwin2SRPipeline: any = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let swin2sLoadingPromise: Promise<any> | null = null;
+
+// lightweight x2가 classical보다 메모리 1/3 (attention 채널 수가 적음)
+// 화질 차이는 미미하지만 OOM 위험이 훨씬 적음
+const SWIN2SR_MODEL_ID = "Xenova/swin2SR-lightweight-x2-64";
+
+async function getSwin2SR(onProgress: (p: number) => void) {
+  if (cachedSwin2SRTf && cachedSwin2SRPipeline) {
+    return { tf: cachedSwin2SRTf, upscaler: cachedSwin2SRPipeline };
+  }
+  if (swin2sLoadingPromise) return swin2sLoadingPromise;
+  swin2sLoadingPromise = (async () => {
+    const tf = await import("@huggingface/transformers");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (tf.env as any).allowLocalModels = false;
+    cachedSwin2SRTf = tf;
+    onProgress(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cachedSwin2SRPipeline = await (tf.pipeline as any)("image-to-image", SWIN2SR_MODEL_ID, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      progress_callback: (data: any) => {
+        if (data?.status === "progress" && typeof data.progress === "number") {
+          onProgress(Math.max(1, Math.round(data.progress)));
+        }
+      },
+    });
+    return { tf, upscaler: cachedSwin2SRPipeline };
+  })();
+  try {
+    return await swin2sLoadingPromise;
+  } finally {
+    swin2sLoadingPromise = null;
+  }
+}
+
+// 누끼 PNG (RGBA Blob) → 타일 단위 Swin2SR 처리로 큰 사진도 지원
+// 256×256 타일 + 16px overlap → 각 타일 SR → fade 합성
+async function upscaleCutoutBlob(blob: Blob, onProgress: ProgressFn): Promise<Blob> {
+  // ONNX Runtime WASM heap 확보를 위해 다른 모델 캐시 해제
+  cachedRmbgTf = null;
+  cachedRmbgModel = null;
+  cachedRmbgProcessor = null;
+  rmbgLoadingPromise = null;
+  cachedSamTf = null;
+  cachedSamModel = null;
+  cachedSamProcessor = null;
+  samLoadingPromise = null;
+  await new Promise((resolve) => setTimeout(resolve, 50));
+
+  const { tf, upscaler } = await getSwin2SR((p) => onProgress("fetch:swin2sr", p, 100));
+
+  onProgress("compute:upscale-load", 1, 100);
+  const img = new Image();
+  const url = URL.createObjectURL(blob);
+  try {
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = () => reject(new Error("업스케일 입력 로드 실패"));
+      img.src = url;
+    });
+    const origW = img.naturalWidth;
+    const origH = img.naturalHeight;
+
+    const TILE = 256;
+    const OVERLAP = 16;
+    const STEP = TILE - OVERLAP * 2;
+    const SCALE = 2;
+    const newW = origW * SCALE;
+    const newH = origH * SCALE;
+    const fadePx = OVERLAP * SCALE;
+
+    // 원본 RGBA 캔버스 + RGB 분리 캔버스 (흰 배경 합성으로 자연스러운 RGB)
+    const orig = document.createElement("canvas");
+    orig.width = origW;
+    orig.height = origH;
+    const octx = orig.getContext("2d");
+    if (!octx) throw new Error("canvas context 실패");
+    octx.drawImage(img, 0, 0);
+    const origData = octx.getImageData(0, 0, origW, origH);
+
+    const rgbCanvas = document.createElement("canvas");
+    rgbCanvas.width = origW;
+    rgbCanvas.height = origH;
+    const rgbctx = rgbCanvas.getContext("2d");
+    if (!rgbctx) throw new Error("canvas context 실패");
+    rgbctx.fillStyle = "white";
+    rgbctx.fillRect(0, 0, origW, origH);
+    rgbctx.drawImage(img, 0, 0);
+
+    // 결과 RGB 캔버스
+    const finalRgb = document.createElement("canvas");
+    finalRgb.width = newW;
+    finalRgb.height = newH;
+    const fctx = finalRgb.getContext("2d");
+    if (!fctx) throw new Error("canvas context 실패");
+
+    // 타일 좌표 리스트 생성 (마지막 타일은 끝까지 펼침)
+    type TileCoord = { tx: number; ty: number; tw: number; th: number };
+    const tiles: TileCoord[] = [];
+    for (let y = 0; y < origH; y += STEP) {
+      const ty = Math.max(0, Math.min(y - OVERLAP, origH - TILE));
+      const th = Math.min(TILE, origH - ty);
+      for (let x = 0; x < origW; x += STEP) {
+        const tx = Math.max(0, Math.min(x - OVERLAP, origW - TILE));
+        const tw = Math.min(TILE, origW - tx);
+        tiles.push({ tx, ty, tw, th });
+      }
+    }
+    // 중복 제거 (가장자리에서 같은 좌표 반복 가능)
+    const uniqueTiles = tiles.filter(
+      (t, i, arr) =>
+        arr.findIndex((u) => u.tx === t.tx && u.ty === t.ty && u.tw === t.tw && u.th === t.th) === i,
+    );
+
+    let processedTiles = 0;
+    for (const { tx, ty, tw, th } of uniqueTiles) {
+      // 타일 추출
+      const tile = document.createElement("canvas");
+      tile.width = tw;
+      tile.height = th;
+      const tctx = tile.getContext("2d");
+      if (!tctx) continue;
+      tctx.drawImage(rgbCanvas, tx, ty, tw, th, 0, 0, tw, th);
+
+      // Blob → SR
+      const tileBlob = await new Promise<Blob>((res, rej) =>
+        tile.toBlob((b) => (b ? res(b) : rej(new Error("타일 Blob 실패"))), "image/png"),
+      );
+      const raw = await tf.RawImage.fromBlob(tileBlob);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let upTile: any;
+      try {
+        upTile = await upscaler(raw);
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        if (
+          msg.includes("bad_alloc") ||
+          msg.toLowerCase().includes("memory") ||
+          msg.includes("OrtRun")
+        ) {
+          cachedSwin2SRTf = null;
+          cachedSwin2SRPipeline = null;
+          throw new Error(
+            `메모리가 부족합니다 (타일 ${tw}×${th}). 페이지를 새로고침(F5)한 뒤 다시 시도해 주세요.`,
+          );
+        }
+        throw e;
+      }
+
+      // 결과 타일에 가장자리 fade 적용 후 큰 캔버스에 합성
+      const upCanvas = upTile.toCanvas() as HTMLCanvasElement | OffscreenCanvas;
+      const upW = (upCanvas as HTMLCanvasElement).width;
+      const upH = (upCanvas as HTMLCanvasElement).height;
+      const masked = document.createElement("canvas");
+      masked.width = upW;
+      masked.height = upH;
+      const mctx = masked.getContext("2d");
+      if (!mctx) continue;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mctx.drawImage(upCanvas as any, 0, 0);
+
+      // 인접 타일이 있는 방향에만 fade 적용
+      // destination-out: source 알파만큼 destination을 제거. fillRect 외부는 영향 없음
+      // (destination-in은 fillRect 외부 alpha까지 0으로 만들어버려 사용 불가)
+      const hasLeft = tx > 0;
+      const hasTop = ty > 0;
+      const hasRight = tx + tw < origW;
+      const hasBottom = ty + th < origH;
+      const applyEdgeFade = (
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        dir: "l" | "t" | "r" | "b",
+      ) => {
+        let grad: CanvasGradient;
+        if (dir === "l" || dir === "r") grad = mctx.createLinearGradient(x, 0, x + w, 0);
+        else grad = mctx.createLinearGradient(0, y, 0, y + h);
+        // 가장자리 끝(타일 경계)은 알파 1(완전 제거), 안쪽은 알파 0(보존)
+        if (dir === "l" || dir === "t") {
+          grad.addColorStop(0, "rgba(0,0,0,1)");
+          grad.addColorStop(1, "rgba(0,0,0,0)");
+        } else {
+          grad.addColorStop(0, "rgba(0,0,0,0)");
+          grad.addColorStop(1, "rgba(0,0,0,1)");
+        }
+        mctx.save();
+        mctx.globalCompositeOperation = "destination-out";
+        mctx.fillStyle = grad;
+        mctx.fillRect(x, y, w, h);
+        mctx.restore();
+      };
+      if (hasLeft) applyEdgeFade(0, 0, fadePx, upH, "l");
+      if (hasTop) applyEdgeFade(0, 0, upW, fadePx, "t");
+      if (hasRight) applyEdgeFade(upW - fadePx, 0, fadePx, upH, "r");
+      if (hasBottom) applyEdgeFade(0, upH - fadePx, upW, fadePx, "b");
+
+      const dx = tx * SCALE;
+      const dy = ty * SCALE;
+      fctx.drawImage(masked, dx, dy);
+
+      processedTiles++;
+      onProgress("compute:upscale-tile", processedTiles, uniqueTiles.length);
+      // 매 타일 후 setTimeout 양보 — GC 트리거 + UI 갱신
+      await new Promise((r) => setTimeout(r, 0));
+    }
+
+    onProgress("compute:upscale-alpha", 95, 100);
+    // 알파 채널 2배 리사이즈
+    const alphaSmall = document.createElement("canvas");
+    alphaSmall.width = origW;
+    alphaSmall.height = origH;
+    const asctx = alphaSmall.getContext("2d");
+    if (!asctx) throw new Error("canvas context 실패");
+    const aData = asctx.createImageData(origW, origH);
+    const ad = aData.data;
+    const od = origData.data;
+    for (let i = 0; i < origW * origH; i++) {
+      ad[4 * i] = 255;
+      ad[4 * i + 1] = 255;
+      ad[4 * i + 2] = 255;
+      ad[4 * i + 3] = od[4 * i + 3];
+    }
+    asctx.putImageData(aData, 0, 0);
+
+    const alphaLarge = document.createElement("canvas");
+    alphaLarge.width = newW;
+    alphaLarge.height = newH;
+    const alctx = alphaLarge.getContext("2d");
+    if (!alctx) throw new Error("canvas context 실패");
+    alctx.imageSmoothingEnabled = true;
+    alctx.imageSmoothingQuality = "high";
+    alctx.drawImage(alphaSmall, 0, 0, newW, newH);
+    const largeAlphaData = alctx.getImageData(0, 0, newW, newH);
+
+    // 최종 합성: SR RGB + 리사이즈된 알파
+    const finalCanvas = document.createElement("canvas");
+    finalCanvas.width = newW;
+    finalCanvas.height = newH;
+    const ffctx = finalCanvas.getContext("2d");
+    if (!ffctx) throw new Error("canvas context 실패");
+    ffctx.drawImage(finalRgb, 0, 0);
+
+    const finalData = ffctx.getImageData(0, 0, newW, newH);
+    const fd = finalData.data;
+    const lad = largeAlphaData.data;
+    for (let i = 0; i < newW * newH; i++) {
+      fd[4 * i + 3] = lad[4 * i + 3];
+    }
+    ffctx.putImageData(finalData, 0, 0);
+
+    onProgress("compute:upscale-done", 100, 100);
+    return await new Promise<Blob>((resolve, reject) =>
+      finalCanvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Blob 생성 실패"))),
+        "image/png",
+        1,
+      ),
+    );
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
 // 모든 모델 인스턴스 캐시 해제 — 페이지 unmount 시 호출되어 GC 가능 상태로 만듦
 // 다음 방문 시 브라우저 IndexedDB 캐시에서 빠르게 재로딩됨 (모델 파일은 디스크 캐시에 남음)
 function releaseModelCaches() {
@@ -128,6 +398,9 @@ function releaseModelCaches() {
   cachedSamModel = null;
   cachedSamProcessor = null;
   samLoadingPromise = null;
+  cachedSwin2SRTf = null;
+  cachedSwin2SRPipeline = null;
+  swin2sLoadingPromise = null;
   // ISNet (@imgly/background-removal)는 라이브러리 내부 캐시. dynamic import된 모듈 자체는 살아있지만
   // 인스턴스/텐서는 다음 호출 시 새로 만들어지므로 명시적 dispose 없이도 GC가 회수함
   // (WebWorker로 분리 처리되어 메인 thread heap 비중도 낮음)
@@ -316,6 +589,12 @@ export default function RemoveBackgroundPage() {
 
   // SAM (클릭 분리)
   const [isSamEditing, setIsSamEditing] = useState(false);
+
+  // 2배 업스케일 (Swin2SR)
+  const [upscale2x, setUpscale2x] = useState(false);
+  const [upscaleStatus, setUpscaleStatus] = useState<{ active: boolean; label: string; pct: number }>(
+    { active: false, label: "", pct: 0 },
+  );
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   // SSR-safe: 서버에서는 false, 클라이언트 hydration 후 navigator.gpu 체크
@@ -575,18 +854,77 @@ export default function RemoveBackgroundPage() {
     // JPEG는 투명도 못 가짐 → 배경이 투명이면 PNG로 강제
     const effectiveFmt: OutFormat =
       outFormat === "jpeg" && bg.kind === "transparent" ? "png" : outFormat;
-    const blob = await composeFinal(bg, effectiveFmt);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    const baseName = file?.name.replace(/\.[^.]+$/, "") || "background-removed";
-    const ext = effectiveFmt === "jpeg" ? "jpg" : effectiveFmt;
-    const tag = bg.kind === "transparent" ? "" : "-" + (bg.label || "bg");
-    a.download = `${baseName}${tag}.${ext}`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    try {
+      // 1) 배경·마감 합성
+      let blob = await composeFinal(bg, upscale2x ? "png" : effectiveFmt);
+
+      // 2) (선택) 2배 업스케일
+      if (upscale2x) {
+        setUpscaleStatus({ active: true, label: "AI 모델 준비 중", pct: 0 });
+        try {
+          blob = await upscaleCutoutBlob(blob, (key, current, total) => {
+            const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+            const label = key.startsWith("fetch")
+              ? "화질 개선 모델 다운로드"
+              : key.includes("upscale-tile") || key.includes("upscale-sr")
+                ? "화질 개선 중"
+                : key.includes("upscale-alpha") || key.includes("upscale-compose")
+                  ? "후처리 중"
+                  : "처리 중";
+            setUpscaleStatus({ active: true, label, pct });
+          });
+          // 업스케일 후 포맷이 jpeg/webp면 다시 한 번 인코딩
+          if (effectiveFmt !== "png") {
+            const img = new Image();
+            const u = URL.createObjectURL(blob);
+            try {
+              await new Promise<void>((res, rej) => {
+                img.onload = () => res();
+                img.onerror = () => rej(new Error("재인코딩 실패"));
+                img.src = u;
+              });
+              const c = document.createElement("canvas");
+              c.width = img.naturalWidth;
+              c.height = img.naturalHeight;
+              const cx = c.getContext("2d");
+              if (cx) {
+                cx.drawImage(img, 0, 0);
+                blob = await new Promise<Blob>((res, rej) =>
+                  c.toBlob(
+                    (b) => (b ? res(b) : rej(new Error("Blob 실패"))),
+                    effectiveFmt === "webp" ? "image/webp" : "image/jpeg",
+                    0.95,
+                  ),
+                );
+              }
+            } finally {
+              URL.revokeObjectURL(u);
+            }
+          }
+        } finally {
+          setUpscaleStatus({ active: false, label: "", pct: 0 });
+        }
+      }
+
+      // 3) 다운로드
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const baseName = file?.name.replace(/\.[^.]+$/, "") || "background-removed";
+      const ext = effectiveFmt === "jpeg" ? "jpg" : effectiveFmt;
+      const tag = bg.kind === "transparent" ? "" : "-" + (bg.label || "bg");
+      const upTag = upscale2x ? "-2x" : "";
+      a.download = `${baseName}${tag}${upTag}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {
+      console.error(e);
+      setUpscaleStatus({ active: false, label: "", pct: 0 });
+      setError(e instanceof Error ? e.message : "다운로드 처리 실패");
+    }
   };
 
   return (
@@ -979,6 +1317,27 @@ export default function RemoveBackgroundPage() {
                 <span className="text-[11px] text-slate-400 ml-1">상품·인물 합성 시 자연스러움 ↑</span>
               </label>
 
+              <label className="flex items-start gap-2 cursor-pointer p-2 rounded-lg border border-fuchsia-200 dark:border-fuchsia-800 bg-fuchsia-50/50 dark:bg-fuchsia-950/30">
+                <input
+                  type="checkbox"
+                  checked={upscale2x}
+                  onChange={(e) => setUpscale2x(e.target.checked)}
+                  className="w-4 h-4 mt-0.5"
+                />
+                <span className="text-sm">
+                  <span className="text-slate-800 dark:text-slate-200 font-medium">🔍 화질 개선 (AI 2배)</span>
+                  <span className="block text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    AI로 결과 해상도를 2배로 확대해 머리카락·털·작은 디테일을 또렷하게 복원. 256×256 타일 분할 처리로 큰 사진도 가능.
+                  </span>
+                  <strong className="block text-[11px] text-fuchsia-700 dark:text-fuchsia-400 mt-1">
+                    ⚠️ 체크만으로는 적용되지 않습니다 — 아래 <strong>⬇️ 다운로드</strong> 버튼을 눌러야 처리가 시작돼요.
+                  </strong>
+                  <span className="block text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    처리 시간: 작은 사진 ~5초, 큰 사진(1000×1000+)은 ~30초~1분. 첫 사용 시 모델 ~25MB 다운로드.
+                  </span>
+                </span>
+              </label>
+
               <div>
                 <div className="text-xs text-slate-600 dark:text-slate-400 mb-1.5">출력 포맷</div>
                 <div className="grid grid-cols-3 gap-2">
@@ -1011,23 +1370,42 @@ export default function RemoveBackgroundPage() {
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={handleDownload}
-                className="flex-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 transition"
+                disabled={upscaleStatus.active}
+                className={`flex-1 rounded-xl font-semibold py-3 transition disabled:opacity-50 disabled:cursor-not-allowed text-white ${
+                  upscale2x && !upscaleStatus.active
+                    ? "bg-fuchsia-600 hover:bg-fuchsia-700"
+                    : "bg-indigo-600 hover:bg-indigo-700"
+                }`}
               >
-                ⬇️ 결과 다운로드
+                {upscaleStatus.active
+                  ? `${upscaleStatus.label}... ${upscaleStatus.pct}%`
+                  : upscale2x
+                    ? "🔍 화질 개선 후 다운로드"
+                    : "⬇️ 결과 다운로드"}
               </button>
               <button
                 onClick={() => setIsSamEditing(true)}
-                className="rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold py-3 px-5 transition"
+                disabled={upscaleStatus.active}
+                className="rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold py-3 px-5 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 ✨ 클릭 분리
               </button>
               <button
                 onClick={reset}
-                className="rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium py-3 px-5 hover:border-indigo-400 transition"
+                disabled={upscaleStatus.active}
+                className="rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium py-3 px-5 hover:border-indigo-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 다른 사진
               </button>
             </div>
+            {upscaleStatus.active && (
+              <div className="h-1.5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-950 overflow-hidden">
+                <div
+                  className="h-full bg-fuchsia-600 transition-all"
+                  style={{ width: `${upscaleStatus.pct}%` }}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
