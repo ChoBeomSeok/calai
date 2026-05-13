@@ -35,7 +35,10 @@ const notoSansKR = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://calai.kr"),
+  // Vercel 도메인 설정상 www.calai.kr가 primary이고 calai.kr는 → www 307 redirect.
+  // 일부 크롤러가 redirect를 따라가지 못해 OG 이미지를 못 가져가는 문제를 회피하기 위해
+  // 메타 기반 URL을 처음부터 www로 생성.
+  metadataBase: new URL("https://www.calai.kr"),
   title: {
     default: "calai — 한국에서 가장 빠른 도구·계산기 104개",
     template: "%s | calai",
