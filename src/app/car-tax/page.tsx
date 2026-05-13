@@ -22,11 +22,16 @@ function ageDiscount(yearsOld: number): number {
   return Math.min(0.50, (yearsOld - 2) * 0.05);
 }
 
+// 2026년 행정안전부 고시 기준 연납 할인율 (지방세법 시행령 개정에 따라 단계적 축소 중)
+// 2022: 10% → 2023: 7% → 2024: 5% → 2025: 3% → 2026: 1.5%
+const DEFAULT_ANNUAL_DISCOUNT_RATE_2026 = 1.5;
+
 export default function CarTaxPage() {
   const [cc, setCc] = useState("1998");
   const [yearsOld, setYearsOld] = useState("3");
   const [carType, setCarType] = useState<CarType>("passenger");
   const [annualPay, setAnnualPay] = useState(false);
+  const [annualDiscountPct, setAnnualDiscountPct] = useState(String(DEFAULT_ANNUAL_DISCOUNT_RATE_2026));
 
   const result = useMemo(() => {
     const c = parseFloat(cc);
@@ -47,8 +52,9 @@ export default function CarTaxPage() {
     const baseTaxAfterDiscount = baseTax * (1 - discountRate);
     const localEducation = baseTaxAfterDiscount * 0.30;
     const grossTax = baseTaxAfterDiscount + localEducation;
-    // 1월 연납 신청 시 9.15% 할인
-    const annualDiscount = annualPay ? grossTax * 0.0915 : 0;
+    // 1월 연납 신청 시 사용자 설정 할인율 적용 (2026 기본 1.5%)
+    const annualRate = (parseFloat(annualDiscountPct) || 0) / 100;
+    const annualDiscount = annualPay ? grossTax * annualRate : 0;
     const finalTax = grossTax - annualDiscount;
     const discount = baseTax * discountRate;
 
@@ -62,8 +68,9 @@ export default function CarTaxPage() {
       annualDiscount,
       finalTax,
       halfYear: finalTax / 2,
+      annualRate,
     };
-  }, [cc, yearsOld, carType, annualPay]);
+  }, [cc, yearsOld, carType, annualPay, annualDiscountPct]);
 
   return (
     <CalculatorLayout
@@ -127,10 +134,29 @@ export default function CarTaxPage() {
           </div>
         </div>
 
-        <label className="mt-4 flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-slate-300 hover:border-indigo-400">
-          <input type="checkbox" checked={annualPay} onChange={(e) => setAnnualPay(e.target.checked)} className="w-4 h-4" />
-          <span className="text-sm">1월 연납 (일시납) 신청 — 9.15% 할인 적용</span>
-        </label>
+        <div className="mt-4 rounded-lg border border-slate-300 p-3">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={annualPay} onChange={(e) => setAnnualPay(e.target.checked)} className="w-4 h-4" />
+            <span className="text-sm">1월 연납 (일시납) 신청</span>
+          </label>
+          {annualPay && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs text-slate-600">할인율</span>
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                min="0"
+                max="10"
+                value={annualDiscountPct}
+                onChange={(e) => setAnnualDiscountPct(e.target.value)}
+                className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm"
+              />
+              <span className="text-xs text-slate-500">%</span>
+              <span className="text-[11px] text-slate-400 ml-auto">2026 행안부 고시 기본 1.5%</span>
+            </div>
+          )}
+        </div>
 
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">
@@ -166,7 +192,7 @@ export default function CarTaxPage() {
               )}
               {result.annualDiscount > 0 && (
                 <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-600">1월 연납 할인 (9.15%)</span>
+                  <span className="text-slate-600">1월 연납 할인 ({(result.annualRate * 100).toFixed(1)}%)</span>
                   <span className="text-emerald-600">- {formatKRW(result.annualDiscount)} 원</span>
                 </div>
               )}
@@ -189,6 +215,12 @@ export default function CarTaxPage() {
       <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
           <strong>💡 차종별 평균</strong>: 경차 (1,000cc) 약 13만원/년 / 2,000cc 승용차 약 52만원/년 / 3,000cc 약 78만원/년
         </div>
+      <div className="mt-3 rounded-xl bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600">
+        <strong>📌 연납 할인율 변경 이력</strong>: 2022년 10% → 2023년 7% → 2024년 5% → 2025년 3% → 2026년 1.5% (단계적 축소). 최신 할인율은 위택스(wetax.go.kr)에서 확인.
+      </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 지방세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

@@ -131,6 +131,9 @@ export default function ComprehensivePropertyTaxPage() {
       <div className="mt-8 text-sm text-slate-600">
         <p className="text-xs">※ 1주택자 12억·다주택 9억 공제. 공정시장가액비율 60%. 종부세는 12월 납부. 1주택자 고령자(60세+) + 장기보유(5년+) 세액공제 합산 최대 80% 가능.</p>
       </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 종합부동산세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

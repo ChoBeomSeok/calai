@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
 
-type HouseStatus = "single-resided" | "single-not-resided" | "multi";
+type HouseStatus = "single-resided" | "single-not-resided" | "multi-2" | "multi-3plus";
 
 function formatKRW(n: number): string {
   return new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -30,7 +30,7 @@ function calcProgressiveTax(taxBase: number): number {
 // 장기보유특별공제 (1주택 거주자) — 보유년수와 거주년수 합산
 function longHoldDeductionRate(holdYears: number, resideYears: number, isSingleResided: boolean): number {
   if (!isSingleResided) {
-    // 일반: 보유 3년 이상 6% × 보유년수, 최대 30% (15년)
+    // 일반: 보유 3년 이상 2% × 보유년수, 최대 30% (15년)
     if (holdYears < 3) return 0;
     return Math.min(0.30, holdYears * 0.02);
   }
@@ -47,6 +47,7 @@ export default function CapitalGainsPage() {
   const [holdYears, setHoldYears] = useState("10");
   const [resideYears, setResideYears] = useState("5");
   const [status, setStatus] = useState<HouseStatus>("single-resided");
+  const [adjustedArea, setAdjustedArea] = useState(false);
 
   const result = useMemo(() => {
     const sale = parseFloat(salePrice);
@@ -56,46 +57,97 @@ export default function CapitalGainsPage() {
     const rY = parseFloat(resideYears) || 0;
     if (!sale || !acq) return null;
 
+    const isSingleResided = status === "single-resided";
+    const isSingleNotResided = status === "single-not-resided";
+    const isMulti2 = status === "multi-2";
+    const isMulti3 = status === "multi-3plus";
+    const isMulti = isMulti2 || isMulti3;
+
+    // 조정대상지역 + 다주택 → 중과세율 (2주택 +20%p, 3주택+ +30%p)
+    // 다주택 중과는 장기보유특별공제 배제
+    const heavyTaxApplied = adjustedArea && isMulti;
+    const heavyTaxRate = isMulti3 ? 0.30 : isMulti2 ? 0.20 : 0;
+
     const gain = sale - acq - exp;
     if (gain <= 0) {
-      return { gain, taxableGain: 0, longHoldDeduction: 0, taxBase: 0, tax: 0, localTax: 0, totalTax: 0, taxFreeNote: null };
-    }
-
-    // 1주택 12억 이하 비과세 (거주·보유 2년 조건 충족 시)
-    if (status === "single-resided" && sale <= 1_200_000_000 && hY >= 2 && rY >= 2) {
       return {
         gain,
         taxableGain: 0,
         longHoldDeduction: 0,
         taxBase: 0,
+        baseTax: 0,
+        heavyTax: 0,
         tax: 0,
         localTax: 0,
         totalTax: 0,
+        heavyTaxApplied,
+        heavyTaxRate,
+        taxFreeNote: null,
+      };
+    }
+
+    // 1주택 12억 이하 비과세 (거주·보유 2년 조건 충족 시)
+    if (isSingleResided && sale <= 1_200_000_000 && hY >= 2 && rY >= 2) {
+      return {
+        gain,
+        taxableGain: 0,
+        longHoldDeduction: 0,
+        taxBase: 0,
+        baseTax: 0,
+        heavyTax: 0,
+        tax: 0,
+        localTax: 0,
+        totalTax: 0,
+        heavyTaxApplied: false,
+        heavyTaxRate: 0,
         taxFreeNote: "1주택자 12억원 이하 + 2년 거주·보유 조건 충족 → 양도세 비과세",
       };
     }
 
     let taxableGain = gain;
     // 1주택 12억 초과 — 12억 초과분 비율로 과세
-    if (status === "single-resided" && sale > 1_200_000_000) {
+    if (isSingleResided && sale > 1_200_000_000) {
       const taxableRatio = (sale - 1_200_000_000) / sale;
       taxableGain = gain * taxableRatio;
     }
 
-    const longHoldRate = longHoldDeductionRate(hY, rY, status === "single-resided");
+    // 중과 적용 시 장기보유특별공제 배제
+    const longHoldRate = heavyTaxApplied
+      ? 0
+      : longHoldDeductionRate(hY, rY, isSingleResided);
     const longHoldDeduction = taxableGain * longHoldRate;
     const taxBase = Math.max(0, taxableGain - longHoldDeduction - 2_500_000); // 기본공제 250만원
-    const tax = calcProgressiveTax(taxBase);
+    const baseTax = calcProgressiveTax(taxBase);
+    const heavyTax = heavyTaxApplied ? taxBase * heavyTaxRate : 0;
+    const tax = baseTax + heavyTax;
     const localTax = tax * 0.10; // 지방소득세 10%
     const totalTax = tax + localTax;
 
-    return { gain, taxableGain, longHoldDeduction, taxBase, tax, localTax, totalTax, taxFreeNote: null };
-  }, [salePrice, acquisitionPrice, expenses, holdYears, resideYears, status]);
+    // 미사용 변수 ESLint 회피
+    void isSingleNotResided;
+
+    return {
+      gain,
+      taxableGain,
+      longHoldDeduction,
+      taxBase,
+      baseTax,
+      heavyTax,
+      tax,
+      localTax,
+      totalTax,
+      heavyTaxApplied,
+      heavyTaxRate,
+      taxFreeNote: null,
+    };
+  }, [salePrice, acquisitionPrice, expenses, holdYears, resideYears, status, adjustedArea]);
+
+  const isMultiSelected = status === "multi-2" || status === "multi-3plus";
 
   return (
     <CalculatorLayout
       title="양도소득세 계산기"
-      description="1주택·다주택 양도소득세를 보유·거주 기간별 장기보유특별공제까지 자동 적용해 계산합니다 (2026년 세법 기준)."
+      description="1주택·다주택 양도소득세를 보유·거주 기간·조정대상지역 중과세까지 자동 적용해 계산합니다 (2026년 세법 기준)."
     >
       <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -166,11 +218,12 @@ export default function CapitalGainsPage() {
 
         <div className="mt-5">
           <span className="text-sm font-medium text-slate-700 block mb-2">주택 보유 상태</span>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
               { v: "single-resided", label: "1주택 (거주)" },
               { v: "single-not-resided", label: "1주택 (미거주)" },
-              { v: "multi", label: "다주택" },
+              { v: "multi-2", label: "2주택" },
+              { v: "multi-3plus", label: "3주택 이상" },
             ].map((s) => (
               <button
                 key={s.v}
@@ -187,6 +240,23 @@ export default function CapitalGainsPage() {
           </div>
         </div>
 
+        {isMultiSelected && (
+          <label className="mt-4 flex items-start gap-2 cursor-pointer p-3 rounded-lg border border-amber-300 bg-amber-50 hover:border-amber-400">
+            <input
+              type="checkbox"
+              checked={adjustedArea}
+              onChange={(e) => setAdjustedArea(e.target.checked)}
+              className="w-4 h-4 mt-0.5"
+            />
+            <span className="text-sm text-amber-900">
+              <strong>조정대상지역 주택</strong> — 중과세율 적용 (2주택 +20%p, 3주택 이상 +30%p) · 장기보유특별공제 배제
+              <span className="block text-xs text-amber-700 mt-0.5">
+                서울 강남3구·용산 등 조정대상지역 지정 여부는 국토교통부 고시 확인
+              </span>
+            </span>
+          </label>
+        )}
+
         {result && (
           <div className="mt-8 pt-6 border-t border-slate-200">
             {result.taxFreeNote ? (
@@ -202,6 +272,11 @@ export default function CapitalGainsPage() {
                   <div className="text-3xl sm:text-4xl font-bold text-indigo-900">
                     {formatKRW(result.totalTax)} 원
                   </div>
+                  {result.heavyTaxApplied && (
+                    <div className="text-xs text-rose-700 mt-2 font-medium">
+                      ⚠️ 조정대상지역 다주택 중과세 (+{(result.heavyTaxRate * 100).toFixed(0)}%p) 적용
+                    </div>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-3 mt-4 text-sm">
                   <div className="rounded-xl bg-slate-50 p-3">
@@ -220,6 +295,16 @@ export default function CapitalGainsPage() {
                     <div className="text-xs text-slate-500">과세표준</div>
                     <div className="font-semibold text-slate-900">{formatKRW(result.taxBase)} 원</div>
                   </div>
+                  <div className="rounded-xl bg-slate-50 p-3">
+                    <div className="text-xs text-slate-500">기본 산출세액</div>
+                    <div className="font-semibold text-slate-900">{formatKRW(result.baseTax)} 원</div>
+                  </div>
+                  {result.heavyTaxApplied && (
+                    <div className="rounded-xl bg-rose-50 p-3">
+                      <div className="text-xs text-rose-700">다주택 중과세</div>
+                      <div className="font-semibold text-rose-800">+ {formatKRW(result.heavyTax)} 원</div>
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -233,13 +318,17 @@ export default function CapitalGainsPage() {
           <li>1주택 12억원 이하 + 2년 거주·보유 조건 충족 시 비과세</li>
           <li>1주택 12억 초과 시 초과분 비율만큼만 과세</li>
           <li>장기보유특별공제 — 1주택 거주자는 보유·거주 각 최대 40% (총 80%)</li>
-          <li>다주택 + 조정대상지역의 경우 중과세율 (+10~30%) 추가 적용 가능</li>
+          <li>조정대상지역 다주택: 2주택 +20%p, 3주택 이상 +30%p 중과 (장기보유공제 배제)</li>
+          <li>다주택 중과 한시 유예 정책 변동 가능 — 최신 국세청 고시 확인 권장</li>
           <li>본 계산은 추정치이며 실제 신고는 세무사 상담 권장</li>
         </ul>
       </div>
       <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
           <strong>💡 한국 평균 매매가 (2026 5월)</strong>: 서울 아파트 평균 약 11억 / 수도권 약 6억 / 전국 평균 약 4억
         </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

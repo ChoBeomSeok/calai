@@ -85,6 +85,9 @@ export default function PropertyTaxPage() {
           <li>3억 초과: 0.4% - 630,000원</li>
         </ul>
       </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 지방세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

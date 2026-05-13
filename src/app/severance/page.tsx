@@ -58,6 +58,9 @@ export default function SeverancePage() {
       <div className="mt-8 text-sm text-slate-600">
         <p>※ 1년 미만 근무 시 퇴직금 지급 의무 X. 평균임금은 퇴직일 직전 3개월 임금의 1일 평균.</p>
       </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 근로자퇴직급여보장법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

@@ -153,7 +153,7 @@ export default function AnnualLeavePage() {
               <div className="rounded-xl bg-amber-50 dark:bg-amber-950 p-5 text-center">
                 <div className="text-base font-bold text-amber-900 dark:text-amber-300 mb-2">⚠️ 출근율 80% 미만 — 연차 발생 X</div>
                 <div className="text-sm text-amber-700 dark:text-amber-400">
-                  근로기준법상 1년 80% 이상 출근 시에만 15일 연차 발생. 단 만근월에 대한 \"월차 1일\"은 별도 발생 가능.
+                  근로기준법상 1년 80% 이상 출근 시에만 15일 연차 발생. 단 만근월에 대한 &quot;월차 1일&quot;은 별도 발생 가능.
                 </div>
               </div>
             )}
@@ -175,7 +175,7 @@ export default function AnnualLeavePage() {
                   </div>
                 )}
                 <div className="mt-4 rounded-xl bg-slate-50 dark:bg-slate-700 p-4 text-sm">
-                  <strong>💡 안내</strong>: 입사 1년 시점에 \"1년 미만 누적 11일 + 1년차 15일\" = <strong>최대 26일</strong>까지 보유 가능합니다 (사용촉진 미실시 시).
+                  <strong>💡 안내</strong>: 입사 1년 시점에 &quot;1년 미만 누적 11일 + 1년차 15일&quot; = <strong>최대 26일</strong>까지 보유 가능합니다 (사용촉진 미실시 시).
                 </div>
               </>
             )}
@@ -208,7 +208,7 @@ export default function AnnualLeavePage() {
                       </div>
                     )}
                     <div className="text-xs text-emerald-600 dark:text-emerald-500 mt-2">
-                      ※ 회사가 \"연차사용촉진제도\"를 적법하게 시행한 경우 1년 미만 11일은 입사 1년 차 만료 시점에 소멸 가능
+                      ※ 회사가 &quot;연차사용촉진제도&quot;를 적법하게 시행한 경우 1년 미만 11일은 입사 1년 차 만료 시점에 소멸 가능
                     </div>
                   </div>
                 )}
@@ -258,6 +258,9 @@ export default function AnnualLeavePage() {
           본 도구는 <strong className="font-semibold text-slate-900 dark:text-slate-100">입사일 기준</strong> (근로기준법 표준)입니다. 회사가 <strong className="font-semibold text-slate-900 dark:text-slate-100">회계연도 기준</strong> (1월 1일~12월 31일) 운영 시 일수가 약간 다를 수 있습니다. 단, 회계 기준이 입사일 기준보다 불리하면 안 됩니다 — 대법원 판례 2018다231536.
         </p>
       </aside>
+      <div className="mt-6 text-[11px] text-slate-400 dark:text-slate-500 text-right">
+        2026년 근로기준법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

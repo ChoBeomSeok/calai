@@ -132,6 +132,9 @@ export default function InheritanceTaxPage() {
           <li>실제 신고는 세무사 상담 권장</li>
         </ul>
       </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 상속세 및 증여세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

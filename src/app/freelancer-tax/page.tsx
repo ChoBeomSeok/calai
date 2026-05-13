@@ -50,6 +50,9 @@ export default function FreelancerTaxPage() {
           <li>연간 7,500만원 이상 시 부가가치세 사업자 등록 의무</li>
         </ul>
       </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 소득세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

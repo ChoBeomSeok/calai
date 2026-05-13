@@ -138,6 +138,9 @@ export default function GiftTaxPage() {
       <div className="mt-8 text-sm text-slate-600">
         <p className="text-xs">※ 10년간 동일인 증여 합산 적용. 신고기한 3개월 (자진 신고 시 3% 세액공제). 부부간 6억·성인자녀 5천·미성년 2천·기타친족 1천 (10년 합산). 혼인·출산 1억 추가공제는 직계존속 → 자녀로 혼인일 또는 출생일 전후 2년 이내 증여만 적용.</p>
       </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 상속세 및 증여세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }

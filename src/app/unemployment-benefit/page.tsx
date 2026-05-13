@@ -4,13 +4,14 @@ import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import { MoneyHint } from "@/components/MoneyHint";
 
-// 2026년 고용보험법 기준 (고용노동부 고시)
-// 1일 상한: 66,000원 (2019년 1월부터 유지, 2026년 변동 가능성 있음 → 공식 고시 확인 필요)
+// 2026년 고용보험법 기준 (고용노동부 고시 · 2025-07 최저임금위원회 결정)
+// 1일 상한: 66,000원 (2019년 1월부터 유지)
 // 1일 하한: 최저임금의 80% × 8시간 (퇴직 시점 최저시급 기준)
-// 2026 최저시급: 10,030원 (2025년 10,030원 동결 또는 인상 가정)
+// 2026 최저시급: 10,320원 (전년 대비 +2.9%, 2025-07-14 결정·고시)
+// ※ 2026년부터 하한액 > 상한액 역전 → 실무상 하한액이 우선 적용됨
 const UPPER_LIMIT = 66_000;
-const MIN_WAGE_2026 = 10_030;
-const LOWER_LIMIT = Math.floor(MIN_WAGE_2026 * 0.8 * 8); // 64,192원
+const MIN_WAGE_2026 = 10_320;
+const LOWER_LIMIT = Math.floor(MIN_WAGE_2026 * 0.8 * 8); // 66,048원
 
 // 소정급여일수 (만 나이·고용보험 가입기간별)
 function getDays(age: number, insuredYears: number): number {
@@ -42,8 +43,9 @@ export default function UnemploymentBenefitPage() {
     const dailyAvg = w / 30;
     // 구직급여 1일 = 평균임금의 60%
     const rawDaily = dailyAvg * 0.6;
-    // 상한·하한 적용
-    const daily = Math.min(UPPER_LIMIT, Math.max(LOWER_LIMIT, rawDaily));
+    // 상한·하한 적용 — 하한 우선 (2026년 하한 > 상한 역전 케이스 대응)
+    const cappedDaily = Math.min(UPPER_LIMIT, rawDaily);
+    const daily = Math.max(LOWER_LIMIT, cappedDaily);
 
     const years = m / 12;
     const days = getDays(a, years);
@@ -82,7 +84,7 @@ export default function UnemploymentBenefitPage() {
             />
             <MoneyHint value={avgWage} />
             <span className="block mt-1 text-xs text-slate-500 dark:text-slate-400">
-              기본급 + 정기상여 + 비과세 제외한 \"평균임금\". 회사 급여명세서 기준.
+              기본급 + 정기상여 + 비과세 제외한 &quot;평균임금&quot;. 회사 급여명세서 기준.
             </span>
           </label>
 
@@ -192,7 +194,10 @@ export default function UnemploymentBenefitPage() {
             <strong>수급 자격</strong>: ① 고용보험 가입 180일 이상 ② 비자발적 이직 (해고·계약만료·권고사직) ③ 적극적 구직활동 ④ 근로 의사·능력 보유
           </div>
           <div>
-            <strong>1일 수급액</strong>: 평균임금 × 60% (상한 66,000원 / 하한 약 64,192원 = 최저시급 80%×8h)
+            <strong>1일 수급액</strong>: 평균임금 × 60% (상한 66,000원 / 하한 66,048원 = 2026 최저시급 10,320원 × 80% × 8h)
+            <div className="mt-1 text-amber-700 dark:text-amber-400">
+              ※ 2026년부터 하한액(66,048원) &gt; 상한액(66,000원) 역전 → 사실상 모든 수급자 66,048원 적용
+            </div>
           </div>
           <div>
             <strong>소정급여일수</strong>: 가입기간 + 만 나이에 따라 120~270일
@@ -211,7 +216,10 @@ export default function UnemploymentBenefitPage() {
       </div>
 
       <div className="mt-4 rounded-xl bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
-        ⚠️ <strong>주의</strong>: 본 도구는 추정치입니다. 정확한 금액은 고용보험공단 마이페이지(고용24) 조회. 자발적 퇴직도 \"정당한 사유\" (임금체불·통근곤란·질병 등) 인정 시 수급 가능 — 고용센터 상담 권장.
+        ⚠️ <strong>주의</strong>: 본 도구는 추정치입니다. 정확한 금액은 고용보험공단 마이페이지(고용24) 조회. 자발적 퇴직도 &quot;정당한 사유&quot; (임금체불·통근곤란·질병 등) 인정 시 수급 가능 — 고용센터 상담 권장.
+      </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 고용보험법 기준 · 최종 갱신: 2026-05-13
       </div>
     </CalculatorLayout>
   );

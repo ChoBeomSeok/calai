@@ -88,6 +88,9 @@ export default function AcquisitionTaxPage() {
       <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
           <strong>💡 한국 평균 매매가 (2026 5월)</strong>: 서울 아파트 평균 약 11억 / 수도권 약 6억 / 전국 평균 약 4억
         </div>
+      <div className="mt-3 text-[11px] text-slate-400 text-right">
+        2026년 지방세법 기준 · 최종 갱신: 2026-05-13
+      </div>
     </CalculatorLayout>
   );
 }
