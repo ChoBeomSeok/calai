@@ -100,14 +100,29 @@ export default function CalculatorLayout({ title, description, children }: Props
           </button>
         </div>
       </div>
-      <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">{title}</h1>
-      <p className="mt-2 text-slate-600 dark:text-slate-400 leading-relaxed">{description}</p>
-      <div className="mt-8">{children}</div>
+      {current && (
+        <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-indigo-600 dark:text-indigo-400 mb-3" style={{ fontFamily: "var(--font-roboto), sans-serif" }}>
+          {current.category}
+        </div>
+      )}
+      <h1
+        className="text-[30px] sm:text-[40px] tracking-tight text-slate-900 dark:text-slate-100 leading-[1.15]"
+        style={{ fontFamily: "var(--font-playfair), var(--font-roboto), 'Noto Sans KR', 'Pretendard', serif", fontWeight: 900 }}
+      >
+        {title}
+      </h1>
+      <p className="mt-4 text-[16px] sm:text-[17px] text-slate-600 dark:text-slate-400 leading-[1.7] max-w-prose"
+         style={{ fontFamily: "var(--font-roboto), 'Noto Sans KR', 'Pretendard', sans-serif" }}>
+        {description}
+      </p>
+      <div className="mt-10">{children}</div>
 
       <ToolGuide title={title} />
 
       <aside className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-700">
-        <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">관련 도구</h2>
+        <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-indigo-600 dark:text-indigo-400 mb-5" style={{ fontFamily: "var(--font-roboto), sans-serif" }}>
+          관련 도구
+        </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {related.map((tool) => (
             <Link

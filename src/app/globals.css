@@ -145,3 +145,111 @@ body {
 html {
   scroll-padding-top: 64px;
 }
+
+/* 블로그 글 본문 — 워밍 그레이 에디토리얼 (.markdown-preview 위에 덧입힘) */
+.blog-article {
+  font-family: "Pretendard", var(--font-noto-sans-kr), "Apple SD Gothic Neo", -apple-system, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.85;
+  color: #57534e;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.dark .blog-article { color: #d6d3d1; }
+
+.blog-article h2 {
+  font-family: "Pretendard", var(--font-noto-sans-kr), "Apple SD Gothic Neo", sans-serif;
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  margin: 2.6rem 0 0.9rem;
+  padding: 0;
+  border: none;
+  color: #44403c;
+}
+.dark .blog-article h2 { color: #f5f5f4; }
+
+.blog-article h3 {
+  font-family: "Pretendard", var(--font-noto-sans-kr), "Apple SD Gothic Neo", sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  margin: 1.8rem 0 0.5rem;
+  color: #57534e;
+}
+.dark .blog-article h3 { color: #d6d3d1; }
+
+.blog-article p { margin: 1rem 0; }
+
+.blog-article strong { font-weight: 600; color: #292524; }
+.dark .blog-article strong { color: #f5f5f4; }
+
+.blog-article a {
+  color: #4f46e5;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: #c7d2fe;
+}
+.blog-article a:hover { color: #4338ca; text-decoration-color: #6366f1; }
+.dark .blog-article a { color: #a5b4fc; text-decoration-color: #4338ca; }
+
+.blog-article blockquote {
+  font-family: "Pretendard", var(--font-noto-sans-kr), sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #78716c;
+  border-left: 2px solid #d6d3d1;
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  margin: 1.4rem 0;
+  background: transparent;
+  border-radius: 0;
+}
+.dark .blog-article blockquote { color: #a8a29e; border-left-color: #57534e; }
+.blog-article blockquote p { margin: 0.3rem 0; }
+
+.blog-article ul, .blog-article ol { margin: 1rem 0; padding-left: 1.4rem; }
+.blog-article li { margin: 0.35rem 0; }
+.blog-article ul li::marker { color: #cbd5e1; }
+
+.blog-article hr {
+  border: none;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2.5rem 0;
+}
+.dark .blog-article hr { background: #1e293b; }
+
+.blog-article table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.6rem 0;
+  font-size: 14.5px;
+  font-family: "Pretendard", var(--font-noto-sans-kr), sans-serif;
+}
+.blog-article th {
+  text-align: left;
+  font-weight: 600;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #0f172a;
+  background: transparent;
+  color: #0f172a;
+}
+.dark .blog-article th { border-bottom-color: #cbd5e1; color: #f1f5f9; }
+.blog-article td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+.dark .blog-article td { border-bottom-color: #1e293b; }
+
+.blog-article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1.8rem auto;
+  display: block;
+}

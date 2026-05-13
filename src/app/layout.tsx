@@ -1,8 +1,38 @@
 import type { Metadata } from "next";
+import { Roboto, Playfair_Display, Noto_Serif_KR, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-roboto",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const notoSerifKR = Noto_Serif_KR({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  variable: "--font-noto-serif-kr",
+  display: "swap",
+});
+
+const notoSansKR = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-noto-sans-kr",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://calai.kr"),
@@ -96,7 +126,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className="h-full" suppressHydrationWarning>
+    <html lang="ko" className={`h-full ${roboto.variable} ${playfair.variable} ${notoSerifKR.variable} ${notoSansKR.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"

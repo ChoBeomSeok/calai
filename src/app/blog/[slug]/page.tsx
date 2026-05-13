@@ -92,26 +92,31 @@ export default async function PostPage({ params }: Props) {
         <span className="text-slate-900 dark:text-slate-100 font-medium truncate">{post.title}</span>
       </nav>
 
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-medium">
-          {post.category}
-        </span>
-        <span className="text-xs text-slate-500 dark:text-slate-400">
-          작성 {new Date(post.publishedAt).toLocaleDateString("ko-KR")} · 읽기 {post.readingTime}분
-        </span>
-        {post.updatedAt && post.updatedAt !== post.publishedAt && (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">
-            ✓ 마지막 업데이트 {new Date(post.updatedAt).toLocaleDateString("ko-KR")}
-          </span>
-        )}
+      <div className="text-[12px] text-stone-500 dark:text-stone-400 mb-3" style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif" }}>
+        {post.category}
       </div>
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight leading-snug">
+      <h1
+        className="text-[26px] sm:text-[32px] text-stone-700 dark:text-stone-100 leading-[1.45]"
+        style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), 'Apple SD Gothic Neo', sans-serif", fontWeight: 600, letterSpacing: "-0.015em", wordBreak: "keep-all" }}
+      >
         {post.title}
       </h1>
-      <p className="mt-3 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+      <p className="mt-4 text-[15.5px] sm:text-[16.5px] text-stone-600 dark:text-stone-300 leading-[1.75] max-w-prose"
+         style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif", letterSpacing: "-0.01em", wordBreak: "keep-all" }}>
         {post.description}
       </p>
+      <div className="mt-5 flex items-center gap-2 text-[12.5px] text-stone-500 dark:text-stone-400" style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif" }}>
+        <time className="tabular-nums">{new Date(post.publishedAt).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })}</time>
+        <span className="text-stone-300 dark:text-stone-700">·</span>
+        <span>{post.readingTime}분 분량</span>
+        {post.updatedAt && post.updatedAt !== post.publishedAt && (
+          <>
+            <span className="text-stone-300 dark:text-stone-700">·</span>
+            <span className="text-emerald-700 dark:text-emerald-400">업데이트 {new Date(post.updatedAt).toLocaleDateString("ko-KR")}</span>
+          </>
+        )}
+      </div>
 
       {/* 진행 바 + 데스크탑 sticky TOC (xl 이상) */}
       <BlogReadingUI headings={headings} />
@@ -138,7 +143,7 @@ export default async function PostPage({ params }: Props) {
       )}
 
       <div
-        className="markdown-preview mt-8 pt-8 border-t border-slate-200 dark:border-slate-700"
+        className="markdown-preview blog-article mt-10 pt-10 border-t border-slate-200 dark:border-slate-700"
         dangerouslySetInnerHTML={{ __html: html }}
       />
 

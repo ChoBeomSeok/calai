@@ -82,7 +82,7 @@ export const tools: Tool[] = [
   { slug: "/pomodoro", title: "포모도로 타이머", shortTitle: "포모도로", description: "25분 작업 + 5분 휴식 자동 반복. 집중력 향상 기법.", category: "일상", icon: "🍅" },
   { slug: "/countdown", title: "카운트다운 타이머", shortTitle: "카운트다운", description: "원하는 시간 설정 → 0초 카운트다운 + 알림.", category: "일상", icon: "⏰" },
   { slug: "/unit-price", title: "단가 비교 (g당)", shortTitle: "단가 비교", description: "여러 상품 가격·용량 → g당·100g당·ml당 단가 비교.", category: "일상", icon: "🛒" },
-  { slug: "/annual-leave", title: "휴가 일수 계산", shortTitle: "휴가 일수", description: "입사일 → 근로기준법 기준 연차 자동 계산.", category: "일상", icon: "🏖️" },
+  { slug: "/annual-leave", title: "연차·휴가 일수 계산기", shortTitle: "휴가 일수", description: "입사일 + 출근율 → 근로기준법 기준 연차 자동 계산 (1년 미만 월차·1년차 26일·가산일수 포함).", category: "일상", icon: "🏖️" },
 
   // 개발자
   { slug: "/password", title: "비밀번호 생성기", shortTitle: "비밀번호", description: "길이·문자 종류 선택해 안전한 비밀번호 생성.", category: "개발자", icon: "🔐" },

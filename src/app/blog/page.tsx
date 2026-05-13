@@ -116,11 +116,17 @@ export default async function BlogIndexPage({
         <span className="text-slate-900 dark:text-slate-100 font-medium">블로그</span>
       </nav>
 
-      <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">블로그</h1>
-      <p className="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">
+      <h1
+        className="text-[28px] sm:text-[34px] text-stone-700 dark:text-stone-100 leading-[1.35]"
+        style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), 'Apple SD Gothic Neo', sans-serif", fontWeight: 600, letterSpacing: "-0.015em" }}
+      >
+        블로그
+      </h1>
+      <p className="mt-3 text-[15.5px] text-stone-600 dark:text-stone-300 leading-[1.75] max-w-prose"
+         style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif", letterSpacing: "-0.01em", wordBreak: "keep-all" }}>
         세금·부동산·실업급여 같은 한국 사용자가 실제로 겪는 상황을 직접 정리한 글입니다. 광고성 일반론 대신 실수담·체크리스트·시점별 의사결정 위주로 씁니다.
       </p>
-      <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-3 text-[12.5px] text-stone-500 dark:text-stone-400 tabular-nums" style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif" }}>
         총 {all.length}개 글 · {currentPage} / {totalPages} 페이지
       </div>
 
@@ -133,29 +139,34 @@ export default async function BlogIndexPage({
           posts.map((post) => (
             <article
               key={post.slug}
-              className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 hover:border-indigo-400 hover:shadow-sm transition-all"
+              className="group border-b border-slate-200 dark:border-slate-800 pb-8 last:border-b-0"
             >
               <Link href={`/blog/${post.slug}`} className="block">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-medium">
-                    {post.category}
-                  </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400">
-                    {new Date(post.publishedAt).toLocaleDateString("ko-KR")} · {post.readingTime}분
-                  </span>
+                <div className="flex items-center gap-2 mb-3 text-[12px] text-stone-500 dark:text-stone-400 tabular-nums" style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif" }}>
+                  <time>{new Date(post.publishedAt).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })}</time>
+                  <span className="text-stone-300 dark:text-stone-700">/</span>
+                  <span>{post.category}</span>
                 </div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600">
+                <h2
+                  className="text-[18.5px] sm:text-[20px] text-stone-700 dark:text-stone-100 leading-[1.5] group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors"
+                  style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), 'Apple SD Gothic Neo', sans-serif", fontWeight: 600, letterSpacing: "-0.01em", wordBreak: "keep-all" }}
+                >
                   {post.title}
                 </h2>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="mt-2.5 text-[14.5px] text-stone-600 dark:text-stone-300 leading-[1.75] max-w-prose"
+                   style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif", letterSpacing: "-0.01em", wordBreak: "keep-all" }}>
                   {post.description}
                 </p>
+                <div className="mt-3 text-[12px] text-stone-500 dark:text-stone-400" style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif" }}>
+                  {post.readingTime}분 분량
+                </div>
                 {post.toolLinks && post.toolLinks.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     {post.toolLinks.map((t) => (
                       <span
                         key={t.slug}
-                        className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                        className="text-[11.5px] px-2 py-0.5 text-stone-500 dark:text-stone-400 border border-stone-200 dark:border-stone-700"
+                        style={{ fontFamily: "Pretendard, var(--font-noto-sans-kr), sans-serif" }}
                       >
                         {t.label}
                       </span>
