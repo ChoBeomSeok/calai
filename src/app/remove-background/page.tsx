@@ -604,6 +604,33 @@ export default function RemoveBackgroundPage() {
     () => false,
   );
 
+  // ONNX Runtime의 무해한 정보성 경고를 콘솔에서 가림
+  // (VerifyEachNodeIsAssignedToAnEp — shape 관련 op이 의도적으로 CPU에서 처리됨을 알리는 메시지)
+  useEffect(() => {
+    const originalWarn = console.warn;
+    const originalError = console.error;
+    const NOISY_PATTERNS = [
+      "VerifyEachNodeIsAssignedToAnEp",
+      "Some nodes were not assigned to the preferred execution providers",
+    ];
+    const isNoisy = (args: unknown[]) => {
+      const msg = args.map((a) => (typeof a === "string" ? a : "")).join(" ");
+      return NOISY_PATTERNS.some((p) => msg.includes(p));
+    };
+    console.warn = (...args) => {
+      if (isNoisy(args)) return;
+      originalWarn.apply(console, args);
+    };
+    console.error = (...args) => {
+      if (isNoisy(args)) return;
+      originalError.apply(console, args);
+    };
+    return () => {
+      console.warn = originalWarn;
+      console.error = originalError;
+    };
+  }, []);
+
   // preload — 페이지 진입 후 idle 상태에서 백그라운드로 모델 다운로드 시작
   // RMBG-1.4는 ~80MB로 무거우므로 자동 preload 하지 않고 사용자 클릭 시점에만 받음
   useEffect(() => {
