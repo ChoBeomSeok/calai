@@ -119,6 +119,7 @@ export const tools: Tool[] = [
   // 이미지
   { slug: "/id-photo", title: "증명사진 만들기 (무료)", shortTitle: "증명사진", description: "여권·이력서·민증·비자 한국 9종 규격 자동 크롭. 배경색 변경·DPI 300 인쇄 가능.", category: "이미지", icon: "📸" },
   { slug: "/image-compress", title: "이미지 압축 (무료)", shortTitle: "이미지 압축", description: "JPG·PNG·WebP 용량 무료 압축. 일괄 처리·품질 조정·원본 비교.", category: "이미지", icon: "🗜️" },
+  { slug: "/remove-background", title: "사진 누끼 따기 (배경 제거, 무료)", shortTitle: "누끼 따기", description: "브라우저에서 AI로 즉시 누끼 따기. 인물·상품·반려동물 자동 인식, 투명 PNG·증명사진 배경색. 사진 외부 전송 X.", category: "이미지", icon: "✂️" },
 
   // 생활·행정 (일상 카테고리에 추가)
   { slug: "/unemployment-benefit", title: "실업급여 계산기", shortTitle: "실업급여", description: "평균임금·가입기간으로 1일 수급액·총 지급액·기간 자동 계산 (2026 고용보험법 기준).", category: "금융", icon: "💼" },
