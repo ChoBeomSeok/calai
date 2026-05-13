@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",

@@ -26,6 +26,7 @@ export const metadata: Metadata = {
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
+    images: ["/opengraph-image"],
   },
   alternates: { canonical: "https://calai.kr/remove-background" },
 };

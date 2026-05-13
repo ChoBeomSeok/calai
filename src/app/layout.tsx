@@ -73,11 +73,20 @@ export const metadata: Metadata = {
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "calai — 한국에서 가장 빠른 도구·계산기 104개",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "calai — 한국에서 가장 빠른 도구·계산기",
     description: "104개 도구를 한 페이지에. 가입 없이 무료.",
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
