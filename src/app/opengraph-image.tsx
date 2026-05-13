@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,20 +15,52 @@ export default async function Image() {
           alignItems: "center",
           justifyContent: "center",
           background: "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
-          fontFamily: "system-ui",
+          color: "white",
         }}
       >
-        <div style={{ fontSize: 140, fontWeight: 900, color: "white", letterSpacing: "-0.04em" }}>
+        <div
+          style={{
+            fontSize: 220,
+            fontWeight: 900,
+            letterSpacing: "-0.05em",
+            lineHeight: 1,
+          }}
+        >
           cal<span style={{ color: "#fde047" }}>ai</span>
         </div>
-        <div style={{ fontSize: 36, color: "rgba(255,255,255,0.85)", marginTop: 16 }}>
-          한국에서 가장 빠른 도구·계산기
+        <div
+          style={{
+            fontSize: 44,
+            opacity: 0.9,
+            marginTop: 24,
+            letterSpacing: "0.02em",
+          }}
+        >
+          Free Tools &amp; Calculators
         </div>
-        <div style={{ fontSize: 28, color: "rgba(255,255,255,0.7)", marginTop: 8 }}>
-          BMI · PDF · 마크다운 · SQL · Cron · 104개+ 무료
+        <div
+          style={{
+            fontSize: 30,
+            opacity: 0.75,
+            marginTop: 12,
+            letterSpacing: "0.02em",
+          }}
+        >
+          BMI &middot; Loan &middot; Tax &middot; PDF &middot; 100+ tools
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 40,
+            fontSize: 26,
+            opacity: 0.8,
+            letterSpacing: "0.04em",
+          }}
+        >
+          calai.kr
         </div>
       </div>
     ),
-    { ...size }
+    { ...size },
   );
 }
