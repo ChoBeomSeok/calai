@@ -135,14 +135,14 @@ export default function ImageCompressPage() {
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={(e) => { e.preventDefault(); setDragOver(false); addFiles(e.dataTransfer.files); }}
-          className={`block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+          className={`block cursor-pointer rounded-xl border-2 border-dashed p-12 sm:p-16 text-center transition ${
             dragOver ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950" : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
           }`}
         >
           <input type="file" accept="image/*" multiple onChange={(e) => e.target.files && addFiles(e.target.files)} className="hidden" />
-          <div className="text-4xl mb-2">🗜️</div>
-          <div className="font-semibold text-slate-700 dark:text-slate-200">이미지를 드래그하거나 클릭해서 추가</div>
-          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">JPG·PNG·WebP · 여러 장 일괄 · 100% 무료</div>
+          <div className="text-5xl sm:text-6xl mb-4">🗜️</div>
+          <div className="font-semibold text-lg sm:text-xl text-slate-800 dark:text-slate-100">이미지를 드래그하거나 클릭해서 추가</div>
+          <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">JPG·PNG·WebP · 여러 장 일괄 · 100% 무료</div>
         </label>
 
         {items.length > 0 && (

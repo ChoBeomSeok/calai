@@ -77,7 +77,7 @@ export default function PdfToImagePage() {
             setDragOver(false);
             handleFile(e.dataTransfer.files[0] || null);
           }}
-          className={`block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+          className={`block cursor-pointer rounded-xl border-2 border-dashed p-12 sm:p-16 text-center transition ${
             dragOver ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950" : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
           }`}
         >
@@ -87,13 +87,13 @@ export default function PdfToImagePage() {
             onChange={(e) => handleFile(e.target.files?.[0] || null)}
             className="hidden"
           />
-          <div className="text-4xl mb-2">🖼️</div>
+          <div className="text-5xl sm:text-6xl mb-4">🖼️</div>
           {file ? (
-            <div className="font-semibold text-slate-700 dark:text-slate-200">{file.name}</div>
+            <div className="font-semibold text-lg sm:text-xl text-slate-800 dark:text-slate-100">{file.name}</div>
           ) : (
             <>
-              <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 파일을 드래그하거나 클릭해서 선택</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">100% 무료 · 브라우저 내 처리</div>
+              <div className="font-semibold text-lg sm:text-xl text-slate-800 dark:text-slate-100">PDF 파일을 드래그하거나 클릭해서 선택</div>
+              <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">100% 무료 · 브라우저 내 처리</div>
             </>
           )}
         </label>

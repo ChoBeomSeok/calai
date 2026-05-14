@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import ResultDone from "@/components/ResultDone";
+import ProgressBar from "@/components/ProgressBar";
 
 type FileItem = { id: string; file: File; size: string };
+type Result = { url: string; filename: string; pageCount: number; fileCount: number };
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -14,8 +17,24 @@ function formatSize(bytes: number): string {
 export default function PdfMergePage() {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
+
+  const reset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    setResult(null);
+    setFiles([]);
+    setError("");
+    setProgress({ current: 0, total: 0 });
+  };
 
   const addFiles = useCallback((newFiles: FileList | File[]) => {
     const pdfs = Array.from(newFiles).filter((f) => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf"));
@@ -51,29 +70,50 @@ export default function PdfMergePage() {
     }
     setProcessing(true);
     setError("");
+    setProgress({ current: 0, total: files.length });
     try {
       const { PDFDocument } = await import("pdf-lib");
       const mergedPdf = await PDFDocument.create();
-      for (const item of files) {
-        const bytes = await item.file.arrayBuffer();
+      let pageCount = 0;
+      for (let i = 0; i < files.length; i++) {
+        const bytes = await files[i].file.arrayBuffer();
         const pdf = await PDFDocument.load(bytes, { ignoreEncryption: true });
         const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
         pages.forEach((p) => mergedPdf.addPage(p));
+        pageCount += pages.length;
+        setProgress({ current: i + 1, total: files.length });
       }
       const out = await mergedPdf.save();
       const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `merged-${Date.now()}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+      setResult({ url, filename: `merged-${Date.now()}.pdf`, pageCount, fileCount: files.length });
     } catch (e) {
       setError(`처리 실패: ${(e as Error).message}`);
     } finally {
       setProcessing(false);
     }
   };
+
+  if (result) {
+    return (
+      <CalculatorLayout
+        title="PDF 합치기 (무료)"
+        description="여러 PDF 파일을 하나로 무료 결합합니다. 가입·로그인·워터마크 없음. 모든 처리는 브라우저 안에서 이뤄져 파일이 서버로 전송되지 않습니다."
+      >
+        <ResultDone
+          title={`PDF ${result.fileCount}개가 하나로 합쳐졌습니다`}
+          url={result.url}
+          filename={result.filename}
+          stats={[
+            { label: "파일", value: `${result.fileCount}개` },
+            { label: "총 페이지", value: `${result.pageCount}장` },
+          ]}
+          currentSlug="/pdf-merge"
+          onReset={reset}
+        />
+      </CalculatorLayout>
+    );
+  }
 
   return (
     <CalculatorLayout
@@ -92,7 +132,7 @@ export default function PdfMergePage() {
             setDragOver(false);
             addFiles(e.dataTransfer.files);
           }}
-          className={`block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+          className={`block cursor-pointer rounded-xl border-2 border-dashed p-12 sm:p-16 text-center transition ${
             dragOver
               ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950"
               : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
@@ -105,9 +145,9 @@ export default function PdfMergePage() {
             onChange={(e) => e.target.files && addFiles(e.target.files)}
             className="hidden"
           />
-          <div className="text-4xl mb-2">📑</div>
-          <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 파일을 드래그하거나 클릭해서 추가</div>
-          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">여러 파일 선택 가능 · 100% 무료 · 브라우저 내 처리</div>
+          <div className="text-5xl sm:text-6xl mb-4">📑</div>
+          <div className="font-semibold text-lg sm:text-xl text-slate-800 dark:text-slate-100">PDF 파일을 드래그하거나 클릭해서 추가</div>
+          <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">여러 파일 선택 가능 · 100% 무료 · 브라우저 내 처리</div>
         </label>
 
         {files.length > 0 && (
@@ -157,6 +197,13 @@ export default function PdfMergePage() {
             >
               {processing ? "처리 중..." : `📑 ${files.length}개 PDF 합치기 (무료)`}
             </button>
+            {processing && (
+              <ProgressBar
+                label={`PDF 결합 중 (${progress.current}/${progress.total})`}
+                current={progress.current}
+                total={progress.total}
+              />
+            )}
           </div>
         )}
 

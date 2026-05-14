@@ -1,17 +1,37 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import ResultDone from "@/components/ResultDone";
+import ProgressBar from "@/components/ProgressBar";
 
 type ImageItem = { id: string; file: File; url: string };
 type PageSize = "fit" | "a4" | "letter";
+type Result = { url: string; filename: string; pageCount: number };
 
 export default function ImageToPdfPage() {
   const [images, setImages] = useState<ImageItem[]>([]);
   const [pageSize, setPageSize] = useState<PageSize>("fit");
   const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
+
+  const reset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    images.forEach((img) => URL.revokeObjectURL(img.url));
+    setResult(null);
+    setImages([]);
+    setError("");
+    setProgress({ current: 0, total: 0 });
+  };
 
   const addFiles = useCallback((newFiles: FileList | File[]) => {
     const imgs = Array.from(newFiles).filter((f) => f.type.startsWith("image/"));
@@ -50,11 +70,13 @@ export default function ImageToPdfPage() {
     if (images.length === 0) return;
     setProcessing(true);
     setError("");
+    setProgress({ current: 0, total: images.length });
     try {
       const { PDFDocument } = await import("pdf-lib");
       const pdf = await PDFDocument.create();
 
-      for (const item of images) {
+      for (let i = 0; i < images.length; i++) {
+        const item = images[i];
         const bytes = await item.file.arrayBuffer();
         const isJpg = /jpeg|jpg/i.test(item.file.type) || /\.jpe?g$/i.test(item.file.name);
         const embedded = isJpg ? await pdf.embedJpg(bytes) : await pdf.embedPng(bytes);
@@ -82,22 +104,37 @@ export default function ImageToPdfPage() {
           const y = (ph - drawH) / 2;
           page.drawImage(embedded, { x, y, width: drawW, height: drawH });
         }
+        setProgress({ current: i + 1, total: images.length });
       }
 
       const out = await pdf.save();
       const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `images-${Date.now()}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+      setResult({ url, filename: `images-${Date.now()}.pdf`, pageCount: images.length });
     } catch (e) {
       setError(`처리 실패: ${(e as Error).message}`);
     } finally {
       setProcessing(false);
     }
   };
+
+  if (result) {
+    return (
+      <CalculatorLayout
+        title="이미지 → PDF 변환 (무료)"
+        description="JPG·PNG 여러 장을 하나의 PDF로 무료 변환. 순서 조정·페이지 크기 선택 가능. 가입·워터마크 없음, 브라우저 내 처리."
+      >
+        <ResultDone
+          title={`이미지 ${result.pageCount}장이 PDF로 변환되었습니다`}
+          url={result.url}
+          filename={result.filename}
+          stats={[{ label: "페이지", value: `${result.pageCount}장` }]}
+          currentSlug="/image-to-pdf"
+          onReset={reset}
+        />
+      </CalculatorLayout>
+    );
+  }
 
   return (
     <CalculatorLayout
@@ -113,7 +150,7 @@ export default function ImageToPdfPage() {
             setDragOver(false);
             addFiles(e.dataTransfer.files);
           }}
-          className={`block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+          className={`block cursor-pointer rounded-xl border-2 border-dashed p-12 sm:p-16 text-center transition ${
             dragOver ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950" : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
           }`}
         >
@@ -124,9 +161,9 @@ export default function ImageToPdfPage() {
             onChange={(e) => e.target.files && addFiles(e.target.files)}
             className="hidden"
           />
-          <div className="text-4xl mb-2">📷</div>
-          <div className="font-semibold text-slate-700 dark:text-slate-200">JPG·PNG 이미지를 드래그하거나 클릭해서 선택</div>
-          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">여러 장 동시 선택 · 100% 무료 · 브라우저 내 처리</div>
+          <div className="text-5xl sm:text-6xl mb-4">📷</div>
+          <div className="font-semibold text-lg sm:text-xl text-slate-800 dark:text-slate-100">JPG·PNG 이미지를 드래그하거나 클릭해서 선택</div>
+          <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">여러 장 동시 선택 · 100% 무료 · 브라우저 내 처리</div>
         </label>
 
         {images.length > 0 && (
@@ -197,6 +234,13 @@ export default function ImageToPdfPage() {
             >
               {processing ? "처리 중..." : `📷 ${images.length}장을 PDF로 변환 (무료)`}
             </button>
+            {processing && (
+              <ProgressBar
+                label={`이미지 변환 중 (${progress.current}/${progress.total})`}
+                current={progress.current}
+                total={progress.total}
+              />
+            )}
           </div>
         )}
 

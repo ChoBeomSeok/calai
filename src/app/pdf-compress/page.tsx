@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import ResultDone from "@/components/ResultDone";
+import ProgressBar from "@/components/ProgressBar";
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -15,6 +17,19 @@ export default function PdfCompressPage() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<{ originalSize: number; compressedSize: number; url: string; name: string } | null>(null);
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
+
+  const reset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    setResult(null);
+    setFile(null);
+    setError("");
+  };
 
   const handleFile = (f: File | null) => {
     setFile(f);
@@ -57,6 +72,34 @@ export default function PdfCompressPage() {
     }
   };
 
+  if (result) {
+    const saved = result.originalSize > result.compressedSize
+      ? `${(((result.originalSize - result.compressedSize) / result.originalSize) * 100).toFixed(1)}%`
+      : "0%";
+    return (
+      <CalculatorLayout
+        title="PDF 용량 줄이기 (무료)"
+        description="PDF 파일 용량을 무료로 압축합니다. 메타데이터 제거 + 객체 스트림 최적화. 이메일 첨부·업로드 한도 회피에 유용. 브라우저 내 처리."
+      >
+        <ResultDone
+          title="PDF 용량이 줄었습니다"
+          url={result.url}
+          filename={result.name}
+          stats={[
+            { label: "원본", value: formatSize(result.originalSize) },
+            { label: "압축 후", value: formatSize(result.compressedSize) },
+            { label: "절감", value: saved },
+          ]}
+          currentSlug="/pdf-compress"
+          onReset={reset}
+        />
+        <div className="mt-4 rounded-xl bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
+          💡 브라우저 내 처리는 이미지 재압축이 어려워 절감률이 5~30% 수준입니다. 이미지가 많은 PDF는 &quot;이미지 → PDF&quot; 도구로 재변환 시 더 큰 절감 가능.
+        </div>
+      </CalculatorLayout>
+    );
+  }
+
   return (
     <CalculatorLayout
       title="PDF 용량 줄이기 (무료)"
@@ -71,7 +114,7 @@ export default function PdfCompressPage() {
             setDragOver(false);
             handleFile(e.dataTransfer.files[0] || null);
           }}
-          className={`block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition ${
+          className={`block cursor-pointer rounded-xl border-2 border-dashed p-12 sm:p-16 text-center transition ${
             dragOver ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950" : "border-slate-300 dark:border-slate-600 hover:border-indigo-400"
           }`}
         >
@@ -81,16 +124,16 @@ export default function PdfCompressPage() {
             onChange={(e) => handleFile(e.target.files?.[0] || null)}
             className="hidden"
           />
-          <div className="text-4xl mb-2">🗜️</div>
+          <div className="text-5xl sm:text-6xl mb-4">🗜️</div>
           {file ? (
             <>
-              <div className="font-semibold text-slate-700 dark:text-slate-200">{file.name}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">원본 {formatSize(file.size)}</div>
+              <div className="font-semibold text-lg sm:text-xl text-slate-800 dark:text-slate-100">{file.name}</div>
+              <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">원본 {formatSize(file.size)}</div>
             </>
           ) : (
             <>
-              <div className="font-semibold text-slate-700 dark:text-slate-200">PDF 파일을 드래그하거나 클릭해서 선택</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">100% 무료 · 브라우저 내 처리</div>
+              <div className="font-semibold text-lg sm:text-xl text-slate-800 dark:text-slate-100">PDF 파일을 드래그하거나 클릭해서 선택</div>
+              <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">100% 무료 · 브라우저 내 처리</div>
             </>
           )}
         </label>
@@ -105,38 +148,7 @@ export default function PdfCompressPage() {
           </button>
         )}
 
-        {result && (
-          <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-            <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950 p-5">
-              <div className="text-sm text-emerald-700 dark:text-emerald-400 mb-2">압축 완료</div>
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div>
-                  <div className="text-xs text-slate-500">원본</div>
-                  <div className="font-bold">{formatSize(result.originalSize)}</div>
-                </div>
-                <div className="text-2xl text-emerald-600 self-center">→</div>
-                <div>
-                  <div className="text-xs text-slate-500">압축 후</div>
-                  <div className="font-bold text-emerald-700 dark:text-emerald-400">
-                    {formatSize(result.compressedSize)}
-                  </div>
-                </div>
-              </div>
-              <div className="text-center mt-3 text-sm text-emerald-700 dark:text-emerald-400 font-semibold">
-                {result.originalSize > result.compressedSize
-                  ? `✓ ${(((result.originalSize - result.compressedSize) / result.originalSize) * 100).toFixed(1)}% 절감`
-                  : "압축 효과 없음 (이미 최적화된 PDF)"}
-              </div>
-            </div>
-            <a
-              href={result.url}
-              download={result.name}
-              className="block w-full mt-4 bg-emerald-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition text-center"
-            >
-              💾 다운로드
-            </a>
-          </div>
-        )}
+        {processing && <ProgressBar label="압축 중..." indeterminate />}
 
         {error && (
           <div className="mt-4 rounded-lg bg-rose-50 dark:bg-rose-950 border border-rose-200 dark:border-rose-800 p-3 text-sm text-rose-700 dark:text-rose-400">
@@ -146,7 +158,7 @@ export default function PdfCompressPage() {
       </div>
 
       <div className="mt-4 rounded-xl bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-3 text-xs text-amber-900 dark:text-amber-300">
-        💡 브라우저 내 처리는 이미지 재압축이 어려워 절감률이 5~30% 수준입니다. 이미지가 많은 PDF는 \"이미지 → PDF\" 도구로 재변환 시 더 큰 절감 가능.
+        💡 브라우저 내 처리는 이미지 재압축이 어려워 절감률이 5~30% 수준입니다. 이미지가 많은 PDF는 &quot;이미지 → PDF&quot; 도구로 재변환 시 더 큰 절감 가능.
       </div>
     </CalculatorLayout>
   );
