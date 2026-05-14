@@ -27,7 +27,7 @@ import {
   Combine, Scissors, ArchiveRestore, FileOutput, RotateCw, FileImage,
   Droplets, AlignLeft, Eraser, PenLine, Lock, Files,
   // 이미지
-  IdCard, ImageMinus, Minimize2,
+  IdCard, ImageMinus, Minimize2, Maximize2,
   // 기본
   Box,
   type LucideIcon,
@@ -157,6 +157,7 @@ const MAP: Record<string, LucideIcon> = {
   // 이미지
   "/id-photo": IdCard,
   "/image-compress": Minimize2,
+  "/image-resize": Maximize2,
   "/remove-background": ImageMinus,
 };
 

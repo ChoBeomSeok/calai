@@ -4,7 +4,7 @@ import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "calai 소개",
-  description: "calai는 한국에서 자주 쓰는 도구·계산기 104개+를 한 페이지에 모은 완전 무료 사이트입니다. PDF·이미지·실업급여·전세사기·마크다운·SQL 포매터·Cron 해석까지 모두 무료, 가입·로그인 없이 즉시 사용.",
+  description: "calai는 한국에서 자주 쓰는 도구·계산기 106개+를 한 페이지에 모은 완전 무료 사이트입니다. PDF·이미지·실업급여·전세사기·마크다운·SQL 포매터·Cron 해석까지 모두 무료, 가입·로그인 없이 즉시 사용.",
   alternates: { canonical: "https://calai.kr/about" },
 };
 

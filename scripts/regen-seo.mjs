@@ -873,6 +873,14 @@ const SEO = {
     name: "이미지 압축",
     appCategory: "MultimediaApplication",
   },
+  "image-resize": {
+    title: "이미지 크기 변경, 인스타·유튜브·블로그 프리셋까지",
+    description: "사진 픽셀·비율을 무료로 변경. 인스타 1080·유튜브 썸네일·OG 1200x630·이력서 사진 등 프리셋 + 비율 유지·고화질 리샘플링. 사진은 서버로 전송되지 않습니다.",
+    ogTitle: "이미지 리사이즈 — SNS 프리셋 + 고화질",
+    ogDescription: "사진 픽셀·비율 무료 변경, 인스타·유튜브·OG 프리셋, 브라우저 안에서 처리.",
+    name: "이미지 크기 변경 (리사이즈)",
+    appCategory: "MultimediaApplication",
+  },
   "remove-background": {
     title: "사진 누끼 따기, AI 자동 배경 제거 무료",
     description: "브라우저에서 AI로 즉시 누끼 따기. 인물·상품·반려동물 자동 인식, 투명 PNG·증명사진 배경색 변경. 사진 외부 전송 0.",
