@@ -8,6 +8,7 @@ import ToolGuide from "./ToolGuide";
 import HowToSteps from "./HowToSteps";
 import CategoryIcon from "./CategoryIcon";
 import ToolTile from "./ToolTile";
+import RelatedPosts from "./RelatedPosts";
 import { colorFor } from "@/lib/categoryColors";
 
 type Props = {
@@ -154,6 +155,8 @@ export default function CalculatorLayout({ title, description, children }: Props
       {current && <HowToSteps category={current.category} />}
 
       <ToolGuide title={title} />
+
+      {current && <RelatedPosts toolSlug={current.slug} />}
 
       <aside className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-700">
         <div className="text-[11px] uppercase tracking-[0.22em] font-bold text-indigo-600 dark:text-indigo-400 mb-5" style={{ fontFamily: "var(--font-roboto), sans-serif" }}>

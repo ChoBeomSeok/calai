@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import ResultDone from "@/components/ResultDone";
+import ProgressBar from "@/components/ProgressBar";
 
 type Mode = "all" | "range";
+type Result = { url: string; filename: string; angle: number; rotated: number; total: number };
 
 export default function PdfRotatePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -12,8 +15,23 @@ export default function PdfRotatePage() {
   const [mode, setMode] = useState<Mode>("all");
   const [rangeText, setRangeText] = useState("1-3");
   const [processing, setProcessing] = useState(false);
+  const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
+
+  const reset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    setResult(null);
+    setFile(null);
+    setPageCount(0);
+    setError("");
+  };
 
   const handleFile = async (f: File | null) => {
     if (!f) return;
@@ -75,17 +93,40 @@ export default function PdfRotatePage() {
       const out = await pdf.save();
       const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${file.name.replace(/\.pdf$/i, "")}_rotated.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+      setResult({
+        url,
+        filename: `${file.name.replace(/\.pdf$/i, "")}_rotated.pdf`,
+        angle,
+        rotated: targetPages.length,
+        total: pageCount,
+      });
     } catch (e) {
       setError(`처리 실패: ${(e as Error).message}`);
     } finally {
       setProcessing(false);
     }
   };
+
+  if (result) {
+    return (
+      <CalculatorLayout
+        title="PDF 회전 (무료)"
+        description="PDF 페이지를 90·180·270도 무료 회전. 전체 또는 특정 페이지 선택 가능. 브라우저 내 처리."
+      >
+        <ResultDone
+          title={`${result.rotated}페이지가 ${result.angle}° 회전되었습니다`}
+          url={result.url}
+          filename={result.filename}
+          stats={[
+            { label: "회전", value: `${result.angle}°` },
+            { label: "적용", value: `${result.rotated} / ${result.total}페이지` },
+          ]}
+          currentSlug="/pdf-rotate"
+          onReset={reset}
+        />
+      </CalculatorLayout>
+    );
+  }
 
   return (
     <CalculatorLayout
@@ -190,6 +231,7 @@ export default function PdfRotatePage() {
             >
               {processing ? "처리 중..." : `🔄 ${angle}° 회전 (무료)`}
             </button>
+            {processing && <ProgressBar label="회전 적용 중..." indeterminate />}
           </>
         )}
 

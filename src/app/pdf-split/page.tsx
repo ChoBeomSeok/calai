@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import ResultDone from "@/components/ResultDone";
+import ProgressBar from "@/components/ProgressBar";
 
 type Mode = "all" | "range";
+type Result = { url: string; filename: string; mode: Mode; fileCount: number; pageCount: number };
 
 export default function PdfSplitPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -11,8 +14,25 @@ export default function PdfSplitPage() {
   const [mode, setMode] = useState<Mode>("all");
   const [rangeText, setRangeText] = useState("1-3, 5, 7-9");
   const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
+
+  const reset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    setResult(null);
+    setFile(null);
+    setPageCount(0);
+    setError("");
+    setProgress({ current: 0, total: 0 });
+  };
 
   const handleFile = async (f: File | null) => {
     if (!f) return;
@@ -56,23 +76,30 @@ export default function PdfSplitPage() {
       const { PDFDocument } = await import("pdf-lib");
       const bytes = await file.arrayBuffer();
       const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
+      const baseName = file.name.replace(/\.pdf$/i, "");
 
       if (mode === "all") {
-        // 각 페이지를 별도 PDF로
+        // 모든 페이지를 zip에 담아 하나의 다운로드로
+        setProgress({ current: 0, total: pageCount });
+        const JSZip = (await import("jszip")).default;
+        const zip = new JSZip();
         for (let i = 0; i < pageCount; i++) {
           const newPdf = await PDFDocument.create();
           const [page] = await newPdf.copyPages(src, [i]);
           newPdf.addPage(page);
           const out = await newPdf.save();
-          const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `${file.name.replace(/\.pdf$/i, "")}_page-${i + 1}.pdf`;
-          a.click();
-          URL.revokeObjectURL(url);
-          await new Promise((r) => setTimeout(r, 100));
+          zip.file(`${baseName}_page-${i + 1}.pdf`, out);
+          setProgress({ current: i + 1, total: pageCount });
         }
+        const blob = await zip.generateAsync({ type: "blob" });
+        const url = URL.createObjectURL(blob);
+        setResult({
+          url,
+          filename: `${baseName}_split.zip`,
+          mode: "all",
+          fileCount: pageCount,
+          pageCount,
+        });
       } else {
         const pages = parseRange(rangeText, pageCount);
         if (pages.length === 0) {
@@ -86,11 +113,13 @@ export default function PdfSplitPage() {
         const out = await newPdf.save();
         const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${file.name.replace(/\.pdf$/i, "")}_split.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
+        setResult({
+          url,
+          filename: `${baseName}_split.pdf`,
+          mode: "range",
+          fileCount: 1,
+          pageCount: pages.length,
+        });
       }
     } catch (e) {
       setError(`처리 실패: ${(e as Error).message}`);
@@ -98,6 +127,32 @@ export default function PdfSplitPage() {
       setProcessing(false);
     }
   };
+
+  if (result) {
+    return (
+      <CalculatorLayout
+        title="PDF 분할 (무료)"
+        description="PDF를 페이지 단위로 무료 분할. 전체 분할 또는 범위 지정 (예: 1-3, 5, 7-9). 가입·워터마크 없음, 브라우저 내 처리."
+      >
+        <ResultDone
+          title={result.mode === "all" ? `PDF ${result.pageCount}페이지를 각각 분리했습니다` : `PDF에서 ${result.pageCount}페이지를 추출했습니다`}
+          url={result.url}
+          filename={result.filename}
+          stats={result.mode === "all"
+            ? [
+                { label: "분할", value: `${result.fileCount}개 파일` },
+                { label: "형식", value: "ZIP" },
+              ]
+            : [
+                { label: "선택", value: `${result.pageCount}페이지` },
+                { label: "형식", value: "PDF" },
+              ]}
+          currentSlug="/pdf-split"
+          onReset={reset}
+        />
+      </CalculatorLayout>
+    );
+  }
 
   return (
     <CalculatorLayout
@@ -149,7 +204,7 @@ export default function PdfSplitPage() {
                     : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
                 }`}
               >
-                전체 분할 ({pageCount}개 파일)
+                전체 분할 (ZIP {pageCount}개)
               </button>
               <button
                 onClick={() => setMode("range")}
@@ -159,7 +214,7 @@ export default function PdfSplitPage() {
                     : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600"
                 }`}
               >
-                범위 지정 (1개 파일)
+                범위 지정 (1개 PDF)
               </button>
             </div>
 
@@ -188,6 +243,14 @@ export default function PdfSplitPage() {
             >
               {processing ? "처리 중..." : `✂️ PDF 분할 (무료)`}
             </button>
+            {processing && mode === "all" && (
+              <ProgressBar
+                label={`페이지 분리 중 (${progress.current}/${progress.total})`}
+                current={progress.current}
+                total={progress.total}
+              />
+            )}
+            {processing && mode === "range" && <ProgressBar label="페이지 추출 중..." indeterminate />}
           </>
         )}
 

@@ -1,15 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import ResultDone from "@/components/ResultDone";
+import ProgressBar from "@/components/ProgressBar";
+
+type Result = { url: string; filename: string; extracted: number; total: number };
 
 export default function PdfExtractPage() {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [rangeText, setRangeText] = useState("1, 3-5");
   const [processing, setProcessing] = useState(false);
+  const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
+
+  const reset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    setResult(null);
+    setFile(null);
+    setPageCount(0);
+    setError("");
+  };
 
   const handleFile = async (f: File | null) => {
     if (!f) return;
@@ -64,17 +83,39 @@ export default function PdfExtractPage() {
       const out = await newPdf.save();
       const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${file.name.replace(/\.pdf$/i, "")}_extracted.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+      setResult({
+        url,
+        filename: `${file.name.replace(/\.pdf$/i, "")}_extracted.pdf`,
+        extracted: pages.length,
+        total: pageCount,
+      });
     } catch (e) {
       setError(`처리 실패: ${(e as Error).message}`);
     } finally {
       setProcessing(false);
     }
   };
+
+  if (result) {
+    return (
+      <CalculatorLayout
+        title="PDF 페이지 추출 (무료)"
+        description="PDF에서 필요한 페이지만 골라 새 파일로 무료 추출. 페이지 범위 지정 가능, 브라우저 내 처리."
+      >
+        <ResultDone
+          title={`${result.extracted}페이지를 추출했습니다`}
+          url={result.url}
+          filename={result.filename}
+          stats={[
+            { label: "추출", value: `${result.extracted}페이지` },
+            { label: "원본", value: `${result.total}페이지` },
+          ]}
+          currentSlug="/pdf-extract"
+          onReset={reset}
+        />
+      </CalculatorLayout>
+    );
+  }
 
   return (
     <CalculatorLayout
@@ -135,6 +176,7 @@ export default function PdfExtractPage() {
             >
               {processing ? "처리 중..." : "📄 페이지 추출 (무료)"}
             </button>
+            {processing && <ProgressBar label="페이지 추출 중..." indeterminate />}
           </>
         )}
 

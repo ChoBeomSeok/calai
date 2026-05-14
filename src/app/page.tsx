@@ -6,6 +6,7 @@ import { tools, type Tool } from "@/lib/tools";
 import { useFavorites, useRecent } from "@/lib/useFavorites";
 import CategoryIcon from "@/components/CategoryIcon";
 import ToolTile from "@/components/ToolTile";
+import SearchBox from "@/components/SearchBox";
 import { colorFor } from "@/lib/categoryColors";
 
 function normalize(s: string): string {
@@ -91,27 +92,9 @@ export default function Home() {
             PDF·세금·실업급여·만 나이·SQL 포매터까지. 입력값은 서버로 전송되지 않습니다.
           </p>
 
-          <div className="mt-10 relative max-w-xl">
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="찾는 계산기를 검색 (예: 만 나이, 대출, 양도세)"
-              className="w-full pl-12 pr-12 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 text-[15px] focus:border-slate-900 dark:focus:border-slate-100 focus:outline-none focus:ring-0 transition"
-            />
-            <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" strokeLinecap="round" />
-            </svg>
-            {query && (
-              <button onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 transition flex items-center justify-center" aria-label="검색 초기화">×</button>
-            )}
+          <div className="mt-10">
+            <SearchBox query={query} onQueryChange={setQuery} resultCount={filtered.length} />
           </div>
-          {query && (
-            <div className="mt-3 text-[13px] text-slate-500 dark:text-slate-400">
-              {filtered.length === 0 ? `"${query}"에 맞는 도구가 없습니다` : `${filtered.length}개 도구 매칭됨`}
-            </div>
-          )}
         </div>
       </section>
 

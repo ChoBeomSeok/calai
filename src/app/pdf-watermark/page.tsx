@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
+import ResultDone from "@/components/ResultDone";
+import ProgressBar from "@/components/ProgressBar";
 
 type Position = "center" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+type Result = { url: string; filename: string; text: string; pageCount: number };
 
 export default function PdfWatermarkPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,8 +16,22 @@ export default function PdfWatermarkPage() {
   const [position, setPosition] = useState<Position>("center");
   const [rotation, setRotation] = useState(45);
   const [processing, setProcessing] = useState(false);
+  const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (result?.url) URL.revokeObjectURL(result.url);
+    };
+  }, [result]);
+
+  const reset = () => {
+    if (result?.url) URL.revokeObjectURL(result.url);
+    setResult(null);
+    setFile(null);
+    setError("");
+  };
 
   const handleFile = (f: File | null) => {
     setFile(f);
@@ -89,17 +106,39 @@ export default function PdfWatermarkPage() {
       const out = await pdf.save();
       const blob = new Blob([new Uint8Array(out)], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${file.name.replace(/\.pdf$/i, "")}_watermarked.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+      setResult({
+        url,
+        filename: `${file.name.replace(/\.pdf$/i, "")}_watermarked.pdf`,
+        text,
+        pageCount: pdf.getPageCount(),
+      });
     } catch (e) {
       setError(`처리 실패: ${(e as Error).message}`);
     } finally {
       setProcessing(false);
     }
   };
+
+  if (result) {
+    return (
+      <CalculatorLayout
+        title="PDF 워터마크 (무료)"
+        description="PDF에 텍스트 워터마크를 무료로 추가. 위치·투명도·회전 조정 가능. 가입·서명 없이 즉시 사용, 브라우저 내 처리."
+      >
+        <ResultDone
+          title="PDF에 워터마크를 추가했습니다"
+          url={result.url}
+          filename={result.filename}
+          stats={[
+            { label: "워터마크", value: `"${result.text}"` },
+            { label: "적용", value: `${result.pageCount}페이지` },
+          ]}
+          currentSlug="/pdf-watermark"
+          onReset={reset}
+        />
+      </CalculatorLayout>
+    );
+  }
 
   return (
     <CalculatorLayout
@@ -228,6 +267,12 @@ export default function PdfWatermarkPage() {
             >
               {processing ? (/[\u3131-\uD79D]/.test(text) ? "한글 폰트 다운로드 중..." : "처리 중...") : "💧 워터마크 추가 (무료)"}
             </button>
+            {processing && (
+              <ProgressBar
+                label={/[\u3131-\uD79D]/.test(text) ? "한글 폰트 임베드 중..." : "워터마크 적용 중..."}
+                indeterminate
+              />
+            )}
           </>
         )}
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import ThemeToggle from "./ThemeToggle";
 import CategoryIcon from "./CategoryIcon";
@@ -13,6 +14,15 @@ const CATEGORY_ORDER: Tool["category"][] = [
 export default function Header() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // 이미 홈에 있으면 Link가 navigate 안 함 → 수동으로 스크롤 맨 위로
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -37,6 +47,7 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         <Link
           href="/"
+          onClick={handleLogoClick}
           className="group inline-flex items-center gap-2"
           aria-label="calai 홈"
         >

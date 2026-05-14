@@ -71,3 +71,8 @@ export function getRecentPosts(limit = 10): Post[] {
 export function getPostsByCategory(category: string): Post[] {
   return POSTS.filter((p) => p.category === category);
 }
+
+/** 특정 도구 슬러그와 연결된 글 — toolLinks 메타데이터 기준 */
+export function getPostsForTool(toolSlug: string, limit = 3): Post[] {
+  return POSTS.filter((p) => p.toolLinks?.some((l) => l.slug === toolSlug)).slice(0, limit);
+}

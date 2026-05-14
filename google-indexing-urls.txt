@@ -1,84 +1,195 @@
-# Google Search Console 색인 요청 URL 목록 (총 65개)
-# https://search.google.com/search-console > URL 검사 > 색인 요청
-# Google은 하루 약 10~12개 색인 요청 가능 → 우선순위 순으로 진행 권장
+# calai 색인 요청 URL 목록
+# ============================================================
+# Google Search Console: https://search.google.com/search-console
+#   - 상단 URL 검사 창 > URL 입력 > "색인 생성 요청"
+#   - 일일 한도 약 10개
+#
+# Naver Search Advisor: https://searchadvisor.naver.com/
+#   - 요청 > 웹페이지 수집 > URL 입력
+#   - 일일 한도 50개 (더 넉넉)
+#
+# Sitemap (한 번 제출하면 자동 크롤): https://calai.kr/sitemap.xml
+# ============================================================
 
-# ===== 1순위: 메인 + 검색량 매우 큰 도구 (TOP 10) =====
-https://calai.kr
+
+# ====================================================
+# Day 1 — 신규 + 최상위 트래픽 (TOP 10)
+# ====================================================
+https://calai.kr/
+https://calai.kr/pdf-merge
+https://calai.kr/image-resize
 https://calai.kr/age
 https://calai.kr/salary
-https://calai.kr/loan
-https://calai.kr/bmi
-https://calai.kr/savings
 https://calai.kr/capital-gains
-https://calai.kr/pyeong
-https://calai.kr/exchange
-https://calai.kr/percent
-
-# ===== 2순위: 한국 특화 + 검색량 큰 도구 =====
+https://calai.kr/remove-background
+https://calai.kr/pdf-compress
+https://calai.kr/markdown
 https://calai.kr/cheongyak-score
+
+
+# ====================================================
+# Day 2 — 두 번째 우선순위 (TOP 11~20)
+# ====================================================
+https://calai.kr/loan
+https://calai.kr/savings
+https://calai.kr/cron
+https://calai.kr/bmi
+https://calai.kr/jeonse-risk
+https://calai.kr/unemployment-benefit
+https://calai.kr/json-format
+https://calai.kr/image-compress
+https://calai.kr/qr-code
+https://calai.kr/pdf-to-image
+
+
+# ====================================================
+# Day 3 — 한국 특화 부동산·세금·금융
+# ====================================================
 https://calai.kr/ltv-dti
 https://calai.kr/acquisition-tax
 https://calai.kr/property-tax
 https://calai.kr/comprehensive-property-tax
 https://calai.kr/income-tax
 https://calai.kr/freelancer-tax
-https://calai.kr/car-tax
-https://calai.kr/electricity
-https://calai.kr/dday
-
-# ===== 3순위: 금융·부동산·세금 =====
-https://calai.kr/compound
-https://calai.kr/installment
-https://calai.kr/stock-average
-https://calai.kr/coin-average
-https://calai.kr/coin-pl
 https://calai.kr/agent-fee
 https://calai.kr/jeonse-monthly
-https://calai.kr/rental-yield
 https://calai.kr/inheritance-tax
 https://calai.kr/gift-tax
-https://calai.kr/severance
-https://calai.kr/vat
 
-# ===== 4순위: 자동차 =====
+
+# ====================================================
+# Day 4 — 일상/금융/생활
+# ====================================================
+https://calai.kr/exchange
+https://calai.kr/pyeong
+https://calai.kr/percent
+https://calai.kr/dday
+https://calai.kr/discount
+https://calai.kr/electricity
+https://calai.kr/severance
+https://calai.kr/annual-leave
+https://calai.kr/vat
+https://calai.kr/rental-yield
+
+
+# ====================================================
+# Day 5 — PDF·이미지 도구
+# ====================================================
+https://calai.kr/pdf-split
+https://calai.kr/pdf-extract
+https://calai.kr/pdf-rotate
+https://calai.kr/pdf-watermark
+https://calai.kr/image-to-pdf
+https://calai.kr/pdf-sign
+https://calai.kr/pdf-password
+https://calai.kr/pdf-batch
+https://calai.kr/strip-metadata
+https://calai.kr/id-photo
+
+
+# ====================================================
+# Day 6 — 개발자 도구
+# ====================================================
+https://calai.kr/base64
+https://calai.kr/url-encode
+https://calai.kr/jwt-decode
+https://calai.kr/regex-test
+https://calai.kr/uuid
+https://calai.kr/password
+https://calai.kr/color
+https://calai.kr/color-palette
+https://calai.kr/timestamp
+https://calai.kr/sql-format
+
+
+# ====================================================
+# Day 7 — 자동차·라이프·문서
+# ====================================================
+https://calai.kr/car-tax
 https://calai.kr/car-loan
 https://calai.kr/fuel-cost
 https://calai.kr/parking-fee
 https://calai.kr/ev-charge
+https://calai.kr/toll-fee
+https://calai.kr/wedding-cost
+https://calai.kr/child-cost
+https://calai.kr/korea-rank
+https://calai.kr/word-count
 
-# ===== 5순위: 건강 =====
+
+# ====================================================
+# Day 8 — 건강
+# ====================================================
 https://calai.kr/calorie
 https://calai.kr/standard-weight
 https://calai.kr/water-intake
 https://calai.kr/sleep
-https://calai.kr/child-height
 https://calai.kr/heart-rate
 https://calai.kr/pregnancy
 https://calai.kr/ovulation
 https://calai.kr/alcohol
 https://calai.kr/one-rm
+https://calai.kr/child-height
 
-# ===== 6순위: 일상·생활 =====
-https://calai.kr/discount
+
+# ====================================================
+# Day 9 — 나머지 일상·라이프
+# ====================================================
 https://calai.kr/tip
 https://calai.kr/gpa
 https://calai.kr/lunar
 https://calai.kr/zodiac
 https://calai.kr/unit
 https://calai.kr/timezone
+https://calai.kr/lotto
+https://calai.kr/pomodoro
+https://calai.kr/countdown
+https://calai.kr/unit-price
 
-# ===== 7순위: 개발자 도구 =====
-https://calai.kr/password
-https://calai.kr/color
-https://calai.kr/uuid
-https://calai.kr/json-format
-https://calai.kr/base64
-https://calai.kr/url-encode
-https://calai.kr/jwt-decode
-https://calai.kr/regex-test
 
-# ===== 8순위: 정책 페이지 =====
+# ====================================================
+# Day 10 — 추가 도구 + 정책
+# ====================================================
+https://calai.kr/compatibility
+https://calai.kr/mbti-compatibility
+https://calai.kr/carbon-footprint
+https://calai.kr/marathon-pace
+https://calai.kr/mountain-time
+https://calai.kr/csv-json
+https://calai.kr/hash
+https://calai.kr/ai-token
+https://calai.kr/inflation
+https://calai.kr/job-change
+
+
+# ====================================================
+# Day 11 — 마지막 잔여 도구 + 정책 페이지
+# ====================================================
+https://calai.kr/remit-fee
+https://calai.kr/rule-of-72
+https://calai.kr/coin-pl
+https://calai.kr/coin-average
+https://calai.kr/stock-average
+https://calai.kr/compound
+https://calai.kr/installment
 https://calai.kr/about
 https://calai.kr/privacy
 https://calai.kr/terms
+
+
+# ====================================================
+# Day 12 — 콘택트 + 블로그 (있다면)
+# ====================================================
 https://calai.kr/contact
+https://calai.kr/blog
+
+
+# ============================================================
+# 참고
+# ============================================================
+# - 색인 요청 후 크롤 보통 1~3일
+# - 새 타이틀이 검색결과 노출까지 +며칠 추가 소요
+# - 구글이 임의로 타이틀 재작성하는 경우 있음 (예: "(무료)" 제거)
+# - 사이트맵만 다시 제출해도 1~2주 안에 대부분 처리됨
+#
+# 총 URL 수: 106개 도구 + 4개 정책/소개 = 110개
