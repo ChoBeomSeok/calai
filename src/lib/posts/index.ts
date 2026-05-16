@@ -21,6 +21,19 @@ import { post as coinPl2Years } from "./coin-pl-2years";
 import { post as bmiCheckup } from "./bmi-checkup";
 import { post as propertyTaxDetail } from "./property-tax-detail";
 import { post as inflation30Years } from "./inflation-30years";
+// 2026-05-15 신규
+import { post as incomeTaxD15 } from "./income-tax-d15";
+import { post as freelancerRefund5Years } from "./freelancer-refund-5years";
+import { post as sidehustleTaxAunt } from "./sidehustle-tax-aunt";
+import { post as propertyTaxInstallment } from "./property-tax-installment";
+import { post as annualLeaveResignation } from "./annual-leave-resignation";
+import { post as summerVacationPayQna } from "./summer-vacation-pay-qna";
+import { post as capitalGains1House } from "./capital-gains-1house-12conditions";
+import { post as jeonseExplainParents } from "./jeonse-explain-to-parents";
+import { post as cheongyak3Way } from "./cheongyak-3way-compare";
+import { post as businessVsFreelancer } from "./business-vs-freelancer-timeline";
+import { post as pdfMergeSites } from "./pdf-merge-sites-compare";
+import { post as nukkiSites } from "./nukki-sites-compare";
 
 export type Post = {
   slug: string;
@@ -36,6 +49,20 @@ export type Post = {
 };
 
 export const POSTS: Post[] = [
+  // 2026-05-15 신규 (최상단 노출)
+  incomeTaxD15,
+  freelancerRefund5Years,
+  sidehustleTaxAunt,
+  propertyTaxInstallment,
+  annualLeaveResignation,
+  summerVacationPayQna,
+  capitalGains1House,
+  jeonseExplainParents,
+  cheongyak3Way,
+  businessVsFreelancer,
+  pdfMergeSites,
+  nukkiSites,
+  // 기존
   yangdoseStory,
   salaryParadox,
   cheongyakFriend,
