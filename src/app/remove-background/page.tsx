@@ -1135,7 +1135,11 @@ function SamEditor({
   const [modelStatus, setModelStatus] = useState<"loading" | "ready" | "error">("loading");
   const [progress, setProgress] = useState(0);
   const [points, setPoints] = useState<SamPoint[]>([]);
-  const [pointMode, setPointMode] = useState<"add" | "exclude">("add");
+  const [pointMode, setPointMode] = useState<"add" | "exclude" | "erase">("add");
+  const [brushSize, setBrushSize] = useState(20);
+  // 브러시 드래그 상태
+  const isErasingRef = useRef(false);
+  const lastBrushPosRef = useRef<{ x: number; y: number } | null>(null);
   const [isComputing, setIsComputing] = useState(false);
   const [currentMask, setCurrentMask] = useState<{
     data: Uint8Array;
@@ -1268,18 +1272,94 @@ function SamEditor({
     };
   }, [points, modelStatus]);
 
-  const handleCanvasClick = (e: React.MouseEvent | React.TouchEvent) => {
+  // 캔버스 좌표 추출 (마우스/터치 공통)
+  const getCanvasCoords = (e: React.MouseEvent | React.TouchEvent | PointerEvent) => {
     const overlay = overlayCanvasRef.current;
-    if (!overlay) return;
+    if (!overlay) return null;
     const rect = overlay.getBoundingClientRect();
     const scaleX = overlay.width / rect.width;
     const scaleY = overlay.height / rect.height;
-    const clientX = "touches" in e ? e.changedTouches[0].clientX : e.clientX;
-    const clientY = "touches" in e ? e.changedTouches[0].clientY : e.clientY;
+    let clientX: number;
+    let clientY: number;
+    if ("touches" in e) {
+      clientX = e.changedTouches[0].clientX;
+      clientY = e.changedTouches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
     const x = Math.round((clientX - rect.left) * scaleX);
     const y = Math.round((clientY - rect.top) * scaleY);
-    if (x < 0 || y < 0 || x >= overlay.width || y >= overlay.height) return;
-    setPoints((prev) => [...prev, { x, y, label: pointMode === "add" ? 1 : 0 }]);
+    if (x < 0 || y < 0 || x >= overlay.width || y >= overlay.height) return null;
+    return { x, y };
+  };
+
+  const handleCanvasClick = (e: React.MouseEvent | React.TouchEvent) => {
+    if (pointMode === "erase") return; // erase는 drag로 처리
+    const c = getCanvasCoords(e);
+    if (!c) return;
+    setPoints((prev) => [...prev, { x: c.x, y: c.y, label: pointMode === "add" ? 1 : 0 }]);
+  };
+
+  // 브러시 스트로크 — 두 점 사이를 원으로 채우며 알파 0으로 (선분 그리기)
+  const eraseStroke = (from: { x: number; y: number }, to: { x: number; y: number }) => {
+    const base = baseCanvasRef.current;
+    if (!base) return;
+    const ctx = base.getContext("2d");
+    if (!ctx) return;
+    ctx.save();
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillStyle = "rgba(0,0,0,1)";
+    // 두 점 사이 보간 (1px 간격)
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const dist = Math.max(1, Math.hypot(dx, dy));
+    const steps = Math.ceil(dist);
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const x = from.x + dx * t;
+      const y = from.y + dy * t;
+      ctx.beginPath();
+      ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  };
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (pointMode !== "erase") return;
+    const c = getCanvasCoords(e);
+    if (!c) return;
+    isErasingRef.current = true;
+    lastBrushPosRef.current = c;
+    eraseStroke(c, c);
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (pointMode !== "erase" || !isErasingRef.current) return;
+    const c = getCanvasCoords(e);
+    if (!c || !lastBrushPosRef.current) return;
+    eraseStroke(lastBrushPosRef.current, c);
+    lastBrushPosRef.current = c;
+  };
+
+  const handlePointerUp = async (e: React.PointerEvent) => {
+    if (pointMode !== "erase") return;
+    if (!isErasingRef.current) return;
+    isErasingRef.current = false;
+    lastBrushPosRef.current = null;
+    (e.target as HTMLElement).releasePointerCapture?.(e.pointerId);
+    // 스트로크 끝나면 baseCanvas → blob → workingBlob 갱신 + 히스토리 저장
+    const base = baseCanvasRef.current;
+    if (!base) return;
+    const newBlob: Blob | null = await new Promise((r) => base.toBlob(r, "image/png", 0.95));
+    if (!newBlob) return;
+    const h = historyRef.current;
+    h.stack = [...h.stack.slice(0, h.index + 1), newBlob].slice(-20);
+    h.index = h.stack.length - 1;
+    setWorkingBlob(newBlob);
+    refreshUndoRedo();
   };
 
   const handleReset = () => {
@@ -1397,7 +1477,33 @@ function SamEditor({
               >
                 − 빼지 말 영역
               </button>
+              <button
+                onClick={() => setPointMode("erase")}
+                className={`px-3 py-2 text-sm font-medium border-l border-slate-300 dark:border-slate-600 ${
+                  pointMode === "erase"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200"
+                }`}
+                title="얇은 잔재·점은 SAM이 못 잡음 — 브러시로 직접 지우기"
+              >
+                🖌 지우개
+              </button>
             </div>
+            {pointMode === "erase" && (
+              <label className="inline-flex items-center gap-2 text-xs">
+                <span className="text-slate-600 dark:text-slate-400">브러시</span>
+                <input
+                  type="range"
+                  min="5"
+                  max="80"
+                  step="1"
+                  value={brushSize}
+                  onChange={(e) => setBrushSize(parseInt(e.target.value))}
+                  className="w-24 accent-indigo-600"
+                />
+                <span className="text-slate-500 tabular-nums w-8">{brushSize}px</span>
+              </label>
+            )}
             <button
               onClick={handleReset}
               disabled={points.length === 0}
@@ -1427,8 +1533,11 @@ function SamEditor({
           </div>
 
           <div className="text-xs text-slate-500 dark:text-slate-400">
-            사진 위에서 <strong>빼낼 영역(예: 발 받침 통나무)</strong>을 클릭하세요. SAM이 자동으로 객체를
-            인식합니다. 너무 많이 잡히면 빼지 말 부분에 <strong>−</strong> 클릭으로 정제하세요.
+            {pointMode === "erase" ? (
+              <>드래그로 직접 픽셀 지우기. <strong>얇은 막대·점·미세 잔재</strong>를 SAM이 못 잡을 때 사용. 브러시 크기 조절 가능.</>
+            ) : (
+              <>사진 위에서 <strong>빼낼 영역(예: 발 받침 통나무)</strong>을 클릭하세요. SAM이 자동으로 객체를 인식합니다. 너무 많이 잡히면 빼지 말 부분에 <strong>−</strong> 클릭으로 정제하세요.</>
+            )}
           </div>
 
           <div
@@ -1444,8 +1553,16 @@ function SamEditor({
                 ref={overlayCanvasRef}
                 onClick={handleCanvasClick}
                 onTouchEnd={handleCanvasClick}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
                 className="absolute inset-0 max-w-full h-auto block"
-                style={{ cursor: "crosshair", touchAction: "none", pointerEvents: "auto" }}
+                style={{
+                  cursor: pointMode === "erase" ? "crosshair" : "crosshair",
+                  touchAction: "none",
+                  pointerEvents: "auto",
+                }}
               />
             </div>
           </div>
