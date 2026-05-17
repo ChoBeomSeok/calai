@@ -13,6 +13,48 @@ const RATE_HEALTH = 0.03545; // 건강보험 3.545%
 const RATE_LONG_TERM_CARE = 0.1295; // 장기요양 (건강보험료의 12.95%)
 const RATE_EMPLOYMENT = 0.009; // 고용보험 0.9%
 
+// 한국 임금근로자 연봉 백분위 (2026 추정 기준)
+// 출처: 국세청 근로소득 백분위 + 통계청 임금근로일자리 동향 + 언론 보도
+// (중앙일보·Daum 등: 연봉 1억 = 상위 6.7%, 130~140만 명 / 2천만 명)
+// 각 점: [임계 연봉, 상위 N%]
+const SALARY_PERCENTILES: [number, number][] = [
+  [300_000_000, 1],
+  [210_000_000, 3],
+  [150_000_000, 5],
+  [100_000_000, 7],
+  [88_000_000, 10],
+  [75_000_000, 15],
+  [63_000_000, 20],
+  [50_000_000, 30],
+  [42_000_000, 40],
+  [36_000_000, 50],
+  [30_000_000, 60],
+  [27_000_000, 70],
+  [23_000_000, 80],
+  [18_000_000, 90],
+];
+
+const MEDIAN_SALARY_2026 = 36_000_000; // 중위 약 3,600만
+const MEAN_SALARY_2026 = 42_000_000; // 평균 약 4,200만 (중위보다 약 17% 높음)
+
+/**
+ * 연봉 → 상위 백분위 (선형 보간). 단위: %
+ * 예: 8천만 → 상위 약 17%
+ */
+function calcPercentile(salary: number): number {
+  if (salary >= SALARY_PERCENTILES[0][0]) return 1;
+  if (salary <= SALARY_PERCENTILES[SALARY_PERCENTILES.length - 1][0]) return 95;
+  for (let i = 0; i < SALARY_PERCENTILES.length - 1; i++) {
+    const [highSalary, highPct] = SALARY_PERCENTILES[i];
+    const [lowSalary, lowPct] = SALARY_PERCENTILES[i + 1];
+    if (salary <= highSalary && salary >= lowSalary) {
+      const ratio = (highSalary - salary) / (highSalary - lowSalary);
+      return Math.round((highPct + ratio * (lowPct - highPct)) * 10) / 10;
+    }
+  }
+  return 50;
+}
+
 // 종합소득세 누진세율 (2026)
 const TAX_BRACKETS = [
   { upTo: 14_000_000, rate: 0.06, ded: 0 },
@@ -45,7 +87,7 @@ function calcEarnedIncomeDeduction(totalSalary: number): number {
 // 근로소득 세액공제 (산출세액 → 결정세액)
 function calcEarnedIncomeTaxCredit(calculatedTax: number, totalSalary: number): number {
   // 산출세액 130만원 이하: 55%, 초과: 30%
-  let credit = calculatedTax <= 1_300_000
+  const credit = calculatedTax <= 1_300_000
     ? calculatedTax * 0.55
     : 715_000 + (calculatedTax - 1_300_000) * 0.30;
 
@@ -199,6 +241,40 @@ export default function SalaryPage() {
               </div>
               <div className="text-xs text-indigo-700 mt-2">연 환산: {fmt(result.annualNet)} 원</div>
             </div>
+
+            {/* 한국 임금근로자 백분위 */}
+            {(() => {
+              const annual = parseFloat(annualSalary);
+              if (!annual || annual < 5_000_000) return null;
+              const pct = calcPercentile(annual);
+              const vsMedian = annual / MEDIAN_SALARY_2026;
+              const vsMean = annual / MEAN_SALARY_2026;
+              return (
+                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-5">
+                  <div className="flex items-baseline justify-between mb-3">
+                    <div className="text-xs uppercase tracking-wider font-semibold text-amber-700">📊 한국 임금근로자 중</div>
+                    <div className="text-[11px] text-amber-600">2026 추정 기준</div>
+                  </div>
+                  <div className="text-2xl sm:text-3xl font-bold text-amber-900 mb-2">
+                    상위 {pct}%
+                  </div>
+                  <div className="text-sm text-amber-800 space-y-1">
+                    <div>
+                      • 중위 연봉 ({fmt(MEDIAN_SALARY_2026)}원) 대비{" "}
+                      <strong>{(vsMedian * 100).toFixed(0)}%</strong>{" "}
+                      ({vsMedian >= 1 ? `+${fmt((vsMedian - 1) * MEDIAN_SALARY_2026)}원` : `${fmt((vsMedian - 1) * MEDIAN_SALARY_2026)}원`})
+                    </div>
+                    <div>
+                      • 평균 연봉 ({fmt(MEAN_SALARY_2026)}원) 대비{" "}
+                      <strong>{(vsMean * 100).toFixed(0)}%</strong>
+                    </div>
+                  </div>
+                  <div className="mt-3 text-[11px] text-amber-700 leading-relaxed">
+                    출처: 국세청 근로소득 백분위 + 통계청 임금근로일자리 동향 + 언론 보도 종합. 연봉 1억 = 상위 약 6.7% (130~140만 명 / 임금근로자 2천만 명 기준). 정규직·비정규직 포함, 자영업·사업소득 제외. 2026 추정 기준.
+                  </div>
+                </div>
+              );
+            })()}
             <div className="mt-5 space-y-2 text-sm">
               <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-slate-600">월 세전 급여</span>
@@ -252,7 +328,7 @@ export default function SalaryPage() {
         </p>
       </div>
       <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
-          <strong>💡 한국 평균 (통계청 2025)</strong>: 근로자 평균 연봉 약 4,200만원 / 중위 연봉 3,500만원 / 신입 평균 3,200만원
+          <strong>💡 한국 임금 분포 (2026 추정)</strong>: 평균 4,200만 / 중위 3,600만 / 신입 3,200만 / 상위 10% 8,800만 / 상위 7% 1억 / 상위 1% 3억 — 국세청 + 통계청 + 언론 종합.
         </div>
     </CalculatorLayout>
   );
