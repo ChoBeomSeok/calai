@@ -21,6 +21,8 @@ import { post as coinPl2Years } from "./coin-pl-2years";
 import { post as bmiCheckup } from "./bmi-checkup";
 import { post as propertyTaxDetail } from "./property-tax-detail";
 import { post as inflation30Years } from "./inflation-30years";
+// 2026-05-19 신규
+import { post as incomeTaxRefund17 } from "./income-tax-refund-17days";
 // 2026-05-15 신규
 import { post as incomeTaxD15 } from "./income-tax-d15";
 import { post as freelancerRefund5Years } from "./freelancer-refund-5years";
@@ -49,7 +51,9 @@ export type Post = {
 };
 
 export const POSTS: Post[] = [
-  // 2026-05-15 신규 (최상단 노출)
+  // 2026-05-19 신규 (최상단 노출)
+  incomeTaxRefund17,
+  // 2026-05-15 신규
   incomeTaxD15,
   freelancerRefund5Years,
   sidehustleTaxAunt,
