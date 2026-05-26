@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "이미지 압축 — 일괄·품질 조정",
     description: "JPG·PNG·WebP 일괄 압축, 품질·원본 비교로 화질 유지.",
-    url: "https://calai.kr/image-compress",
+    url: "https://www.calai.kr/image-compress",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "이미지 압축 — 일괄·품질 조정",
     description: "JPG·PNG·WebP 일괄 압축, 품질·원본 비교로 화질 유지.",
   },
-  alternates: { canonical: "https://calai.kr/image-compress" },
+  alternates: { canonical: "https://www.calai.kr/image-compress" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "이미지 압축",
   "description": "JPG·PNG·WebP 이미지를 한 번에 일괄 압축. 품질 조정·원본 비교로 화질 손상 없이 용량만 줄임. 외부 전송 없음.",
-  "url": "https://calai.kr/image-compress",
+  "url": "https://www.calai.kr/image-compress",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Any",
   "offers": {

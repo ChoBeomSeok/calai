@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "CSV ↔ JSON — 양방향 자동",
     description: "CSV↔JSON 양방향, 헤더·구분자 자동 인식 + 미리보기.",
-    url: "https://calai.kr/csv-json",
+    url: "https://www.calai.kr/csv-json",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "CSV ↔ JSON — 양방향 자동",
     description: "CSV↔JSON 양방향, 헤더·구분자 자동 인식 + 미리보기.",
   },
-  alternates: { canonical: "https://calai.kr/csv-json" },
+  alternates: { canonical: "https://www.calai.kr/csv-json" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "CSV ↔ JSON 변환기",
   "description": "CSV ↔ JSON을 양방향 변환. 헤더 자동 인식·구분자 감지·숫자 타입 자동, 미리보기 테이블로 결과를 즉시 확인.",
-  "url": "https://calai.kr/csv-json",
+  "url": "https://www.calai.kr/csv-json",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

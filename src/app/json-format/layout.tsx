@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JSON 포매터 — 정렬·압축·검증",
     description: "JSON 정렬·압축·문법 검증, 오류 위치를 줄·열로 표시.",
-    url: "https://calai.kr/json-format",
+    url: "https://www.calai.kr/json-format",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "JSON 포매터 — 정렬·압축·검증",
     description: "JSON 정렬·압축·문법 검증, 오류 위치를 줄·열로 표시.",
   },
-  alternates: { canonical: "https://calai.kr/json-format" },
+  alternates: { canonical: "https://www.calai.kr/json-format" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "JSON 포매터",
   "description": "JSON 문자열을 들여쓰기 정렬, 한 줄 압축, 문법 오류 검증까지 한 페이지에서. 오류 위치를 줄·열로 정확히 표시.",
-  "url": "https://calai.kr/json-format",
+  "url": "https://www.calai.kr/json-format",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

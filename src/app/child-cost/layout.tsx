@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "양육비 — 0~18세 누적 추정",
     description: "0~18세 양육비 단계별 + 사교육비 시나리오 시뮬레이션.",
-    url: "https://calai.kr/child-cost",
+    url: "https://www.calai.kr/child-cost",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "양육비 — 0~18세 누적 추정",
     description: "0~18세 양육비 단계별 + 사교육비 시나리오 시뮬레이션.",
   },
-  alternates: { canonical: "https://calai.kr/child-cost" },
+  alternates: { canonical: "https://www.calai.kr/child-cost" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "자녀 양육비 계산",
   "description": "자녀 출생부터 18세까지의 누적 양육비를 단계별로 추정 + 사교육비 시나리오까지. 가족 자산 계획·출산 검토에.",
-  "url": "https://calai.kr/child-cost",
+  "url": "https://www.calai.kr/child-cost",
   "applicationCategory": "LifestyleApplication",
   "operatingSystem": "Any",
   "offers": {

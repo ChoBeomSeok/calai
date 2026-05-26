@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JWT 디코더 — 토큰 즉시 분석",
     description: "JWT의 header·payload·만료까지 즉시 분석, 토큰 외부 X.",
-    url: "https://calai.kr/jwt-decode",
+    url: "https://www.calai.kr/jwt-decode",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "JWT 디코더 — 토큰 즉시 분석",
     description: "JWT의 header·payload·만료까지 즉시 분석, 토큰 외부 X.",
   },
-  alternates: { canonical: "https://calai.kr/jwt-decode" },
+  alternates: { canonical: "https://www.calai.kr/jwt-decode" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "JWT 디코더",
   "description": "JWT 토큰을 붙여 넣으면 header·payload·signature 세 영역과 만료 시간(exp)까지 즉시 분석. 토큰은 서버로 전송되지 않습니다.",
-  "url": "https://calai.kr/jwt-decode",
+  "url": "https://www.calai.kr/jwt-decode",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

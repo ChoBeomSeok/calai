@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "복리 — 미래 가치·증가 그래프",
     description: "원금·이율·기간 + 복리 주기 5가지 자동 미래 가치 계산.",
-    url: "https://calai.kr/compound",
+    url: "https://www.calai.kr/compound",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "복리 — 미래 가치·증가 그래프",
     description: "원금·이율·기간 + 복리 주기 5가지 자동 미래 가치 계산.",
   },
-  alternates: { canonical: "https://calai.kr/compound" },
+  alternates: { canonical: "https://www.calai.kr/compound" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "복리 계산기",
   "description": "원금·연이율·기간·복리 주기(연·반기·분기·월·일)를 선택하면 시간에 따른 자산 증가 그래프와 미래 가치가 자동 표시.",
-  "url": "https://calai.kr/compound",
+  "url": "https://www.calai.kr/compound",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

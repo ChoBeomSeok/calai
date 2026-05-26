@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "환율 변환 — 실시간 주요 통화",
     description: "USD·JPY·EUR·CNY 등 주요 통화의 실시간 원화 변환.",
-    url: "https://calai.kr/exchange",
+    url: "https://www.calai.kr/exchange",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "환율 변환 — 실시간 주요 통화",
     description: "USD·JPY·EUR·CNY 등 주요 통화의 실시간 원화 변환.",
   },
-  alternates: { canonical: "https://calai.kr/exchange" },
+  alternates: { canonical: "https://www.calai.kr/exchange" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "환율 변환기",
   "description": "실시간 환율 기반으로 달러·엔·유로·위안 등 주요 통화를 원화로 즉시 변환. 환율 우대 비교용 베이스 데이터로도 활용.",
-  "url": "https://calai.kr/exchange",
+  "url": "https://www.calai.kr/exchange",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

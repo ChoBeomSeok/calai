@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "음력 양력 — 띠·간지 동시",
     description: "양력↔음력 양방향 + 띠·간지(육십갑자) 한 번에 표시.",
-    url: "https://calai.kr/lunar",
+    url: "https://www.calai.kr/lunar",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "음력 양력 — 띠·간지 동시",
     description: "양력↔음력 양방향 + 띠·간지(육십갑자) 한 번에 표시.",
   },
-  alternates: { canonical: "https://calai.kr/lunar" },
+  alternates: { canonical: "https://www.calai.kr/lunar" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "음력 ↔ 양력 변환",
   "description": "양력 → 음력, 음력 → 양력 양방향 변환 + 그 해의 띠와 간지(육십갑자)까지 동시 표시. 생일·제사·길일 확인용.",
-  "url": "https://calai.kr/lunar",
+  "url": "https://www.calai.kr/lunar",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

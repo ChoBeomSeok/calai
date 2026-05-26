@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "평수 변환 — 4단위 동시",
     description: "㎡·평·헥타르·ft² 어느 값이든 입력하면 모두 동시 변환.",
-    url: "https://calai.kr/pyeong",
+    url: "https://www.calai.kr/pyeong",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "평수 변환 — 4단위 동시",
     description: "㎡·평·헥타르·ft² 어느 값이든 입력하면 모두 동시 변환.",
   },
-  alternates: { canonical: "https://calai.kr/pyeong" },
+  alternates: { canonical: "https://www.calai.kr/pyeong" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "평수·㎡ 변환기",
   "description": "㎡·평·헥타르·ft² 어느 단위든 한 칸에 넣으면 나머지 모두 즉시 변환. 부동산 매물·전세 평수 환산에 자주 쓰임.",
-  "url": "https://calai.kr/pyeong",
+  "url": "https://www.calai.kr/pyeong",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

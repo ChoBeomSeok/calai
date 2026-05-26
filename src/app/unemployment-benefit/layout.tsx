@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "실업급여 — 수급액·기간 자동",
     description: "평균임금·가입기간 입력으로 1일 수급액과 총 기간 즉시.",
-    url: "https://calai.kr/unemployment-benefit",
+    url: "https://www.calai.kr/unemployment-benefit",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "실업급여 — 수급액·기간 자동",
     description: "평균임금·가입기간 입력으로 1일 수급액과 총 기간 즉시.",
   },
-  alternates: { canonical: "https://calai.kr/unemployment-benefit" },
+  alternates: { canonical: "https://www.calai.kr/unemployment-benefit" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "실업급여 계산기",
   "description": "평균임금과 고용보험 가입 기간을 넣으면 1일 수급액·총 지급액·수급 기간이 자동. 2026 고용보험법 기준 반영.",
-  "url": "https://calai.kr/unemployment-benefit",
+  "url": "https://www.calai.kr/unemployment-benefit",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

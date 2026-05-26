@@ -23,14 +23,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: post.title,
       description: post.description,
-      url: `https://calai.kr/blog/${post.slug}`,
+      url: `https://www.calai.kr/blog/${post.slug}`,
       siteName: "calai",
       locale: "ko_KR",
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
     },
-    alternates: { canonical: `https://calai.kr/blog/${post.slug}` },
+    alternates: { canonical: `https://www.calai.kr/blog/${post.slug}` },
   };
 }
 
@@ -46,16 +46,16 @@ export default async function PostPage({ params }: Props) {
     "@type": "Article",
     headline: post.title,
     description: post.description,
-    image: "https://calai.kr/opengraph-image",
+    image: "https://www.calai.kr/opengraph-image",
     datePublished: post.publishedAt,
     dateModified: post.updatedAt || post.publishedAt,
-    author: { "@type": "Organization", name: "calai", url: "https://calai.kr" },
+    author: { "@type": "Organization", name: "calai", url: "https://www.calai.kr" },
     publisher: {
       "@type": "Organization",
       name: "calai",
-      logo: { "@type": "ImageObject", url: "https://calai.kr/icon.svg" },
+      logo: { "@type": "ImageObject", url: "https://www.calai.kr/icon.svg" },
     },
-    mainEntityOfPage: `https://calai.kr/blog/${post.slug}`,
+    mainEntityOfPage: `https://www.calai.kr/blog/${post.slug}`,
     keywords: post.keywords.join(", "),
   };
 
@@ -63,9 +63,9 @@ export default async function PostPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "홈", item: "https://calai.kr" },
-      { "@type": "ListItem", position: 2, name: "블로그", item: "https://calai.kr/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://calai.kr/blog/${post.slug}` },
+      { "@type": "ListItem", position: 1, name: "홈", item: "https://www.calai.kr" },
+      { "@type": "ListItem", position: 2, name: "블로그", item: "https://www.calai.kr/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://www.calai.kr/blog/${post.slug}` },
     ],
   };
 

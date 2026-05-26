@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "카운트다운 — 시간 설정 알림",
     description: "원하는 시간 설정 후 0초 카운트다운 + 알림.",
-    url: "https://calai.kr/countdown",
+    url: "https://www.calai.kr/countdown",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "카운트다운 — 시간 설정 알림",
     description: "원하는 시간 설정 후 0초 카운트다운 + 알림.",
   },
-  alternates: { canonical: "https://calai.kr/countdown" },
+  alternates: { canonical: "https://www.calai.kr/countdown" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "카운트다운 타이머",
   "description": "원하는 시간을 설정하면 0초까지 카운트다운하고 알림. 요리·운동·시험·발표 등 시간 제한 작업에 유용.",
-  "url": "https://calai.kr/countdown",
+  "url": "https://www.calai.kr/countdown",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

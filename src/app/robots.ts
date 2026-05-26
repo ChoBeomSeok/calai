@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/form-mapper"],
       },
     ],
-    sitemap: "https://calai.kr/sitemap.xml",
-    host: "https://calai.kr",
+    sitemap: "https://www.calai.kr/sitemap.xml",
+    host: "https://www.calai.kr",
   };
 }

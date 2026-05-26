@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PDF 서명 — 손글씨로 무료",
     description: "PDF에 손글씨 서명 마우스·터치로 그려 무료 추가.",
-    url: "https://calai.kr/pdf-sign",
+    url: "https://www.calai.kr/pdf-sign",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "PDF 서명 — 손글씨로 무료",
     description: "PDF에 손글씨 서명 마우스·터치로 그려 무료 추가.",
   },
-  alternates: { canonical: "https://calai.kr/pdf-sign" },
+  alternates: { canonical: "https://www.calai.kr/pdf-sign" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "PDF 손글씨 서명",
   "description": "PDF에 손글씨 서명을 마우스·터치·펜으로 직접 그려 추가. 드래그·리사이즈로 정확한 위치 배치, 가입·설치 없이 무료.",
-  "url": "https://calai.kr/pdf-sign",
+  "url": "https://www.calai.kr/pdf-sign",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

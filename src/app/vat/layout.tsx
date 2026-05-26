@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "부가세 — 10% 양방향 변환",
     description: "공급가↔부가세↔합계 어느 값이든 입력하면 나머지 자동.",
-    url: "https://calai.kr/vat",
+    url: "https://www.calai.kr/vat",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "부가세 — 10% 양방향 변환",
     description: "공급가↔부가세↔합계 어느 값이든 입력하면 나머지 자동.",
   },
-  alternates: { canonical: "https://calai.kr/vat" },
+  alternates: { canonical: "https://www.calai.kr/vat" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "부가가치세 계산기",
   "description": "공급가액·부가세·합계금액 중 아무 값이나 넣으면 나머지가 즉시 채워집니다. 사업자 견적·세금계산서 작성 시 빠르게.",
-  "url": "https://calai.kr/vat",
+  "url": "https://www.calai.kr/vat",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

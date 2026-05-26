@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "이미지 리사이즈 — SNS 프리셋 + 고화질",
     description: "사진 픽셀·비율 무료 변경, 인스타·유튜브·OG 프리셋, 브라우저 안에서 처리.",
-    url: "https://calai.kr/image-resize",
+    url: "https://www.calai.kr/image-resize",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "이미지 리사이즈 — SNS 프리셋 + 고화질",
     description: "사진 픽셀·비율 무료 변경, 인스타·유튜브·OG 프리셋, 브라우저 안에서 처리.",
   },
-  alternates: { canonical: "https://calai.kr/image-resize" },
+  alternates: { canonical: "https://www.calai.kr/image-resize" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   name: "이미지 크기 변경 (리사이즈)",
   description: "사진의 픽셀·비율을 무료로 변경. 인스타·유튜브·블로그·OG 이미지 등 프리셋 + 비율 유지·고화질 리샘플링. 100% 브라우저 처리.",
-  url: "https://calai.kr/image-resize",
+  url: "https://www.calai.kr/image-resize",
   applicationCategory: "MultimediaApplication",
   operatingSystem: "Any",
   offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" },

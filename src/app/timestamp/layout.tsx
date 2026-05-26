@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "타임스탬프 — 9포맷 동시",
     description: "Unix↔날짜 9가지 포맷(KST·UTC·ISO·ms·ns) 동시 변환.",
-    url: "https://calai.kr/timestamp",
+    url: "https://www.calai.kr/timestamp",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "타임스탬프 — 9포맷 동시",
     description: "Unix↔날짜 9가지 포맷(KST·UTC·ISO·ms·ns) 동시 변환.",
   },
-  alternates: { canonical: "https://calai.kr/timestamp" },
+  alternates: { canonical: "https://www.calai.kr/timestamp" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "Unix 타임스탬프 변환",
   "description": "Unix timestamp를 KST·UTC·ISO·RFC·밀리초·나노초 등 9가지 포맷으로 동시 변환. 어떤 단위든 입력 즉시 양방향.",
-  "url": "https://calai.kr/timestamp",
+  "url": "https://www.calai.kr/timestamp",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

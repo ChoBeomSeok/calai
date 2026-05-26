@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "비밀번호 — 안전한 즉시 생성",
     description: "길이·문자 종류 선택해 안전한 비밀번호 즉시 생성.",
-    url: "https://calai.kr/password",
+    url: "https://www.calai.kr/password",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "비밀번호 — 안전한 즉시 생성",
     description: "길이·문자 종류 선택해 안전한 비밀번호 즉시 생성.",
   },
-  alternates: { canonical: "https://calai.kr/password" },
+  alternates: { canonical: "https://www.calai.kr/password" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "비밀번호 생성기",
   "description": "길이와 대·소문자·숫자·특수문자 포함 여부를 선택해 안전한 비밀번호를 즉시 생성. 모든 처리는 브라우저 안에서.",
-  "url": "https://calai.kr/password",
+  "url": "https://www.calai.kr/password",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

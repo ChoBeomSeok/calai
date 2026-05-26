@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "고속도로 통행료 — IC·차종별",
     description: "출발·도착 IC + 차종으로 통행료 즉시, 장거리 여행 예산용.",
-    url: "https://calai.kr/toll-fee",
+    url: "https://www.calai.kr/toll-fee",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "고속도로 통행료 — IC·차종별",
     description: "출발·도착 IC + 차종으로 통행료 즉시, 장거리 여행 예산용.",
   },
-  alternates: { canonical: "https://calai.kr/toll-fee" },
+  alternates: { canonical: "https://www.calai.kr/toll-fee" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "고속도로 톨비 계산",
   "description": "출발·도착 IC와 차종(1~5종)을 넣으면 예상 통행료가 즉시. 서울→부산 같은 장거리 여행 전 예산 가늠에 유용.",
-  "url": "https://calai.kr/toll-fee",
+  "url": "https://www.calai.kr/toll-fee",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

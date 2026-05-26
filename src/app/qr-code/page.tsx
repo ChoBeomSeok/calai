@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
 
 export default function QrCodePage() {
-  const [text, setText] = useState("https://calai.kr");
+  const [text, setText] = useState("https://www.calai.kr");
   const [size, setSize] = useState(256);
 
   const qrUrl = useMemo(() => {

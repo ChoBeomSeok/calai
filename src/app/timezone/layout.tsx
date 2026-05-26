@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "세계 시간 — 주요 도시 동시",
     description: "한국 시각 기준 뉴욕·런던·도쿄 주요 도시 시차 한 번에.",
-    url: "https://calai.kr/timezone",
+    url: "https://www.calai.kr/timezone",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "세계 시간 — 주요 도시 동시",
     description: "한국 시각 기준 뉴욕·런던·도쿄 주요 도시 시차 한 번에.",
   },
-  alternates: { canonical: "https://calai.kr/timezone" },
+  alternates: { canonical: "https://www.calai.kr/timezone" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "세계 시간 변환기",
   "description": "한국 기준 시각을 넣으면 뉴욕·런던·도쿄·LA 등 주요 도시의 현지 시각이 즉시. 화상회의·해외 출장 일정 잡을 때.",
-  "url": "https://calai.kr/timezone",
+  "url": "https://www.calai.kr/timezone",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

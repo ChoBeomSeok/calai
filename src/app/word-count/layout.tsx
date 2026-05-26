@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "글자수 — 자소서·SNS 한도",
     description: "공백·바이트·원고지·SNS 한도 실시간 카운트, 자소서 필수.",
-    url: "https://calai.kr/word-count",
+    url: "https://www.calai.kr/word-count",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "글자수 — 자소서·SNS 한도",
     description: "공백·바이트·원고지·SNS 한도 실시간 카운트, 자소서 필수.",
   },
-  alternates: { canonical: "https://calai.kr/word-count" },
+  alternates: { canonical: "https://www.calai.kr/word-count" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "글자수 세기",
   "description": "공백 포함·제외·바이트·원고지 매수·자소서·SNS 한도(트위터·인스타)까지 실시간 카운트. 자소서·논문·블로그 글에 필수.",
-  "url": "https://calai.kr/word-count",
+  "url": "https://www.calai.kr/word-count",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

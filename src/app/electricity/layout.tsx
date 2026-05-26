@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "전기요금 — 누진제 자동",
     description: "월 사용량 입력으로 주택용 누진 3단계 반영 요금 즉시.",
-    url: "https://calai.kr/electricity",
+    url: "https://www.calai.kr/electricity",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "전기요금 — 누진제 자동",
     description: "월 사용량 입력으로 주택용 누진 3단계 반영 요금 즉시.",
   },
-  alternates: { canonical: "https://calai.kr/electricity" },
+  alternates: { canonical: "https://www.calai.kr/electricity" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "전기요금 계산기",
   "description": "월 사용량(kWh)만 넣으면 주택용 누진제 3단계가 반영된 월 전기요금이 즉시. 여름철 에어컨 가동 시 요금 시뮬레이션에.",
-  "url": "https://calai.kr/electricity",
+  "url": "https://www.calai.kr/electricity",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

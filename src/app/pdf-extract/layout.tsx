@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PDF 추출 — 원하는 페이지만",
     description: "PDF에서 필요한 페이지만 골라 새 파일로 무료 추출.",
-    url: "https://calai.kr/pdf-extract",
+    url: "https://www.calai.kr/pdf-extract",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "PDF 추출 — 원하는 페이지만",
     description: "PDF에서 필요한 페이지만 골라 새 파일로 무료 추출.",
   },
-  alternates: { canonical: "https://calai.kr/pdf-extract" },
+  alternates: { canonical: "https://www.calai.kr/pdf-extract" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "PDF 페이지 추출",
   "description": "PDF 전체에서 필요한 페이지만 골라 새 파일로 무료 추출. 페이지 범위 지정 가능, 브라우저 내 처리로 안전.",
-  "url": "https://calai.kr/pdf-extract",
+  "url": "https://www.calai.kr/pdf-extract",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

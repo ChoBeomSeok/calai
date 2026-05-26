@@ -139,7 +139,7 @@ export const post: Post = {
 
 Smallpdf·iLovePDF·PDF24·ILOVEMERGE 모두 \"24시간 후 자동 삭제\" 정책이지만, **업로드 자체가 위험**. 회사 IT 정책상 외부 클라우드 업로드 금지인 회사 많음.
 
-calai는 [PDF 합치기](https://calai.kr/pdf-merge)·[PDF 압축](https://calai.kr/pdf-compress) 모두 **브라우저 안에서만 처리**. 파일이 본인 컴퓨터를 떠나지 않음. 회사 보안 정책 위반 위험 X.
+calai는 [PDF 합치기](https://www.calai.kr/pdf-merge)·[PDF 압축](https://www.calai.kr/pdf-compress) 모두 **브라우저 안에서만 처리**. 파일이 본인 컴퓨터를 떠나지 않음. 회사 보안 정책 위반 위험 X.
 
 ## 5개 1주일 써본 결론
 

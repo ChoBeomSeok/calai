@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { tools } from "@/lib/tools";
 import { POSTS } from "@/lib/posts";
 
-const BASE_URL = "https://calai.kr";
+const BASE_URL = "https://www.calai.kr";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "주차 요금 — 기본·추가·할인",
     description: "주차 요금 기본·단위·할인 반영해 실 부담액 즉시.",
-    url: "https://calai.kr/parking-fee",
+    url: "https://www.calai.kr/parking-fee",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "주차 요금 — 기본·추가·할인",
     description: "주차 요금 기본·단위·할인 반영해 실 부담액 즉시.",
   },
-  alternates: { canonical: "https://calai.kr/parking-fee" },
+  alternates: { canonical: "https://www.calai.kr/parking-fee" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "주차 요금 계산기",
   "description": "기본 요금·추가 단위·할인 조건을 넣으면 총 주차비가 즉시. 백화점·병원·관공서·일반 유료주차장 모두 대응.",
-  "url": "https://calai.kr/parking-fee",
+  "url": "https://www.calai.kr/parking-fee",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

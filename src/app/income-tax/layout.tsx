@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "종합소득세 — 누진 자동 계산",
     description: "종합소득 입력으로 6~45% 누진세율 적용 세액 즉시.",
-    url: "https://calai.kr/income-tax",
+    url: "https://www.calai.kr/income-tax",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "종합소득세 — 누진 자동 계산",
     description: "종합소득 입력으로 6~45% 누진세율 적용 세액 즉시.",
   },
-  alternates: { canonical: "https://calai.kr/income-tax" },
+  alternates: { canonical: "https://www.calai.kr/income-tax" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "종합소득세 계산기",
   "description": "사업·근로·이자·배당 등 합산 종합소득을 넣으면 6~45% 누진세율 구간별 세액을 자동 산출. 5월 신고 전 예상 세액 점검.",
-  "url": "https://calai.kr/income-tax",
+  "url": "https://www.calai.kr/income-tax",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

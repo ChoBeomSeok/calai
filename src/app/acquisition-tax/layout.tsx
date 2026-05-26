@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "취득세 — 부속세까지 합산",
     description: "매매가·면적·주택수 반영해 취득세 + 부속세 실 부담액 자동.",
-    url: "https://calai.kr/acquisition-tax",
+    url: "https://www.calai.kr/acquisition-tax",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "취득세 — 부속세까지 합산",
     description: "매매가·면적·주택수 반영해 취득세 + 부속세 실 부담액 자동.",
   },
-  alternates: { canonical: "https://calai.kr/acquisition-tax" },
+  alternates: { canonical: "https://www.calai.kr/acquisition-tax" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "취득세 계산기",
   "description": "매매가·전용면적·1주택/다주택 여부로 취득세율과 농어촌특별세·지방교육세까지 합산한 실 부담액 자동 산출.",
-  "url": "https://calai.kr/acquisition-tax",
+  "url": "https://www.calai.kr/acquisition-tax",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

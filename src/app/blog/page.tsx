@@ -13,7 +13,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { page: pageStr } = await searchParams;
   const page = parseInt(pageStr || "1") || 1;
-  const canonical = page === 1 ? "https://calai.kr/blog" : `https://calai.kr/blog?page=${page}`;
+  const canonical = page === 1 ? "https://www.calai.kr/blog" : `https://www.calai.kr/blog?page=${page}`;
   const titleSuffix = page === 1 ? "" : ` (${page}페이지)`;
   return {
     title: `블로그${titleSuffix} — 실제 경험에서 정리한 세금·부동산 가이드 | calai`,

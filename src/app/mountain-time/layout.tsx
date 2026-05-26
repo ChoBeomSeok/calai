@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "등산 시간 — 거리·고도로 추정",
     description: "Naismith·Tobler 공식으로 코스 예상 시간 자동.",
-    url: "https://calai.kr/mountain-time",
+    url: "https://www.calai.kr/mountain-time",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "등산 시간 — 거리·고도로 추정",
     description: "Naismith·Tobler 공식으로 코스 예상 시간 자동.",
   },
-  alternates: { canonical: "https://calai.kr/mountain-time" },
+  alternates: { canonical: "https://www.calai.kr/mountain-time" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "등산 시간 계산기",
   "description": "거리와 누적 고도만 입력하면 Naismith·Tobler 공식으로 예상 등산 시간을 추정. 들머리부터 정상까지 무리 없는 코스 계획에.",
-  "url": "https://calai.kr/mountain-time",
+  "url": "https://www.calai.kr/mountain-time",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Any",
   "offers": {

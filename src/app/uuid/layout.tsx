@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "UUID v4 — 1~100개 일괄",
     description: "UUID v4 표준 형식으로 한 번에 100개까지 일괄 생성.",
-    url: "https://calai.kr/uuid",
+    url: "https://www.calai.kr/uuid",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "UUID v4 — 1~100개 일괄",
     description: "UUID v4 표준 형식으로 한 번에 100개까지 일괄 생성.",
   },
-  alternates: { canonical: "https://calai.kr/uuid" },
+  alternates: { canonical: "https://www.calai.kr/uuid" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "UUID 생성기",
   "description": "표준 UUID v4를 한 번에 1~100개까지 일괄 생성. 복사 버튼 한 번으로 모두 클립보드, 임시 키·테스트 데이터에.",
-  "url": "https://calai.kr/uuid",
+  "url": "https://www.calai.kr/uuid",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

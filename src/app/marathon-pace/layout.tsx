@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "마라톤 페이스 — km당 분 자동",
     description: "목표 완주 시간으로 km당 페이스·구간 통과 시간 자동.",
-    url: "https://calai.kr/marathon-pace",
+    url: "https://www.calai.kr/marathon-pace",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "마라톤 페이스 — km당 분 자동",
     description: "목표 완주 시간으로 km당 페이스·구간 통과 시간 자동.",
   },
-  alternates: { canonical: "https://calai.kr/marathon-pace" },
+  alternates: { canonical: "https://www.calai.kr/marathon-pace" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "마라톤 페이스 계산기",
   "description": "5km·10km·하프·풀 마라톤의 목표 완주 시간을 넣으면 km당 페이스와 구간별 통과 시간이 자동. 대회 전 페이스 전략에.",
-  "url": "https://calai.kr/marathon-pace",
+  "url": "https://www.calai.kr/marathon-pace",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Any",
   "offers": {

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "할인율 — 정가·할인가 양방향",
     description: "정가·할인가·할인율 중 두 값만 넣어도 나머지 자동.",
-    url: "https://calai.kr/discount",
+    url: "https://www.calai.kr/discount",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "할인율 — 정가·할인가 양방향",
     description: "정가·할인가·할인율 중 두 값만 넣어도 나머지 자동.",
   },
-  alternates: { canonical: "https://calai.kr/discount" },
+  alternates: { canonical: "https://www.calai.kr/discount" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "할인율 계산기",
   "description": "정가·할인율·할인가 중 두 값만 넣으면 나머지가 즉시. 쇼핑·세일·가격 비교에서 진짜 할인이 얼마인지 빠르게.",
-  "url": "https://calai.kr/discount",
+  "url": "https://www.calai.kr/discount",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

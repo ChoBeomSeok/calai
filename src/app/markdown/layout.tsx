@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "마크다운 — HTML·PDF 변환",
     description: "MD 실시간 미리보기 + HTML·PDF 다운로드, GFM 지원.",
-    url: "https://calai.kr/markdown",
+    url: "https://www.calai.kr/markdown",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "마크다운 — HTML·PDF 변환",
     description: "MD 실시간 미리보기 + HTML·PDF 다운로드, GFM 지원.",
   },
-  alternates: { canonical: "https://calai.kr/markdown" },
+  alternates: { canonical: "https://www.calai.kr/markdown" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "마크다운 미리보기·변환",
   "description": "Markdown을 실시간 HTML 미리보기로 확인하고 HTML·PDF로 바로 다운로드. GFM 표·체크박스·코드 하이라이팅 지원.",
-  "url": "https://calai.kr/markdown",
+  "url": "https://www.calai.kr/markdown",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

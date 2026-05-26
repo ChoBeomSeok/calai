@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "개인정보 처리방침",
   description: "calai는 사용자의 개인정보를 수집하지 않습니다. 모든 계산은 브라우저에서 처리되며, 입력 데이터는 서버로 전송되지 않습니다.",
-  alternates: { canonical: "https://calai.kr/privacy" },
+  alternates: { canonical: "https://www.calai.kr/privacy" },
 };
 
 export default function PrivacyPage() {

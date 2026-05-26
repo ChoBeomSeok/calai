@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "임대수익률 — 매물 비교 직관",
     description: "매매가·보증금·월세로 연 임대수익률 자동, 매물 비교용.",
-    url: "https://calai.kr/rental-yield",
+    url: "https://www.calai.kr/rental-yield",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "임대수익률 — 매물 비교 직관",
     description: "매매가·보증금·월세로 연 임대수익률 자동, 매물 비교용.",
   },
-  alternates: { canonical: "https://calai.kr/rental-yield" },
+  alternates: { canonical: "https://www.calai.kr/rental-yield" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "임대수익률 계산기",
   "description": "매매가·보증금·월세를 넣으면 연 임대수익률(%)이 즉시. 매수 검토 시 다른 매물과의 수익률 비교가 직관적으로 가능.",
-  "url": "https://calai.kr/rental-yield",
+  "url": "https://www.calai.kr/rental-yield",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

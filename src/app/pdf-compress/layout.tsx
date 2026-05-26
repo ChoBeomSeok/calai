@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PDF 압축 — 이메일 첨부 OK",
     description: "PDF 용량 무료 압축, 이메일·업로드 한도 회피용.",
-    url: "https://calai.kr/pdf-compress",
+    url: "https://www.calai.kr/pdf-compress",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "PDF 압축 — 이메일 첨부 OK",
     description: "PDF 용량 무료 압축, 이메일·업로드 한도 회피용.",
   },
-  alternates: { canonical: "https://calai.kr/pdf-compress" },
+  alternates: { canonical: "https://www.calai.kr/pdf-compress" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "PDF 용량 줄이기",
   "description": "PDF 파일 용량을 무료로 압축. 이메일 첨부·업로드 한도(10MB·25MB) 회피에 가장 자주 쓰이는 도구. 브라우저 내 처리.",
-  "url": "https://calai.kr/pdf-compress",
+  "url": "https://www.calai.kr/pdf-compress",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

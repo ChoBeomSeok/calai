@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "해시 — MD5·SHA·HMAC",
     description: "텍스트·파일을 MD5·SHA·HMAC 동시 생성, 무결성 검증용.",
-    url: "https://calai.kr/hash",
+    url: "https://www.calai.kr/hash",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "해시 — MD5·SHA·HMAC",
     description: "텍스트·파일을 MD5·SHA·HMAC 동시 생성, 무결성 검증용.",
   },
-  alternates: { canonical: "https://calai.kr/hash" },
+  alternates: { canonical: "https://www.calai.kr/hash" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "해시 생성기 (MD5·SHA·HMAC)",
   "description": "텍스트나 파일을 넣으면 MD5·SHA-1·SHA-256·SHA-384·SHA-512가 동시에. HMAC 서명까지, 파일 무결성·체크섬에.",
-  "url": "https://calai.kr/hash",
+  "url": "https://www.calai.kr/hash",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

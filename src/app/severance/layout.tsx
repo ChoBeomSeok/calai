@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "퇴직금 — 평균임금·재직 자동",
     description: "재직기간·평균임금으로 근로기준법 퇴직금 즉시.",
-    url: "https://calai.kr/severance",
+    url: "https://www.calai.kr/severance",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "퇴직금 — 평균임금·재직 자동",
     description: "재직기간·평균임금으로 근로기준법 퇴직금 즉시.",
   },
-  alternates: { canonical: "https://calai.kr/severance" },
+  alternates: { canonical: "https://www.calai.kr/severance" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "퇴직금 계산기",
   "description": "입사일·퇴사일과 최근 3개월 평균임금을 넣으면 근로기준법 기준 퇴직금이 즉시. 퇴직 전 협의·확인용으로 필수.",
-  "url": "https://calai.kr/severance",
+  "url": "https://www.calai.kr/severance",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

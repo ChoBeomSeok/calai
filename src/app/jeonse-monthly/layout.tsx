@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "전월세 전환 — 보증금↔월세",
     description: "전세 ↔ 월세 양방향 환산, 법정 전환율 반영해 협상에 활용.",
-    url: "https://calai.kr/jeonse-monthly",
+    url: "https://www.calai.kr/jeonse-monthly",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "전월세 전환 — 보증금↔월세",
     description: "전세 ↔ 월세 양방향 환산, 법정 전환율 반영해 협상에 활용.",
   },
-  alternates: { canonical: "https://calai.kr/jeonse-monthly" },
+  alternates: { canonical: "https://www.calai.kr/jeonse-monthly" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "전월세 전환 계산기",
   "description": "전세보증금을 월세(보증금+월세)로, 또는 반대로 환산. 법정 전환율 기준으로 집주인 협상 전 실제 손익 가늠.",
-  "url": "https://calai.kr/jeonse-monthly",
+  "url": "https://www.calai.kr/jeonse-monthly",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

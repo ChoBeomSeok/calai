@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "전기차 충전 — 주유비와 비교",
     description: "거리·전비·요금제로 충전 비용 산출 + 주유비 직접 비교.",
-    url: "https://calai.kr/ev-charge",
+    url: "https://www.calai.kr/ev-charge",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "전기차 충전 — 주유비와 비교",
     description: "거리·전비·요금제로 충전 비용 산출 + 주유비 직접 비교.",
   },
-  alternates: { canonical: "https://calai.kr/ev-charge" },
+  alternates: { canonical: "https://www.calai.kr/ev-charge" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "전기차 충전 비용",
   "description": "주행거리·전비·요금제(완속·급속·홈)별 충전 비용과 동급 휘발유 차량의 주유비를 같은 화면에서 비교. 전기차 전환 검토용.",
-  "url": "https://calai.kr/ev-charge",
+  "url": "https://www.calai.kr/ev-charge",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

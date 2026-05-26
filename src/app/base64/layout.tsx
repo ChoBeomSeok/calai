@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Base64 — 한글 OK 양방향",
     description: "문자열↔Base64 실시간, 한글·이모지 깨짐 없이 변환.",
-    url: "https://calai.kr/base64",
+    url: "https://www.calai.kr/base64",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Base64 — 한글 OK 양방향",
     description: "문자열↔Base64 실시간, 한글·이모지 깨짐 없이 변환.",
   },
-  alternates: { canonical: "https://calai.kr/base64" },
+  alternates: { canonical: "https://www.calai.kr/base64" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "Base64 인코딩·디코딩",
   "description": "문자열과 Base64를 양쪽에서 실시간 변환. UTF-8 한글·이모지 깨짐 없음, 입력값은 브라우저 밖으로 나가지 않습니다.",
-  "url": "https://calai.kr/base64",
+  "url": "https://www.calai.kr/base64",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

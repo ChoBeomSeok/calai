@@ -4,8 +4,8 @@ import { useState } from "react";
 import CalculatorLayout from "@/components/CalculatorLayout";
 
 export default function UrlEncodePage() {
-  const [text, setText] = useState("https://calai.kr/검색?q=만 나이");
-  const [encoded, setEncoded] = useState(encodeURIComponent("https://calai.kr/검색?q=만 나이"));
+  const [text, setText] = useState("https://www.calai.kr/검색?q=만 나이");
+  const [encoded, setEncoded] = useState(encodeURIComponent("https://www.calai.kr/검색?q=만 나이"));
 
   const handleText = (v: string) => {
     setText(v);

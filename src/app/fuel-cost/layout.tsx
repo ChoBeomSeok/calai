@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "주유비 — 거리·연비·기름값",
     description: "거리·연비·기름값으로 장거리 여행 주유비 즉시 산출.",
-    url: "https://calai.kr/fuel-cost",
+    url: "https://www.calai.kr/fuel-cost",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "주유비 — 거리·연비·기름값",
     description: "거리·연비·기름값으로 장거리 여행 주유비 즉시 산출.",
   },
-  alternates: { canonical: "https://calai.kr/fuel-cost" },
+  alternates: { canonical: "https://www.calai.kr/fuel-cost" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "주유비 계산기",
   "description": "주행거리·차량 연비·현재 기름값을 넣으면 총 주유비가 즉시. 장거리 여행 전 예산 짤 때, 차량 간 연비 비교 시 활용.",
-  "url": "https://calai.kr/fuel-cost",
+  "url": "https://www.calai.kr/fuel-cost",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

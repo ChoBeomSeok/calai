@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "메타 제거 — GPS·작성자 완전",
     description: "PDF·이미지의 GPS·작성자·EXIF 완전 제거, 익명화용.",
-    url: "https://calai.kr/strip-metadata",
+    url: "https://www.calai.kr/strip-metadata",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "메타 제거 — GPS·작성자 완전",
     description: "PDF·이미지의 GPS·작성자·EXIF 완전 제거, 익명화용.",
   },
-  alternates: { canonical: "https://calai.kr/strip-metadata" },
+  alternates: { canonical: "https://www.calai.kr/strip-metadata" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "메타데이터 제거",
   "description": "PDF·JPG·PNG·WebP의 작성자·GPS·카메라·수정 이력을 완전 제거. 처리 전후 비교와 재검증, 익명화 공유 전 필수.",
-  "url": "https://calai.kr/strip-metadata",
+  "url": "https://www.calai.kr/strip-metadata",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

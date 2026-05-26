@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "만 나이 — 생일 D-Day까지",
     description: "생년월일로 만 나이·연 나이·다음 생일 D-Day 한 번에.",
-    url: "https://calai.kr/age",
+    url: "https://www.calai.kr/age",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "만 나이 — 생일 D-Day까지",
     description: "생년월일로 만 나이·연 나이·다음 생일 D-Day 한 번에.",
   },
-  alternates: { canonical: "https://calai.kr/age" },
+  alternates: { canonical: "https://www.calai.kr/age" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "만 나이 계산기",
   "description": "생년월일만 넣으면 만 나이·연 나이·다음 생일까지 며칠 남았는지 즉시 표시. 2023년 만 나이 통일법 기준 반영.",
-  "url": "https://calai.kr/age",
+  "url": "https://www.calai.kr/age",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

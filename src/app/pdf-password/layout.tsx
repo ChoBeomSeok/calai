@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PDF 잠금·해제 — AES-256",
     description: "PDF AES-256 잠금/비번 알고 있는 PDF 해제 무료.",
-    url: "https://calai.kr/pdf-password",
+    url: "https://www.calai.kr/pdf-password",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "PDF 잠금·해제 — AES-256",
     description: "PDF AES-256 잠금/비번 알고 있는 PDF 해제 무료.",
   },
-  alternates: { canonical: "https://calai.kr/pdf-password" },
+  alternates: { canonical: "https://www.calai.kr/pdf-password" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "PDF 비밀번호 잠금·해제",
   "description": "PDF를 AES-256/128 표준으로 암호화 잠금하거나 비밀번호를 알고 있는 PDF의 잠금을 해제. qpdf 엔진 기반, 무료.",
-  "url": "https://calai.kr/pdf-password",
+  "url": "https://www.calai.kr/pdf-password",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

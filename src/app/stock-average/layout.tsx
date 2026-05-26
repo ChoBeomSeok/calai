@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "주식 평단가 — 추가 매수 후 평균",
     description: "기존 보유 + 추가 매수로 평균 단가 자동, 물타기 시뮬레이션.",
-    url: "https://calai.kr/stock-average",
+    url: "https://www.calai.kr/stock-average",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "주식 평단가 — 추가 매수 후 평균",
     description: "기존 보유 + 추가 매수로 평균 단가 자동, 물타기 시뮬레이션.",
   },
-  alternates: { canonical: "https://calai.kr/stock-average" },
+  alternates: { canonical: "https://www.calai.kr/stock-average" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "주식 평단가 계산기",
   "description": "기존 보유 주식과 추가 매수 수량·가격을 넣으면 새로운 평균 매수 단가가 즉시. 물타기·불타기 전후 손익 시뮬레이션에.",
-  "url": "https://calai.kr/stock-average",
+  "url": "https://www.calai.kr/stock-average",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

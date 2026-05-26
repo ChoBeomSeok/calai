@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "이미지 → PDF — 여러 장 한 번에",
     description: "JPG·PNG 여러 장을 한 PDF로 무료, 순서·크기 조정.",
-    url: "https://calai.kr/image-to-pdf",
+    url: "https://www.calai.kr/image-to-pdf",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "이미지 → PDF — 여러 장 한 번에",
     description: "JPG·PNG 여러 장을 한 PDF로 무료, 순서·크기 조정.",
   },
-  alternates: { canonical: "https://calai.kr/image-to-pdf" },
+  alternates: { canonical: "https://www.calai.kr/image-to-pdf" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "이미지 → PDF",
   "description": "JPG·PNG 여러 장을 하나의 PDF로 무료 변환. 드래그로 순서 조정, 페이지 크기·방향 선택 가능. 가입·설치 없음.",
-  "url": "https://calai.kr/image-to-pdf",
+  "url": "https://www.calai.kr/image-to-pdf",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

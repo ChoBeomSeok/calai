@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "임신 주차 — 출산 예정일 자동",
     description: "마지막 생리일로 주차·출산일·태교 시기 즉시 확인.",
-    url: "https://calai.kr/pregnancy",
+    url: "https://www.calai.kr/pregnancy",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "임신 주차 — 출산 예정일 자동",
     description: "마지막 생리일로 주차·출산일·태교 시기 즉시 확인.",
   },
-  alternates: { canonical: "https://calai.kr/pregnancy" },
+  alternates: { canonical: "https://www.calai.kr/pregnancy" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "임신 주차 계산기",
   "description": "마지막 생리일만 넣으면 현재 임신 주차, 출산 예정일, 태교·검진 시기가 한눈에. 산모수첩 없이도 즉시 확인.",
-  "url": "https://calai.kr/pregnancy",
+  "url": "https://www.calai.kr/pregnancy",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Any",
   "offers": {

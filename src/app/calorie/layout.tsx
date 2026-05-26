@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "칼로리 계산 — BMR·TDEE 즉시",
     description: "BMR·TDEE 자동 산출 + 다이어트·유지·벌크업 권장량까지 한눈에.",
-    url: "https://calai.kr/calorie",
+    url: "https://www.calai.kr/calorie",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "칼로리 계산 — BMR·TDEE 즉시",
     description: "BMR·TDEE 자동 산출 + 다이어트·유지·벌크업 권장량까지 한눈에.",
   },
-  alternates: { canonical: "https://calai.kr/calorie" },
+  alternates: { canonical: "https://www.calai.kr/calorie" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "칼로리 계산기 (BMR·TDEE)",
   "description": "기초대사량(BMR)과 일일 소모 칼로리(TDEE)를 즉시 산출. 다이어트·유지·벌크업 목표별 권장 섭취량을 한 페이지에. 가입 없이 무료.",
-  "url": "https://calai.kr/calorie",
+  "url": "https://www.calai.kr/calorie",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Any",
   "offers": {

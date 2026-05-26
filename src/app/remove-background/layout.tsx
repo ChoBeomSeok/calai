@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "누끼 따기 — AI 자동, 외부 X",
     description: "AI 자동 인식으로 누끼 따기, 투명 PNG·배경색, 외부 전송 0.",
-    url: "https://calai.kr/remove-background",
+    url: "https://www.calai.kr/remove-background",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "누끼 따기 — AI 자동, 외부 X",
     description: "AI 자동 인식으로 누끼 따기, 투명 PNG·배경색, 외부 전송 0.",
   },
-  alternates: { canonical: "https://calai.kr/remove-background" },
+  alternates: { canonical: "https://www.calai.kr/remove-background" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "사진 누끼 따기 (배경 제거)",
   "description": "브라우저에서 AI로 즉시 누끼 따기. 인물·상품·반려동물 자동 인식, 투명 PNG·증명사진 배경색 변경. 사진 외부 전송 0.",
-  "url": "https://calai.kr/remove-background",
+  "url": "https://www.calai.kr/remove-background",
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "Any",
   "offers": {

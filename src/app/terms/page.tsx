@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "이용약관",
   description: "calai 서비스 이용약관. 무료 도구·계산기 사용 시 적용되는 권리·의무·면책 조항.",
-  alternates: { canonical: "https://calai.kr/terms" },
+  alternates: { canonical: "https://www.calai.kr/terms" },
 };
 
 export default function TermsPage() {

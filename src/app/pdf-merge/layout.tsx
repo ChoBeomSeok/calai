@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PDF 합치기 — 설치 없이 10초",
     description: "여러 PDF를 드래그로 결합, 가입·워터마크 없이 즉시 다운로드.",
-    url: "https://calai.kr/pdf-merge",
+    url: "https://www.calai.kr/pdf-merge",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "PDF 합치기 — 설치 없이 10초",
     description: "여러 PDF를 드래그로 결합, 가입·워터마크 없이 즉시 다운로드.",
   },
-  alternates: { canonical: "https://calai.kr/pdf-merge" },
+  alternates: { canonical: "https://www.calai.kr/pdf-merge" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "PDF 합치기",
   "description": "여러 PDF 파일을 드래그 한 번으로 결합. 파일이 서버로 전송되지 않아 안전합니다. 가입·설치·워터마크 없이 즉시 다운로드.",
-  "url": "https://calai.kr/pdf-merge",
+  "url": "https://www.calai.kr/pdf-merge",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

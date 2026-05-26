@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "하루 물 권장량 — 체중 기준",
     description: "체중·활동량 반영해 ml·잔 단위로 동시 표시.",
-    url: "https://calai.kr/water-intake",
+    url: "https://www.calai.kr/water-intake",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "하루 물 권장량 — 체중 기준",
     description: "체중·활동량 반영해 ml·잔 단위로 동시 표시.",
   },
-  alternates: { canonical: "https://calai.kr/water-intake" },
+  alternates: { canonical: "https://www.calai.kr/water-intake" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "수분 섭취량 계산기",
   "description": "체중·활동량·기온을 반영해 하루 권장 수분 섭취량을 자동 산출. ml·잔 단위 동시 표시로 컵 갯수까지 한눈에.",
-  "url": "https://calai.kr/water-intake",
+  "url": "https://www.calai.kr/water-intake",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Any",
   "offers": {

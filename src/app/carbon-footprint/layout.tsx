@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "탄소 발자국 — 항목별 CO₂",
     description: "운전·여행·식단·전기로 연 CO₂ 배출량 + 평균 비교.",
-    url: "https://calai.kr/carbon-footprint",
+    url: "https://www.calai.kr/carbon-footprint",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "탄소 발자국 — 항목별 CO₂",
     description: "운전·여행·식단·전기로 연 CO₂ 배출량 + 평균 비교.",
   },
-  alternates: { canonical: "https://calai.kr/carbon-footprint" },
+  alternates: { canonical: "https://www.calai.kr/carbon-footprint" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "탄소 발자국 계산기",
   "description": "운전 거리·항공 여행·식단·전기 사용을 넣으면 일·연 CO₂ 배출량이 즉시. 한국 가구 평균과 비교로 직관적 진단.",
-  "url": "https://calai.kr/carbon-footprint",
+  "url": "https://www.calai.kr/carbon-footprint",
   "applicationCategory": "LifestyleApplication",
   "operatingSystem": "Any",
   "offers": {

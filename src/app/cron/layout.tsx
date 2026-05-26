@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Cron 해석 — 한국어 + 미리보기",
     description: "Cron 식을 한국어로 풀고 다음 5회 실행 시간 미리보기.",
-    url: "https://calai.kr/cron",
+    url: "https://www.calai.kr/cron",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Cron 해석 — 한국어 + 미리보기",
     description: "Cron 식을 한국어로 풀고 다음 5회 실행 시간 미리보기.",
   },
-  alternates: { canonical: "https://calai.kr/cron" },
+  alternates: { canonical: "https://www.calai.kr/cron" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "Cron 표현식 해석기",
   "description": "Cron 표현식(0 9 * * 1)을 한국어로 풀어 설명 + 다음 5회 실행 시간을 미리보기. 5필드 표준(분·시·일·월·요일) 지원.",
-  "url": "https://calai.kr/cron",
+  "url": "https://www.calai.kr/cron",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

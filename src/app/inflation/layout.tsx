@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "인플레이션 — 과거·미래 가치",
     description: "과거 금액의 현재가치·현재 자산의 미래가치 동시 환산.",
-    url: "https://calai.kr/inflation",
+    url: "https://www.calai.kr/inflation",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "인플레이션 — 과거·미래 가치",
     description: "과거 금액의 현재가치·현재 자산의 미래가치 동시 환산.",
   },
-  alternates: { canonical: "https://calai.kr/inflation" },
+  alternates: { canonical: "https://www.calai.kr/inflation" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "인플레이션 환산",
   "description": "특정 연도의 금액을 현재 화폐 가치로 환산하거나, 현재 자산의 미래 가치를 인플레이션 반영해 추정. 자산 계획에 필수.",
-  "url": "https://calai.kr/inflation",
+  "url": "https://www.calai.kr/inflation",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

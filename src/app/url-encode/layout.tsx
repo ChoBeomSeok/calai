@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "URL 인코딩 — 한글·특수문자",
     description: "URL 한글·특수문자 percent-encoding 양방향 즉시.",
-    url: "https://calai.kr/url-encode",
+    url: "https://www.calai.kr/url-encode",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "URL 인코딩 — 한글·특수문자",
     description: "URL 한글·특수문자 percent-encoding 양방향 즉시.",
   },
-  alternates: { canonical: "https://calai.kr/url-encode" },
+  alternates: { canonical: "https://www.calai.kr/url-encode" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "URL 인코딩·디코딩",
   "description": "URL의 한글·공백·특수문자를 percent-encoding으로 변환하거나 디코딩. 쿼리스트링·API 요청 디버깅에 자주 사용.",
-  "url": "https://calai.kr/url-encode",
+  "url": "https://www.calai.kr/url-encode",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

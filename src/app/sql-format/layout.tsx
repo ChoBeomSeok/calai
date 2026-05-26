@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SQL 포매터 — 8 dialect",
     description: "압축 SQL 자동 들여쓰기·대문자, 8가지 dialect 지원.",
-    url: "https://calai.kr/sql-format",
+    url: "https://www.calai.kr/sql-format",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "SQL 포매터 — 8 dialect",
     description: "압축 SQL 자동 들여쓰기·대문자, 8가지 dialect 지원.",
   },
-  alternates: { canonical: "https://calai.kr/sql-format" },
+  alternates: { canonical: "https://www.calai.kr/sql-format" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "SQL 포매터",
   "description": "압축된 SQL 쿼리를 들여쓰기·키워드 대문자로 정돈. MySQL·PostgreSQL·SQLite·BigQuery 등 8가지 dialect 지원.",
-  "url": "https://calai.kr/sql-format",
+  "url": "https://www.calai.kr/sql-format",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "문의하기",
   description: "calai 도구 추가 요청·오류 신고·제휴 문의는 이메일로 보내주세요.",
-  alternates: { canonical: "https://calai.kr/contact" },
+  alternates: { canonical: "https://www.calai.kr/contact" },
 };
 
 const CONTACT_EMAIL = "petandme99@gmail.com";

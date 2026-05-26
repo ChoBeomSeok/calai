@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "자녀 키 예측 — 부모 키 기준",
     description: "Tanner 공식으로 자녀의 예상 성인 키 자동 산출.",
-    url: "https://calai.kr/child-height",
+    url: "https://www.calai.kr/child-height",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "자녀 키 예측 — 부모 키 기준",
     description: "Tanner 공식으로 자녀의 예상 성인 키 자동 산출.",
   },
-  alternates: { canonical: "https://calai.kr/child-height" },
+  alternates: { canonical: "https://www.calai.kr/child-height" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "어린이 키 예측",
   "description": "아빠·엄마 키와 자녀 성별을 넣으면 Tanner 공식으로 자녀의 예상 성인 신장을 자동 산출. 성장 곡선 참고용.",
-  "url": "https://calai.kr/child-height",
+  "url": "https://www.calai.kr/child-height",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Any",
   "offers": {

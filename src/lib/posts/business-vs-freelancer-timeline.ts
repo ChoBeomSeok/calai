@@ -143,7 +143,7 @@ export const post: Post = {
 
 전환 타이밍은 \"수익 규모\"만이 아니라 \"클라이언트가 세금계산서 요구하는가\"가 결정적. 본인은 3년차 후반에 첫 요구 받고 그 해 12월 전환.
 
-[프리랜서 3.3% 원천징수 계산기](https://calai.kr/freelancer-tax)와 [종합소득세 계산기](https://calai.kr/income-tax)로 본인 수익 규모별 시뮬레이션 가능.
+[프리랜서 3.3% 원천징수 계산기](https://www.calai.kr/freelancer-tax)와 [종합소득세 계산기](https://www.calai.kr/income-tax)로 본인 수익 규모별 시뮬레이션 가능.
 
 ## 전환 결정 체크리스트
 

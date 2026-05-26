@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "컬러 팔레트 — 4규칙 자동",
     description: "기준 색 하나로 보색·유사·삼각·사각 5색 팔레트 자동.",
-    url: "https://calai.kr/color-palette",
+    url: "https://www.calai.kr/color-palette",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "컬러 팔레트 — 4규칙 자동",
     description: "기준 색 하나로 보색·유사·삼각·사각 5색 팔레트 자동.",
   },
-  alternates: { canonical: "https://calai.kr/color-palette" },
+  alternates: { canonical: "https://www.calai.kr/color-palette" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "컬러 팔레트 생성기",
   "description": "기준 색 하나만 넣으면 보색·유사·삼각·사각 4가지 조화 규칙으로 5색 팔레트 자동 생성. 디자인 시안 시작점에.",
-  "url": "https://calai.kr/color-palette",
+  "url": "https://www.calai.kr/color-palette",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any",
   "offers": {

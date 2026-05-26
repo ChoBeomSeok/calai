@@ -118,7 +118,7 @@ export const post: Post = {
 \"100장도? 진짜 광고 0?\"
 
 ### [16:48 본인 → 친구]
-\"진짜. 한 번 들어가봐. [https://calai.kr/remove-background](https://calai.kr/remove-background)\"
+\"진짜. 한 번 들어가봐. [https://www.calai.kr/remove-background](https://www.calai.kr/remove-background)\"
 
 ### [16:52 친구 → 본인]
 \"써봤어. 진짜 워터마크 없네. 일단 한 주 써보고 메인으로 옮길지 결정할게. 고마워\"
@@ -145,7 +145,7 @@ export const post: Post = {
 3. **반려동물·아기 디테일** — RMBG-1.4 모델이 강함
 4. **사진이 서버로 안 감** — 회사 상품 사진·고객 사진 작업 시 보안 안전
 
-[사진 누끼 따기 (배경 제거)](https://calai.kr/remove-background)는 모델 4개 선택 가능 + 배경색 변경 (투명 PNG·증명사진 파랑·빨강·흰색·회색·검정) + JPG·WebP·PNG 출력. 디자이너·인스타 운영자에게 좋음.
+[사진 누끼 따기 (배경 제거)](https://www.calai.kr/remove-background)는 모델 4개 선택 가능 + 배경색 변경 (투명 PNG·증명사진 파랑·빨강·흰색·회색·검정) + JPG·WebP·PNG 출력. 디자이너·인스타 운영자에게 좋음.
 
 ## 결론 — \"무료 + 워터마크 X\"가 가장 큰 차이
 

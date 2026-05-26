@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "단위 변환 — 6분류 한 페이지",
     description: "길이·무게·온도·부피·속도·면적 모두 한 페이지에 양방향.",
-    url: "https://calai.kr/unit",
+    url: "https://www.calai.kr/unit",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "단위 변환 — 6분류 한 페이지",
     description: "길이·무게·온도·부피·속도·면적 모두 한 페이지에 양방향.",
   },
-  alternates: { canonical: "https://calai.kr/unit" },
+  alternates: { canonical: "https://www.calai.kr/unit" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "단위 변환기",
   "description": "길이·무게·온도·부피·속도·면적까지 모든 단위 변환이 한 페이지에서. 어느 단위에 넣어도 나머지 단위가 즉시 변환.",
-  "url": "https://calai.kr/unit",
+  "url": "https://www.calai.kr/unit",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "카드 할부 — 월 청구·수수료",
     description: "원금·개월·수수료율로 매월 청구액과 총 수수료 자동.",
-    url: "https://calai.kr/installment",
+    url: "https://www.calai.kr/installment",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "카드 할부 — 월 청구·수수료",
     description: "원금·개월·수수료율로 매월 청구액과 총 수수료 자동.",
   },
-  alternates: { canonical: "https://calai.kr/installment" },
+  alternates: { canonical: "https://www.calai.kr/installment" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "신용카드 할부 계산기",
   "description": "할부 원금·개월수·수수료율을 넣으면 매월 청구되는 금액과 누적 수수료가 즉시. 무이자 할부와의 차액 비교에 유용.",
-  "url": "https://calai.kr/installment",
+  "url": "https://www.calai.kr/installment",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

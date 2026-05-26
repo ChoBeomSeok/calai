@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "상속세 — 공제·누진 자동",
     description: "상속재산·상속인 수·관계별 공제 반영한 상속세 자동.",
-    url: "https://calai.kr/inheritance-tax",
+    url: "https://www.calai.kr/inheritance-tax",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "상속세 — 공제·누진 자동",
     description: "상속재산·상속인 수·관계별 공제 반영한 상속세 자동.",
   },
-  alternates: { canonical: "https://calai.kr/inheritance-tax" },
+  alternates: { canonical: "https://www.calai.kr/inheritance-tax" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "상속세 계산기",
   "description": "상속재산·상속인 수·관계별 공제를 반영해 상속세 누진세율(10~50%) 구간별 세액을 자동 산출. 상속 계획 사전 점검용.",
-  "url": "https://calai.kr/inheritance-tax",
+  "url": "https://www.calai.kr/inheritance-tax",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any",
   "offers": {

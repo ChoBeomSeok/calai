@@ -58,9 +58,9 @@ export default function CalculatorLayout({ title, description, children }: Props
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "홈", item: "https://calai.kr" },
-      { "@type": "ListItem", position: 2, name: current.category, item: `https://calai.kr/?cat=${encodeURIComponent(current.category)}` },
-      { "@type": "ListItem", position: 3, name: title, item: `https://calai.kr${current.slug}` },
+      { "@type": "ListItem", position: 1, name: "홈", item: "https://www.calai.kr" },
+      { "@type": "ListItem", position: 2, name: current.category, item: `https://www.calai.kr/?cat=${encodeURIComponent(current.category)}` },
+      { "@type": "ListItem", position: 3, name: title, item: `https://www.calai.kr${current.slug}` },
     ],
   } : null;
 

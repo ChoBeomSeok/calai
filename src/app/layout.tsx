@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     title: "calai — 한국에서 가장 빠른 도구·계산기 106개",
     description:
       "BMI·대출·적금·양도세·만 나이·평수 변환 등 106개 도구를 한 페이지에. 가입 없이 무료.",
-    url: "https://calai.kr",
+    url: "https://www.calai.kr",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -101,7 +101,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: { canonical: "https://calai.kr" },
+  alternates: { canonical: "https://www.calai.kr" },
   verification: {
     google: "iyjeJCSlVSqTzjmxJvyg1JJy5dSfCcf5pjtdnjLoMp4",
     other: {
@@ -114,13 +114,13 @@ const siteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "calai",
-  url: "https://calai.kr",
+  url: "https://www.calai.kr",
   inLanguage: "ko",
   description:
     "BMI·대출·적금·양도세·만 나이·평수 변환 등 106개 한국 도구·계산기를 한 페이지에 모은 사이트.",
   potentialAction: {
     "@type": "SearchAction",
-    target: "https://calai.kr/?q={search_term_string}",
+    target: "https://www.calai.kr/?q={search_term_string}",
     "query-input": "required name=search_term_string",
   },
 };
@@ -129,7 +129,7 @@ const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "calai",
-  url: "https://calai.kr",
+  url: "https://www.calai.kr",
 };
 
 export default function RootLayout({

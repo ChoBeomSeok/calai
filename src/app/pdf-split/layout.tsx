@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PDF 분할 — 페이지·범위 지정",
     description: "PDF를 페이지 단위·범위 지정으로 무료 분할, 외부 전송 X.",
-    url: "https://calai.kr/pdf-split",
+    url: "https://www.calai.kr/pdf-split",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "PDF 분할 — 페이지·범위 지정",
     description: "PDF를 페이지 단위·범위 지정으로 무료 분할, 외부 전송 X.",
   },
-  alternates: { canonical: "https://calai.kr/pdf-split" },
+  alternates: { canonical: "https://www.calai.kr/pdf-split" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "PDF 분할",
   "description": "PDF 한 파일을 페이지 단위·범위 지정으로 무료 분할. 파일은 브라우저 안에서만 처리, 가입·설치·워터마크 없음.",
-  "url": "https://calai.kr/pdf-split",
+  "url": "https://www.calai.kr/pdf-split",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {

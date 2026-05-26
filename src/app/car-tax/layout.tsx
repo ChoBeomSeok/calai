@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "자동차세 — 차령 경감까지",
     description: "배기량·연식 반영한 자동차세 실 납부액 즉시.",
-    url: "https://calai.kr/car-tax",
+    url: "https://www.calai.kr/car-tax",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "자동차세 — 차령 경감까지",
     description: "배기량·연식 반영한 자동차세 실 납부액 즉시.",
   },
-  alternates: { canonical: "https://calai.kr/car-tax" },
+  alternates: { canonical: "https://www.calai.kr/car-tax" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "자동차세 계산기",
   "description": "배기량·연식·승용/화물 구분으로 자동차세를 즉시. 3년 이상 차량 차령 경감과 지방교육세까지 합산해 실 납부액 표시.",
-  "url": "https://calai.kr/car-tax",
+  "url": "https://www.calai.kr/car-tax",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

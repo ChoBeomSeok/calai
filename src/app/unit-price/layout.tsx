@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "g당 단가 — 묶음 vs 단품",
     description: "가격·용량 입력으로 g당·100g당·ml당 단가 자동 비교.",
-    url: "https://calai.kr/unit-price",
+    url: "https://www.calai.kr/unit-price",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "g당 단가 — 묶음 vs 단품",
     description: "가격·용량 입력으로 g당·100g당·ml당 단가 자동 비교.",
   },
-  alternates: { canonical: "https://calai.kr/unit-price" },
+  alternates: { canonical: "https://www.calai.kr/unit-price" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "단가 비교 (g당)",
   "description": "여러 상품의 가격과 용량을 넣으면 g당·100g당·ml당 단가가 자동. 대용량이 진짜 싼지, 묶음이 이득인지 명확히.",
-  "url": "https://calai.kr/unit-price",
+  "url": "https://www.calai.kr/unit-price",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": {

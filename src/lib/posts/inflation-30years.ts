@@ -107,7 +107,7 @@ export const post: Post = {
 
 ## 본인 시나리오 시뮬레이션
 
-[인플레이션 환산](https://calai.kr/inflation)에 현재 금액·기간·인플레율 넣으면 즉시 미래 가치 + 실 구매력 계산. [복리 계산기](https://calai.kr/compound)와 같이 쓰면 \"저축 vs 인플레\" 비교 정확.
+[인플레이션 환산](https://www.calai.kr/inflation)에 현재 금액·기간·인플레율 넣으면 즉시 미래 가치 + 실 구매력 계산. [복리 계산기](https://www.calai.kr/compound)와 같이 쓰면 \"저축 vs 인플레\" 비교 정확.
 
 본인 27년 후 \"14억\" 목표라면 어떻게 가는지 단계별:
 - 만 38세 현재 자산: 3억

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PDF 회전 — 90·180·270도",
     description: "PDF 페이지 90·180·270도 무료 회전, 페이지별 각도 가능.",
-    url: "https://calai.kr/pdf-rotate",
+    url: "https://www.calai.kr/pdf-rotate",
     siteName: "calai",
     locale: "ko_KR",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "PDF 회전 — 90·180·270도",
     description: "PDF 페이지 90·180·270도 무료 회전, 페이지별 각도 가능.",
   },
-  alternates: { canonical: "https://calai.kr/pdf-rotate" },
+  alternates: { canonical: "https://www.calai.kr/pdf-rotate" },
 };
 
 const jsonLd = {
@@ -25,7 +25,7 @@ const jsonLd = {
   "@type": "WebApplication",
   "name": "PDF 회전",
   "description": "PDF 페이지를 90·180·270도 회전해 가로·세로 정렬을 맞춤. 페이지별 다른 각도 가능, 가입·설치·워터마크 없음.",
-  "url": "https://calai.kr/pdf-rotate",
+  "url": "https://www.calai.kr/pdf-rotate",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Any",
   "offers": {
