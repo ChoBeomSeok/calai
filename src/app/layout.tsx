@@ -105,7 +105,10 @@ export const metadata: Metadata = {
   verification: {
     google: "iyjeJCSlVSqTzjmxJvyg1JJy5dSfCcf5pjtdnjLoMp4",
     other: {
-      "naver-site-verification": "bdf46184407524f311663c9de99af8d7c80daf48",
+      "naver-site-verification": [
+        "bdf46184407524f311663c9de99af8d7c80daf48", // calai.kr (non-www) 인증
+        "26a280a98f0b8ca9319d0164c1c1f5fb62d93632", // www.calai.kr 인증
+      ],
     },
   },
 };
